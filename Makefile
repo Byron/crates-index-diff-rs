@@ -7,10 +7,6 @@ info:
 CARGO = $(shell command -v cargo)
 bare_index_path = tests/fixtures/index-bare
 
-ifeq ($(CARGO),)
-$(error Cargo is not available in PATH)
-endif
-
 $(bare_index_path):
 	mkdir -p $(dir $@)
 	git clone --bare https://github.com/rust-lang/crates.io-index $@

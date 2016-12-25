@@ -2,7 +2,7 @@
 authors = ["Sebastian Thiel <byronimo@gmail.com>"]
 description = "Learn what's changed in the crates.io index"
 documentation = "https://docs.rs/crates-index-diff"
-keywords = ["crates.io", "crates", "index", "diff"]
+keywords = ["crates", "index", "diff"]
 license = "MIT"
 name = "crates-index-diff"
 repository = "https://github.com/Byron/crates-index-diff-rs"

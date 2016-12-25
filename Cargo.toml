@@ -10,5 +10,8 @@ keywords = ["crates.io", "crates", "index", "diff"]
 documentation = "https://docs.rs/crates-index-diff"
 
 
+[dependencies]
+git2 = "0.6"
+
 [dev-dependencies]
-tempdir = "*"
+tempdir = "0.3.5"

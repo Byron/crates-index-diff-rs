@@ -16,18 +16,23 @@ fn clone_if_needed() {
 }
 
 #[test]
-fn traverse_changed_crates() {
+fn quick_traverse_changed_crates() {
     let tmp = TempDir::new("new-index").unwrap();
     let index = Index::at_path(env::var("CRATES_INDEX_DIFF_TEST_EXISTING_INDEX")
             .map(PathBuf::from)
             .unwrap_or(tmp.path().to_owned()))
         .expect("successful clone");
 
-    assert_eq!(index.traverse_changes("foo", rev_one_added).is_err(), true);
-    assert_eq!(index.traverse_changes(rev_one_added, "bar").is_err(), true);
+    assert_eq!(index.changes("foo", rev_one_added).is_err(), true);
+    assert_eq!(index.changes(rev_one_added, "bar").is_err(), true);
 
-    let crates: Vec<Crate> = index.traverse_changes(format!("{}~1^{{tree}}", rev_one_added),
-                          format!("{}", rev_one_added))
+    let crates: Vec<Crate> = index.changes(format!("{}~1^{{tree}}", rev_one_added),
+                 format!("{}", rev_one_added))
         .expect("ids to be valid and diff ok");
-    assert_eq!(crates.len(), 1);
+    assert_eq!(crates,
+               vec![Crate {
+                        name: "rpwg".to_owned(),
+                        state: ChangeType::Added,
+                        version: "0.1.0".to_owned(),
+                    }]);
 }

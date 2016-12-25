@@ -140,13 +140,6 @@ impl Index {
                            Ok(c) => c,
                            Err(_) => return true,
                        };
-                       println!("hunk.new_lines() = {:?}", hunk.new_lines());
-                       println!("diffline.new_lineno() = {:?}", diffline.new_lineno());
-                       println!("diffline.old_lineno() = {:?}", diffline.old_lineno());
-                       println!("diffline.origin() = {:?}", diffline.origin());
-                       println!("delta.status() = {:?}", delta.status());
-                       println!("diffline.content() = {}", str::from_utf8(diffline.content()).unwrap());
-                       println!("diffline.num_lines() = {:?}", diffline.num_lines());
                        if diffline.origin() != '+' {
                            return true
                        }

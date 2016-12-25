@@ -3,3 +3,5 @@
 target/
 Cargo.lock
 .idea/
+tests/fixtures/index-bare/
+tests/fixtures/index/

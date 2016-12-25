@@ -26,7 +26,8 @@ fn traverse_changed_crates() {
     assert_eq!(index.traverse_changes("foo", rev_one_added).is_err(), true);
     assert_eq!(index.traverse_changes(rev_one_added, "bar").is_err(), true);
 
-    let crates: Vec<Crate> = index.traverse_changes(format!("{}~1^{{tree}}", rev_one_added), format!("{}^{{tree}}", rev_one_added))
+    let crates: Vec<Crate> = index.traverse_changes(format!("{}~1^{{tree}}", rev_one_added),
+                          format!("{}", rev_one_added))
         .expect("ids to be valid and diff ok");
     assert_eq!(crates.len(), 1);
 }

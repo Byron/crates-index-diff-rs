@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use git2::build::RepoBuilder;
-use git2::{Tree, Repository, Oid, ErrorClass, Error as GitError};
+use git2::{ObjectType, Tree, Repository, Oid, ErrorClass, Error as GitError};
 
 static INDEX_GIT_URL: &'static str = "https://github.com/rust-lang/crates.io-index";
 
@@ -10,12 +10,12 @@ pub struct Index {
 }
 
 pub enum ChangeType {
-    Added
+    Added,
 }
 
 pub struct Crate {
     pub name: String,
-    pub state: ChangeType
+    pub state: ChangeType,
 }
 
 impl Index {
@@ -37,7 +37,12 @@ impl Index {
               S2: AsRef<str>
     {
         fn into_tree<S: AsRef<str>>(repo: &Repository, rev: S) -> Result<Tree, GitError> {
-            repo.revparse_single(rev.as_ref()).and_then(|obj| repo.find_tree(obj.id()))
+            repo.revparse_single(rev.as_ref()).and_then(|obj| {
+                repo.find_tree(match obj.kind() {
+               Some(ObjectType::Commit) => obj.as_commit().expect("valid commit").tree_id(),
+                _ => /* let it fail later */ obj.id()
+            })
+            })
         }
 
         let (from, to) = (into_tree(&self.repo, from)?, into_tree(&self.repo, to)?);

@@ -2,8 +2,8 @@ use std::path::Path;
 use rustc_serialize::json::{self, Json};
 
 use git2::build::RepoBuilder;
-use git2::{Object, Oid, Reference, Delta, DiffFormat, ObjectType, Tree, Repository, ErrorClass,
-           Error as GitError};
+use git2::{Object, BranchType, Oid, Branch, Reference, Delta, DiffFormat, ObjectType, Tree,
+           Repository, ErrorClass, Error as GitError};
 use std::str;
 
 static INDEX_GIT_URL: &'static str = "https://github.com/rust-lang/crates.io-index";
@@ -95,7 +95,7 @@ impl Index {
     }
 
     pub fn last_seen_reference(&self) -> Result<Reference, GitError> {
-        self.repo.find_reference(LAST_SEEN_REFNAME)
+        self.repo.find_branch(LAST_SEEN_REFNAME, BranchType::Local).map(Branch::into_reference)
     }
 
     pub fn at_path<P>(path: P) -> Result<Index, GitError>
@@ -119,34 +119,29 @@ impl Index {
                 })
             })
             .or_else(|_| Oid::from_str(EMPTY_TREE_HASH))?;
-        let to = {
-            self.repo
-                .find_remote("origin")
-                .and_then(|mut r| {
-                    r.fetch(&["refs/heads/*:refs/remotes/origin/*"], None, None)
-                        .and_then(|_| {
-                            self.repo
-                                .refname_to_id("refs/remotes/origin/master")
-                                .and_then(|oid| {
-                                    self.last_seen_reference()
-                                        .or_else(|_err| {
-                                            self.repo.reference(LAST_SEEN_REFNAME,
-                                                                oid,
-                                                                true,
-                                                                "create a tracking ref for \
-                                                                 crates-index-diff")
-                                        })
-                                        .and_then(|mut seen_ref| seen_ref.set_target(oid, ""))
-                                })
-                                .and_then(|seen_ref| {
-                                    seen_ref.target().ok_or_else(|| {
-                                        GitError::from_str("could not obtain target of tracking \
-                                                            ref")
+        let to = self.repo
+            .find_remote("origin")
+            .and_then(|mut r| {
+                r.fetch(&["refs/heads/*:refs/remotes/origin/*"], None, None)
+                    .and_then(|_| {
+                        self.repo
+                            .refname_to_id("refs/remotes/origin/master")
+                            .and_then(|oid| {
+                                self.last_seen_reference()
+                                    .and_then(|mut seen_ref| seen_ref.set_target(oid, ""))
+                                    .or_else(|_err| {
+                                        self.repo
+                                            .find_commit(oid)
+                                            .and_then(|commit| {
+                                                self.repo
+                                                    .branch(LAST_SEEN_REFNAME, &commit, true)
+                                                    .map(Branch::into_reference)
+                                            })
                                     })
-                                })
-                        })
-                })?
-        };
+                                    .map(|_| oid)
+                            })
+                    })
+            })?;
         self.changes_from_objects(self.repo.find_object(from, None)?,
                                   self.repo.find_object(to, None)?)
     }

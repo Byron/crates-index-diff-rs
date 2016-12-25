@@ -30,21 +30,27 @@ fn make_index() -> (Index, TempDir) {
 }
 
 #[test]
-fn changes_since_last_fetch() {
+fn quick_changes_since_last_fetch() {
     let (index, _) = make_index();
+    let origin_master = || index.repository().find_reference("refs/remotes/origin/master").unwrap();
     index.last_seen_reference().and_then(|mut r| r.delete()).ok();
-    assert!(index.fetch_changes().unwrap().len() >= NUM_VERSIONS_AT_RECENT_COMMIT);
+    let num_changes_since_first_commit = index.fetch_changes().unwrap().len();
+    assert!(num_changes_since_first_commit >= NUM_VERSIONS_AT_RECENT_COMMIT);
     let mut seen_marker_ref = index.last_seen_reference().expect("must be created/update now");
-    assert!(seen_marker_ref == index.repository().find_reference("master").unwrap());
+    assert!(seen_marker_ref == origin_master());
 
     // reset to previous one
     seen_marker_ref.set_target(index.repository().revparse_single(REV_ONE_UNYANKED).unwrap().id(),
                     "resetting to previous commit")
         .expect("reset success");
     let num_seen_after_reset = index.fetch_changes().unwrap().len();
-    assert!(seen_marker_ref == index.repository().find_reference("master").unwrap());
+    assert!(seen_marker_ref == origin_master());
+    assert!(num_seen_after_reset < num_changes_since_first_commit);
     assert!(num_seen_after_reset < NUM_VERSIONS_AT_RECENT_COMMIT);
     assert!(num_seen_after_reset > 1000);
+
+    // nothing if there was no change
+    assert_eq!(index.fetch_changes().unwrap().len(), 0);
 }
 
 fn changes_of(index: &Index, commit: &str) -> Vec<Crate> {

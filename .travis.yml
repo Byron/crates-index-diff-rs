@@ -6,9 +6,10 @@ rust:
 addons:
   apt:
     sources:
-    - sourceline: 'ppa:george-edison55/cmake-3.x'
+    - kalakris-cmake
+    packages:
+    - cmake
 before_script:
-- apt-get update
 - apt-get upgrade cmake
 script:
 - cargo test

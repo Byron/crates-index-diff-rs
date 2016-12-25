@@ -9,7 +9,7 @@ repository = "https://github.com/Byron/crates-index-diff-rs"
 version = "0.1.0"
 
 [dependencies]
-git2 = "0.6"
+git2 = "0.5"
 rustc-serialize = "0.3.22"
 
 [dev-dependencies]

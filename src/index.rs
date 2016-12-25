@@ -3,7 +3,7 @@ use rustc_serialize::json::{self, Json};
 
 use git2::build::RepoBuilder;
 use git2::{Delta, DiffFormat, DiffDelta, DiffHunk, DiffLine, ObjectType, Tree, Repository,
-           ErrorClass, Error as GitError};
+    ErrorClass, Error as GitError};
 use std::str;
 
 static INDEX_GIT_URL: &'static str = "https://github.com/rust-lang/crates.io-index";
@@ -27,13 +27,19 @@ pub struct Crate {
 
 #[derive(PartialOrd, PartialEq, Debug)]
 enum CrateDecodeError {
-    InvalidTopology { json: Json },
+    InvalidTopology {
+        json: Json
+    },
     MissingFieldError {
         object: json::Object,
         field: &'static str,
     },
-    StringExpected { json: Json },
-    BoolExpected { json: Json },
+    StringExpected {
+        json: Json
+    },
+    BoolExpected {
+        json: Json
+    },
 }
 
 use self::CrateDecodeError::*;
@@ -53,14 +59,14 @@ impl Crate {
 
         fn into_string(value: &Json) -> Result<String, CrateDecodeError> {
             value.as_string()
-                .ok_or_else(|| StringExpected { json: value.clone() })
-                .map(Into::into)
+                 .ok_or_else(|| StringExpected { json: value.clone() })
+                 .map(Into::into)
         }
 
         fn into_bool(value: &Json) -> Result<bool, CrateDecodeError> {
             value.as_boolean()
-                .ok_or_else(|| BoolExpected { json: value.clone() })
-                .map(Into::into)
+                 .ok_or_else(|| BoolExpected { json: value.clone() })
+                 .map(Into::into)
         }
 
         value.as_object().ok_or_else(|| InvalidTopology { json: value.clone() }).and_then(|o| {
@@ -92,11 +98,11 @@ impl Index {
         where P: AsRef<Path>
     {
         let repo =
-            Repository::open(path.as_ref()).or_else(|err| if err.class() == ErrorClass::Repository {
-                    RepoBuilder::new().bare(true).clone(INDEX_GIT_URL, path.as_ref())
-                } else {
-                    Err(err)
-                })?;
+        Repository::open(path.as_ref()).or_else(|err| if err.class() == ErrorClass::Repository {
+            RepoBuilder::new().bare(true).clone(INDEX_GIT_URL, path.as_ref())
+        } else {
+            Err(err)
+        })?;
 
         Ok(Index { repo: repo })
     }
@@ -119,29 +125,39 @@ impl Index {
         let mut res = Vec::new();
         diff.print(DiffFormat::Patch,
                    |delta: DiffDelta, hunk: Option<DiffHunk>, diffline: DiffLine| -> bool {
-                if !match delta.status() {
-                    Delta::Added => true,
-                    _ => false,
-                } {
-                    return true;
-                }
+                       if !match delta.status() {
+                           Delta::Added | Delta::Modified => true,
+                           _ => false,
+                       } {
+                           return true;
+                       }
 
-                let hunk: DiffHunk = match hunk {
-                    Some(h) => h,
-                    None => return true,
-                };
-                let content = match str::from_utf8(diffline.content()) {
-                    Ok(c) => c,
-                    Err(_) => return true,
-                };
+                       let hunk: DiffHunk = match hunk {
+                           Some(h) => h,
+                           None => return true,
+                       };
+                       let content = match str::from_utf8(diffline.content()) {
+                           Ok(c) => c,
+                           Err(_) => return true,
+                       };
+                       println!("hunk.new_lines() = {:?}", hunk.new_lines());
+                       println!("diffline.new_lineno() = {:?}", diffline.new_lineno());
+                       if hunk.new_lines() != 1 {
+                           if !match diffline.new_lineno() {
+                               Some(lineno) => lineno + 1 == hunk.new_lines(),
+                               _ => false,
+                           } {
+                               return true;
+                           }
+                       }
 
-                if let Some(c) = Json::from_str(content)
-                    .ok()
-                    .and_then(|json| Crate::from_json(json).ok()) {
-                    res.push(c)
-                }
-                return true;
-            })?;
+                       if let Some(c) = Json::from_str(content)
+                           .ok()
+                           .and_then(|json| Crate::from_json(json).ok()) {
+                           res.push(c)
+                       }
+                       return true;
+                   })?;
 
         Ok(res)
     }

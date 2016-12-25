@@ -8,7 +8,7 @@ CARGO = $(shell command -v cargo)
 bare_index_path = tests/fixtures/index-bare
 
 ifeq ($(CARGO),)
-	$(error Cargo is not available in PATH)
+$(error Cargo is not available in PATH)
 endif
 
 $(bare_index_path):

@@ -7,8 +7,10 @@ use std::env;
 use std::path::PathBuf;
 
 const REV_ONE_ADDED: &'static str = "615c9c41942a3ba13e088fbcb1470c61b169a187";
+const REV_RECENT_COMMIT: &'static str = REV_ONE_ADDED;
 const REV_ONE_YANKED: &'static str = "8cf8fbad7876586ced34c4b778f6a80fadd2a59b";
 const REV_ONE_UNYANKED: &'static str = "f8cb00181";
+const REV_FIRST_COMMIT: &'static str = "a33de1c98";
 
 #[test]
 fn clone_if_needed() {
@@ -59,7 +61,15 @@ fn quick_traverse_yanked_crates() {
 }
 
 #[test]
-fn quick_traverse_added_crate() {
+fn quick_traverse_all_crates() {
+    let (index, _) = make_index();
+    let changes = index.changes(format!("{}", REV_FIRST_COMMIT), format!("{}", REV_RECENT_COMMIT))
+         .expect("id to be valid and diff OK");
+    assert_eq!(changes.len(), 39752);
+}
+
+#[test]
+fn quick_traverse_added_crates() {
     let (index, _) = make_index();
     assert_eq!(index.changes("foo", REV_ONE_ADDED).is_err(), true);
     assert_eq!(index.changes(REV_ONE_ADDED, "bar").is_err(), true);

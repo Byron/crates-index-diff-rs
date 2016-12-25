@@ -6,6 +6,7 @@ use tempdir::TempDir;
 use std::env;
 use std::path::PathBuf;
 
+const NUM_VERSIONS_AT_RECENT_COMMIT: usize = 39752;
 const REV_ONE_ADDED: &'static str = "615c9c41942a3ba13e088fbcb1470c61b169a187";
 const REV_RECENT_COMMIT: &'static str = REV_ONE_ADDED;
 const REV_ONE_YANKED: &'static str = "8cf8fbad7876586ced34c4b778f6a80fadd2a59b";
@@ -26,6 +27,22 @@ fn make_index() -> (Index, TempDir) {
             .unwrap_or(tmp.path().to_owned()))
         .expect("successful clone");
     (index, tmp)
+}
+
+#[test]
+fn changes_since_last_fetch() {
+    let (index, _) = make_index();
+    index.last_seen_reference().and_then(|mut r| r.delete()).ok();
+    assert!(index.fetch_changes().unwrap().len() >= NUM_VERSIONS_AT_RECENT_COMMIT);
+    let mut seen_marker_ref = index.last_seen_reference().expect("must be created/update now");
+    assert!(seen_marker_ref == index.repository().find_reference("master").unwrap());
+
+    // reset to previous one
+    seen_marker_ref.set_target(index.repository().revparse_single(REV_ONE_UNYANKED).unwrap().id(), "resetting to previous commit").expect("reset success");
+    let num_seen_after_reset = index.fetch_changes().unwrap().len();
+    assert!(seen_marker_ref == index.repository().find_reference("master").unwrap());
+    assert!(num_seen_after_reset < NUM_VERSIONS_AT_RECENT_COMMIT);
+    assert!(num_seen_after_reset > 1000);
 }
 
 fn changes_of(index: &Index, commit: &str) -> Vec<Crate> {
@@ -65,7 +82,7 @@ fn quick_traverse_all_crates() {
     let (index, _) = make_index();
     let changes = index.changes(format!("{}", REV_FIRST_COMMIT), format!("{}", REV_RECENT_COMMIT))
          .expect("id to be valid and diff OK");
-    assert_eq!(changes.len(), 39752);
+    assert_eq!(changes.len(), NUM_VERSIONS_AT_RECENT_COMMIT);
 }
 
 #[test]

@@ -2,11 +2,12 @@ use std::path::Path;
 use rustc_serialize::json::{self, Json};
 
 use git2::build::RepoBuilder;
-use git2::{Delta, DiffFormat, DiffDelta, DiffHunk, DiffLine, ObjectType, Tree, Repository,
+use git2::{Reference, Delta, DiffFormat, ObjectType, Tree, Repository,
     ErrorClass, Error as GitError};
 use std::str;
 
 static INDEX_GIT_URL: &'static str = "https://github.com/rust-lang/crates.io-index";
+static LAST_SEEN_REFNAME: &'static str = "crates-index-diff_last-seen";
 
 pub struct Index {
     repo: Repository,
@@ -94,6 +95,14 @@ impl Crate {
 }
 
 impl Index {
+    pub fn repository(&self) -> &Repository {
+        &self.repo
+    }
+
+    pub fn last_seen_reference(&self) -> Result<Reference, GitError> {
+        self.repo.find_reference(LAST_SEEN_REFNAME)
+    }
+
     pub fn at_path<P>(path: P) -> Result<Index, GitError>
         where P: AsRef<Path>
     {
@@ -105,6 +114,10 @@ impl Index {
         })?;
 
         Ok(Index { repo: repo })
+    }
+
+    pub fn fetch_changes(&self) -> Result<Vec<Crate>, GitError> {
+        self.changes("master~1", "master")
     }
 
     pub fn changes<S1, S2>(&self, from: S1, to: S2) -> Result<Vec<Crate>, GitError>
@@ -124,7 +137,7 @@ impl Index {
         let diff = self.repo.diff_tree_to_tree(Some(&from), Some(&to), None)?;
         let mut res = Vec::new();
         diff.print(DiffFormat::Patch,
-                   |delta: DiffDelta, hunk: Option<DiffHunk>, diffline: DiffLine| -> bool {
+                   |delta, _, diffline| -> bool {
                        if !match delta.status() {
                            Delta::Added | Delta::Modified => true,
                            _ => false,
@@ -132,10 +145,6 @@ impl Index {
                            return true;
                        }
 
-                       let hunk: DiffHunk = match hunk {
-                           Some(h) => h,
-                           None => return true,
-                       };
                        let content = match str::from_utf8(diffline.content()) {
                            Ok(c) => c,
                            Err(_) => return true,

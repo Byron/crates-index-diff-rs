@@ -2,12 +2,13 @@ use std::path::Path;
 use rustc_serialize::json::{self, Json};
 
 use git2::build::RepoBuilder;
-use git2::{Reference, Delta, DiffFormat, ObjectType, Tree, Repository,
-    ErrorClass, Error as GitError};
+use git2::{Object, Oid, Reference, Delta, DiffFormat, ObjectType, Tree, Repository, ErrorClass,
+    Error as GitError};
 use std::str;
 
 static INDEX_GIT_URL: &'static str = "https://github.com/rust-lang/crates.io-index";
 static LAST_SEEN_REFNAME: &'static str = "crates-index-diff_last-seen";
+static EMPTY_TREE_HASH: &'static str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 
 pub struct Index {
     repo: Repository,
@@ -16,7 +17,7 @@ pub struct Index {
 #[derive(Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ChangeType {
     Added,
-    Yanked
+    Yanked,
 }
 
 #[derive(Ord, PartialOrd, Eq, PartialEq, Debug)]
@@ -117,6 +118,13 @@ impl Index {
     }
 
     pub fn fetch_changes(&self) -> Result<Vec<Crate>, GitError> {
+        let from = self.last_seen_reference()
+                       .and_then(|r| {
+                           r.target().ok_or_else(|| {
+                               GitError::from_str("last-seen reference did not have a valid target")
+                           })
+                       })
+                       .or_else(|_| Oid::from_str(EMPTY_TREE_HASH))?;
         self.changes("master~1", "master")
     }
 
@@ -124,42 +132,41 @@ impl Index {
         where S1: AsRef<str>,
               S2: AsRef<str>
     {
-        fn into_tree<S: AsRef<str>>(repo: &Repository, rev: S) -> Result<Tree, GitError> {
-            repo.revparse_single(rev.as_ref()).and_then(|obj| {
-                repo.find_tree(match obj.kind() {
-                    Some(ObjectType::Commit) => obj.as_commit().expect("valid commit").tree_id(),
-                    _ => /* let it fail later */ obj.id()
-                })
+        self.changes_from_objects(self.repo.revparse_single(from.as_ref())?, self.repo.revparse_single(to.as_ref())?)
+    }
+
+    pub fn changes_from_objects(&self, from: Object, to: Object) -> Result<Vec<Crate>, GitError> {
+        fn into_tree<'a>(repo: &'a Repository, obj: Object) -> Result<Tree<'a>, GitError> {
+            repo.find_tree(match obj.kind() {
+                Some(ObjectType::Commit) => obj.as_commit().expect("object of kind commit yields commit").tree_id(),
+                _ => /* let it possibly fail later */ obj.id()
             })
         }
-
-        let (from, to) = (into_tree(&self.repo, from)?, into_tree(&self.repo, to)?);
-        let diff = self.repo.diff_tree_to_tree(Some(&from), Some(&to), None)?;
+        let diff = self.repo.diff_tree_to_tree(Some(&into_tree(&self.repo, from)?), Some(&into_tree(&self.repo, to)?), None)?;
         let mut res = Vec::new();
-        diff.print(DiffFormat::Patch,
-                   |delta, _, diffline| -> bool {
-                       if !match delta.status() {
-                           Delta::Added | Delta::Modified => true,
-                           _ => false,
-                       } {
-                           return true;
-                       }
+        diff.print(DiffFormat::Patch, |delta, _, diffline| -> bool {
+            if !match delta.status() {
+                Delta::Added | Delta::Modified => true,
+                _ => false,
+            } {
+                return true;
+            }
 
-                       let content = match str::from_utf8(diffline.content()) {
-                           Ok(c) => c,
-                           Err(_) => return true,
-                       };
-                       if diffline.origin() != '+' {
-                           return true
-                       }
+            let content = match str::from_utf8(diffline.content()) {
+                Ok(c) => c,
+                Err(_) => return true,
+            };
+            if diffline.origin() != '+' {
+                return true;
+            }
 
-                       if let Some(c) = Json::from_str(content)
-                           .ok()
-                           .and_then(|json| Crate::from_json(json).ok()) {
-                           res.push(c)
-                       }
-                       return true;
-                   })?;
+            if let Some(c) = Json::from_str(content)
+                .ok()
+                .and_then(|json| Crate::from_json(json).ok()) {
+                res.push(c)
+            }
+            return true;
+        })?;
 
         Ok(res)
     }

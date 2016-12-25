@@ -38,7 +38,9 @@ fn changes_since_last_fetch() {
     assert!(seen_marker_ref == index.repository().find_reference("master").unwrap());
 
     // reset to previous one
-    seen_marker_ref.set_target(index.repository().revparse_single(REV_ONE_UNYANKED).unwrap().id(), "resetting to previous commit").expect("reset success");
+    seen_marker_ref.set_target(index.repository().revparse_single(REV_ONE_UNYANKED).unwrap().id(),
+                    "resetting to previous commit")
+        .expect("reset success");
     let num_seen_after_reset = index.fetch_changes().unwrap().len();
     assert!(seen_marker_ref == index.repository().find_reference("master").unwrap());
     assert!(num_seen_after_reset < NUM_VERSIONS_AT_RECENT_COMMIT);
@@ -57,11 +59,11 @@ fn quick_traverse_unyanked_crates() {
 
     let crates = changes_of(&index, REV_ONE_UNYANKED);
     assert_eq!(crates,
-    vec![Crate {
-        name: "gfx_text".to_owned(),
-        state: ChangeType::Added,
-        version: "0.13.2".to_owned(),
-    }]);
+               vec![Crate {
+                        name: "gfx_text".to_owned(),
+                        state: ChangeType::Added,
+                        version: "0.13.2".to_owned(),
+                    }]);
 }
 
 #[test]
@@ -80,8 +82,9 @@ fn quick_traverse_yanked_crates() {
 #[test]
 fn quick_traverse_all_crates() {
     let (index, _) = make_index();
-    let changes = index.changes(format!("{}", REV_FIRST_COMMIT), format!("{}", REV_RECENT_COMMIT))
-         .expect("id to be valid and diff OK");
+    let changes = index.changes(format!("{}", REV_FIRST_COMMIT),
+                 format!("{}", REV_RECENT_COMMIT))
+        .expect("id to be valid and diff OK");
     assert_eq!(changes.len(), NUM_VERSIONS_AT_RECENT_COMMIT);
 }
 

@@ -8,6 +8,7 @@ use std::path::PathBuf;
 
 const REV_ONE_ADDED: &'static str = "615c9c41942a3ba13e088fbcb1470c61b169a187";
 const REV_ONE_YANKED: &'static str = "8cf8fbad7876586ced34c4b778f6a80fadd2a59b";
+const REV_ONE_UNYANKED: &'static str = "f8cb00181";
 
 #[test]
 fn clone_if_needed() {
@@ -30,6 +31,19 @@ fn changes_of(index: &Index, commit: &str) -> Vec<Crate> {
         .expect("id to be valid and diff OK")
 }
 
+
+#[test]
+fn quick_traverse_unyanked_crates() {
+    let (index, _) = make_index();
+
+    let crates = changes_of(&index, REV_ONE_UNYANKED);
+    assert_eq!(crates,
+    vec![Crate {
+        name: "gfx_text".to_owned(),
+        state: ChangeType::Added,
+        version: "0.13.2".to_owned(),
+    }]);
+}
 
 #[test]
 fn quick_traverse_yanked_crates() {

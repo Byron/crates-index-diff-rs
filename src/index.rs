@@ -15,7 +15,7 @@ pub struct Index {
 #[derive(Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ChangeType {
     Added,
-    Yanked,
+    Yanked
 }
 
 #[derive(Ord, PartialOrd, Eq, PartialEq, Debug)]
@@ -142,13 +142,13 @@ impl Index {
                        };
                        println!("hunk.new_lines() = {:?}", hunk.new_lines());
                        println!("diffline.new_lineno() = {:?}", diffline.new_lineno());
-                       if hunk.new_lines() != 1 {
-                           if !match diffline.new_lineno() {
-                               Some(lineno) => lineno + 1 == hunk.new_lines(),
-                               _ => false,
-                           } {
-                               return true;
-                           }
+                       println!("diffline.old_lineno() = {:?}", diffline.old_lineno());
+                       println!("diffline.origin() = {:?}", diffline.origin());
+                       println!("delta.status() = {:?}", delta.status());
+                       println!("diffline.content() = {}", str::from_utf8(diffline.content()).unwrap());
+                       println!("diffline.num_lines() = {:?}", diffline.num_lines());
+                       if diffline.origin() != '+' {
+                           return true
                        }
 
                        if let Some(c) = Json::from_str(content)

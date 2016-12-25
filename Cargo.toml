@@ -9,3 +9,6 @@ repository = "https://github.com/Byron/crates-index-diff-rs"
 keywords = ["crates.io", "crates", "index", "diff"]
 documentation = "https://docs.rs/crates-index-diff"
 
+
+[dev-dependencies]
+tempdir = "*"

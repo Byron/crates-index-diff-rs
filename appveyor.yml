@@ -31,15 +31,16 @@ install:
   - rustup-init.exe -y --default-host %TARGET%
   - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
   - if defined MSYS2 set PATH=C:\msys64\mingw%BITS%\bin;%PATH%
+  - git clone --bare https://github.com/rust-lang/crates.io-index index-bare
   - rustc -V
   - cargo -V
 
 build: false
 
 test_script:
-  - cargo run --manifest-path systest/Cargo.toml --target %TARGET%
-  - cargo test --manifest-path openssl/Cargo.toml --target %TARGET%
+  - set RUST_BACKTRACE=1; set CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=index-bare; cargo test --target %TARGET%
 
 cache:
   - target
+  - index-bare
   - C:\Users\appveyor\.cargo\registry

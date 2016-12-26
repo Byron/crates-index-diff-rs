@@ -55,14 +55,14 @@ impl Crate {
 
         fn into_string(value: &Json) -> Result<String, CrateDecodeError> {
             value.as_string()
-                 .ok_or_else(|| StringExpected { json: value.clone() })
-                 .map(Into::into)
+                .ok_or_else(|| StringExpected { json: value.clone() })
+                .map(Into::into)
         }
 
         fn into_bool(value: &Json) -> Result<bool, CrateDecodeError> {
             value.as_boolean()
-                 .ok_or_else(|| BoolExpected { json: value.clone() })
-                 .map(Into::into)
+                .ok_or_else(|| BoolExpected { json: value.clone() })
+                .map(Into::into)
         }
 
         let o = value.as_object().ok_or_else(|| ObjectExpected { json: value.clone() })?;

@@ -3,12 +3,12 @@ use std::path::Path;
 use rustc_serialize::json::Json;
 
 use git2::build::RepoBuilder;
-use git2::{Object, BranchType, Oid, Branch, Reference, Delta, DiffFormat, ObjectType, Tree,
-           Repository, ErrorClass, Error as GitError};
+use git2::{Object, Oid, Reference, Delta, DiffFormat, ObjectType, Tree, Repository, ErrorClass,
+           Error as GitError};
 use std::str;
 
 static INDEX_GIT_URL: &'static str = "https://github.com/rust-lang/crates.io-index";
-static LAST_SEEN_REFNAME: &'static str = "crates-index-diff_last-seen";
+static LAST_SEEN_REFNAME: &'static str = "refs/heads/crates-index-diff_last-seen";
 static EMPTY_TREE_HASH: &'static str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 static LINE_ADDED_INDICATOR: char = '+';
 
@@ -23,7 +23,7 @@ impl Index {
     }
 
     pub fn last_seen_reference(&self) -> Result<Reference, GitError> {
-        self.repo.find_branch(self.seen_ref_name, BranchType::Local).map(Branch::into_reference)
+        self.repo.find_reference(self.seen_ref_name)
     }
 
     pub fn from_path_or_cloned<P>(path: P) -> Result<Index, GitError>
@@ -62,12 +62,10 @@ impl Index {
                 })
                 .or_else(|_err| {
                     self.repo
-                        .find_commit(latest_fetched_commit_oid)
-                        .and_then(|commit| {
-                            self.repo
-                                .branch(self.seen_ref_name, &commit, true)
-                                .map(Branch::into_reference)
-                        })
+                        .reference(self.seen_ref_name,
+                                   latest_fetched_commit_oid,
+                                   true,
+                                   "creating seen-ref at latest fetched commit")
                 })?;
             latest_fetched_commit_oid
         };

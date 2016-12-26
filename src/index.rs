@@ -14,19 +14,28 @@ static LINE_ADDED_INDICATOR: char = '+';
 
 /// A wrapper for a repository of the crates.io index.
 pub struct Index {
+    /// The name and path of the reference used to keep track of the last seen state of the crates.io
+    /// repository. The default value is `refs/heads/crates-index-diff_last-seen`.
     pub seen_ref_name: &'static str,
+    /// The crates.io repository.
     repo: Repository,
 }
 
 impl Index {
+    /// Return the crates.io repository.
     pub fn repository(&self) -> &Repository {
         &self.repo
     }
 
+    /// Return the reference pointing to the state we have seen after calling `fetch_changes()`.
     pub fn last_seen_reference(&self) -> Result<Reference, GitError> {
         self.repo.find_reference(self.seen_ref_name)
     }
 
+    /// Return a new `Index` instance from the given `path`, which should contain a bare or non-bare
+    /// clone of the `crates.io` index.
+    /// If the directory does not contain the repository or does not exist, it will be cloned from
+    /// the official location automatically (with complete history).
     pub fn from_path_or_cloned<P>(path: P) -> Result<Index, GitError>
         where P: AsRef<Path>
     {
@@ -43,6 +52,11 @@ impl Index {
         })
     }
 
+    /// Return all `CrateVersion`s that are observed between the last time this method was called
+    /// and the latest state of the `crates.io` index repository, which is obtained by fetching
+    /// the remote called `origin`.
+    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched state,
+    /// which causes this method to have a different result each time it is called.
     pub fn fetch_changes(&self) -> Result<Vec<CrateVersion>, GitError> {
         let from = self.last_seen_reference()
             .and_then(|r| {
@@ -74,6 +88,11 @@ impl Index {
                                   &self.repo.find_object(to, None)?)
     }
 
+    /// Return all `CreateVersion`s observed between `from` and `to`. Both parameter are ref-specs
+    /// pointing to either a commit or a tree.
+    /// Learn more about specifying revisions
+    /// in the
+    /// [official documentation](https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html)
     pub fn changes<S1, S2>(&self, from: S1, to: S2) -> Result<Vec<CrateVersion>, GitError>
         where S1: AsRef<str>,
               S2: AsRef<str>
@@ -82,6 +101,8 @@ impl Index {
                                   &self.repo.revparse_single(to.as_ref())?)
     }
 
+    /// Similar to `changes()`, but requires `from` and `to` objects to be provided. They may point
+    /// to either `Commit`s or `Tree`s.
     pub fn changes_from_objects(&self, from: &Object, to: &Object) -> Result<Vec<CrateVersion>, GitError> {
         fn into_tree<'a>(repo: &'a Repository, obj: &Object) -> Result<Tree<'a>, GitError> {
             repo.find_tree(match obj.kind() {

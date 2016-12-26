@@ -38,7 +38,9 @@ install:
 build: false
 
 test_script:
-  - set RUST_BACKTRACE=1; set CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=index-bare; cargo test --target %TARGET%
+  - set RUST_BACKTRACE=1
+  - set CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=index-bare
+  - cargo test --target %TARGET%
 
 cache:
   - target

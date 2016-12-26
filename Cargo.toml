@@ -10,6 +10,7 @@ version = "0.1.0"
 
 [dependencies]
 git2 = "0.5"
+quick-error = "1.1.0"
 rustc-serialize = "0.3.22"
 
 [dev-dependencies]

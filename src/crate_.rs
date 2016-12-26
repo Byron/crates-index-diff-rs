@@ -13,15 +13,29 @@ pub struct Crate {
     pub version: String,
 }
 
-#[derive(PartialOrd, PartialEq, Debug)]
-pub enum CrateDecodeError {
-    InvalidTopology { json: Json },
-    MissingFieldError {
-        object: json::Object,
-        field: &'static str,
-    },
-    StringExpected { json: Json },
-    BoolExpected { json: Json },
+quick_error! {
+    #[derive(PartialOrd, PartialEq, Debug)]
+    pub enum CrateDecodeError {
+        MissingFieldError {
+            object: json::Object,
+            field: &'static str,
+        } {
+            description("A field is not present in a json object")
+            display("Field '{}' was missing in object '{:?}'", field, object)
+        }
+        ObjectExpected { json: Json } {
+            description("A json object was expected")
+            display("Json was not an object: '{:?}'", json)
+        }
+        StringExpected { json: Json } {
+            description("A json string was expected")
+            display("Json was not an string: '{:?}'", json)
+        }
+        BoolExpected { json: Json } {
+            description("A json boolean was expected")
+            display("Json was not an boolean: '{:?}'", json)
+        }
+    }
 }
 
 use self::CrateDecodeError::*;
@@ -51,7 +65,7 @@ impl Crate {
                  .map(Into::into)
         }
 
-        let o = value.as_object().ok_or_else(|| InvalidTopology { json: value.clone() })?;
+        let o = value.as_object().ok_or_else(|| ObjectExpected { json: value.clone() })?;
         let name = extract(o, "name").and_then(into_string)?;
         let version = extract(o, "vers").and_then(into_string)?;
         let yanked = extract(o, "yanked").and_then(into_bool)?;

@@ -1,5 +1,7 @@
 use rustc_serialize::json::{self, Json};
 
+use std::fmt::{self, Display};
+
 /// Identify a kind of change that occurred to a crate
 #[derive(RustcEncodable, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ChangeKind {
@@ -7,6 +9,17 @@ pub enum ChangeKind {
     Added,
     /// A crate version was added or it was unyanked.
     Yanked,
+}
+
+impl Display for ChangeKind {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f,
+               "{}",
+               match *self {
+                   ChangeKind::Added => "added",
+                   ChangeKind::Yanked => "yanked",
+               })
+    }
 }
 
 /// Pack all information we know about a change made to a version of a crate.

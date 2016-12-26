@@ -14,8 +14,8 @@ static LINE_ADDED_INDICATOR: char = '+';
 
 /// A wrapper for a repository of the crates.io index.
 pub struct Index {
-    /// The name and path of the reference used to keep track of the last seen state of the crates.io
-    /// repository. The default value is `refs/heads/crates-index-diff_last-seen`.
+    /// The name and path of the reference used to keep track of the last seen state of the
+    /// crates.io repository. The default value is `refs/heads/crates-index-diff_last-seen`.
     pub seen_ref_name: &'static str,
     /// The crates.io repository.
     repo: Repository,
@@ -55,8 +55,8 @@ impl Index {
     /// Return all `CrateVersion`s that are observed between the last time this method was called
     /// and the latest state of the `crates.io` index repository, which is obtained by fetching
     /// the remote called `origin`.
-    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched state,
-    /// which causes this method to have a different result each time it is called.
+    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
+    /// state, which causes this method to have a different result each time it is called.
     pub fn fetch_changes(&self) -> Result<Vec<CrateVersion>, GitError> {
         let from = self.last_seen_reference()
             .and_then(|r| {
@@ -103,7 +103,10 @@ impl Index {
 
     /// Similar to `changes()`, but requires `from` and `to` objects to be provided. They may point
     /// to either `Commit`s or `Tree`s.
-    pub fn changes_from_objects(&self, from: &Object, to: &Object) -> Result<Vec<CrateVersion>, GitError> {
+    pub fn changes_from_objects(&self,
+                                from: &Object,
+                                to: &Object)
+                                -> Result<Vec<CrateVersion>, GitError> {
         fn into_tree<'a>(repo: &'a Repository, obj: &Object) -> Result<Tree<'a>, GitError> {
             repo.find_tree(match obj.kind() {
                 Some(ObjectType::Commit)

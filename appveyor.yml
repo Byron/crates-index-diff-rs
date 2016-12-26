@@ -5,11 +5,6 @@ environment:
       BITS: 64
       OPENSSL_VERSION: 1_1_0c
       OPENSSL_DIR: C:\OpenSSL
-
-    - TARGET: x86_64-pc-windows-gnu
-      BITS: 64
-      MSYS2: 1
-      OPENSSL_VERSION: 1_0_2j
 install:
   # install OpenSSL
   - ps: Start-FileDownload "http://slproweb.com/download/Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe"

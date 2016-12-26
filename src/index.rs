@@ -9,6 +9,7 @@ use std::str;
 static INDEX_GIT_URL: &'static str = "https://github.com/rust-lang/crates.io-index";
 static LAST_SEEN_REFNAME: &'static str = "crates-index-diff_last-seen";
 static EMPTY_TREE_HASH: &'static str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
+static LINE_ADDED_INDICATOR: char = '+';
 
 pub struct Index {
     pub seen_ref_name: &'static str,
@@ -137,20 +138,20 @@ impl Index {
                 })?;
             latest_fetched_commit_oid
         };
-        self.changes_from_objects(self.repo.find_object(from, None)?,
-                                  self.repo.find_object(to, None)?)
+        self.changes_from_objects(&self.repo.find_object(from, None)?,
+                                  &self.repo.find_object(to, None)?)
     }
 
     pub fn changes<S1, S2>(&self, from: S1, to: S2) -> Result<Vec<Crate>, GitError>
         where S1: AsRef<str>,
               S2: AsRef<str>
     {
-        self.changes_from_objects(self.repo.revparse_single(from.as_ref())?,
-                                  self.repo.revparse_single(to.as_ref())?)
+        self.changes_from_objects(&self.repo.revparse_single(from.as_ref())?,
+                                  &self.repo.revparse_single(to.as_ref())?)
     }
 
-    pub fn changes_from_objects(&self, from: Object, to: Object) -> Result<Vec<Crate>, GitError> {
-        fn into_tree<'a>(repo: &'a Repository, obj: Object) -> Result<Tree<'a>, GitError> {
+    pub fn changes_from_objects(&self, from: &Object, to: &Object) -> Result<Vec<Crate>, GitError> {
+        fn into_tree<'a>(repo: &'a Repository, obj: &Object) -> Result<Tree<'a>, GitError> {
             repo.find_tree(match obj.kind() {
                 Some(ObjectType::Commit)
                     => obj.as_commit().expect("object of kind commit yields commit").tree_id(),
@@ -162,7 +163,11 @@ impl Index {
                                Some(&into_tree(&self.repo, to)?),
                                None)?;
         let mut res = Vec::new();
-        diff.print(DiffFormat::Patch, |delta, _, diffline| -> bool {
+        diff.print(DiffFormat::Patch, |delta, _, diffline| {
+                if diffline.origin() != LINE_ADDED_INDICATOR {
+                    return true;
+                }
+
                 if !match delta.status() {
                     Delta::Added | Delta::Modified => true,
                     _ => false,
@@ -174,9 +179,6 @@ impl Index {
                     Ok(c) => c,
                     Err(_) => return true,
                 };
-                if diffline.origin() != '+' {
-                    return true;
-                }
 
                 if let Some(c) = Json::from_str(content)
                     .ok()
@@ -184,8 +186,7 @@ impl Index {
                     res.push(c)
                 }
                 return true;
-            })?;
-
-        Ok(res)
+            })
+            .map(|_| res)
     }
 }

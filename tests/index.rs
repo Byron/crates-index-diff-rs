@@ -86,15 +86,6 @@ fn quick_traverse_yanked_crates() {
 }
 
 #[test]
-fn quick_traverse_all_crates() {
-    let (index, _) = make_index();
-    let changes = index.changes(format!("{}", REV_FIRST_COMMIT),
-                 format!("{}", REV_RECENT_COMMIT))
-        .expect("id to be valid and diff OK");
-    assert_eq!(changes.len(), NUM_VERSIONS_AT_RECENT_COMMIT);
-}
-
-#[test]
 fn quick_traverse_added_crates() {
     let (index, _) = make_index();
     assert_eq!(index.changes("foo", REV_ONE_ADDED).is_err(), true);

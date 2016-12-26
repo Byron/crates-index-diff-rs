@@ -1,4 +1,4 @@
-use super::Crate;
+use super::CrateVersion;
 use std::path::Path;
 use rustc_serialize::json::Json;
 
@@ -12,6 +12,7 @@ static LAST_SEEN_REFNAME: &'static str = "refs/heads/crates-index-diff_last-seen
 static EMPTY_TREE_HASH: &'static str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 static LINE_ADDED_INDICATOR: char = '+';
 
+/// A wrapper for a repository of the crates.io index.
 pub struct Index {
     pub seen_ref_name: &'static str,
     repo: Repository,
@@ -42,7 +43,7 @@ impl Index {
         })
     }
 
-    pub fn fetch_changes(&self) -> Result<Vec<Crate>, GitError> {
+    pub fn fetch_changes(&self) -> Result<Vec<CrateVersion>, GitError> {
         let from = self.last_seen_reference()
             .and_then(|r| {
                 r.target().ok_or_else(|| {
@@ -73,7 +74,7 @@ impl Index {
                                   &self.repo.find_object(to, None)?)
     }
 
-    pub fn changes<S1, S2>(&self, from: S1, to: S2) -> Result<Vec<Crate>, GitError>
+    pub fn changes<S1, S2>(&self, from: S1, to: S2) -> Result<Vec<CrateVersion>, GitError>
         where S1: AsRef<str>,
               S2: AsRef<str>
     {
@@ -81,7 +82,7 @@ impl Index {
                                   &self.repo.revparse_single(to.as_ref())?)
     }
 
-    pub fn changes_from_objects(&self, from: &Object, to: &Object) -> Result<Vec<Crate>, GitError> {
+    pub fn changes_from_objects(&self, from: &Object, to: &Object) -> Result<Vec<CrateVersion>, GitError> {
         fn into_tree<'a>(repo: &'a Repository, obj: &Object) -> Result<Tree<'a>, GitError> {
             repo.find_tree(match obj.kind() {
                 Some(ObjectType::Commit)
@@ -113,7 +114,7 @@ impl Index {
 
                 if let Some(c) = Json::from_str(content)
                     .ok()
-                    .and_then(|json| Crate::from_crates_diff_json(json).ok()) {
+                    .and_then(|json| CrateVersion::from_crates_diff_json(json).ok()) {
                     res.push(c)
                 }
                 return true;

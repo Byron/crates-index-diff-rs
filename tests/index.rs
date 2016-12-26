@@ -52,7 +52,7 @@ fn quick_changes_since_last_fetch() {
     assert_eq!(index.fetch_changes().unwrap().len(), 0);
 }
 
-fn changes_of(index: &Index, commit: &str) -> Vec<Crate> {
+fn changes_of(index: &Index, commit: &str) -> Vec<CrateVersion> {
     index.changes(format!("{}~1^{{tree}}", commit), format!("{}", commit))
         .expect("id to be valid and diff OK")
 }
@@ -64,9 +64,9 @@ fn quick_traverse_unyanked_crates() {
 
     let crates = changes_of(&index, REV_ONE_UNYANKED);
     assert_eq!(crates,
-               vec![Crate {
+               vec![CrateVersion {
                         name: "gfx_text".to_owned(),
-                        state: ChangeType::Added,
+                        kind: ChangeKind::Added,
                         version: "0.13.2".to_owned(),
                     }]);
 }
@@ -77,9 +77,9 @@ fn quick_traverse_yanked_crates() {
 
     let crates = changes_of(&index, REV_ONE_YANKED);
     assert_eq!(crates,
-               vec![Crate {
+               vec![CrateVersion {
                         name: "sha3".to_owned(),
-                        state: ChangeType::Yanked,
+                        kind: ChangeKind::Yanked,
                         version: "0.0.0".to_owned(),
                     }]);
 }
@@ -92,9 +92,9 @@ fn quick_traverse_added_crates() {
 
     let crates = changes_of(&index, REV_ONE_ADDED);
     assert_eq!(crates,
-               vec![Crate {
+               vec![CrateVersion {
                         name: "rpwg".to_owned(),
-                        state: ChangeType::Added,
+                        kind: ChangeKind::Added,
                         version: "0.1.0".to_owned(),
                     }]);
 }

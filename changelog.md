@@ -1,3 +1,13 @@
+<a name="v2.0.0"></a>
+## v2.0.0 (2016-12-26)
+
+
+#### Bug Fixes
+
+* **cargo:**  use git2 version for compat with docs.rs ([0ceebed3](https://github.com/Byron/crates-index-diff-rs/commit/0ceebed3d70c4482b5d09ffa1f9af5fea2bf7cd7))
+
+
+
 <a name="v1.0.1"></a>
 ### v1.0.1 (2016-12-26)
 

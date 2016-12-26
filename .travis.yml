@@ -7,8 +7,15 @@ rust:
 - beta
 - nightly
 before_script:
-- curl -sSL https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz | sudo tar -xzC $PWD
-- export PATH=$PWD/cmake-3.5.2-Linux-x86_64/bin/:$PATH
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then 
+    brew update
+    brew install cmake
+    brew install openssl
+  else
+    curl -sSL https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz | sudo tar -xzC $PWD
+    export PATH=$PWD/cmake-3.5.2-Linux-x86_64/bin/:$PATH
+  fi
 script:
 - make test
 - cargo doc

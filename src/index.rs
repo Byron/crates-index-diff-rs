@@ -116,29 +116,27 @@ impl Index {
                 })
             })
             .or_else(|_| Oid::from_str(EMPTY_TREE_HASH))?;
-        let to = self.repo
-            .find_remote("origin")
-            .and_then(|mut r| {
-                r.fetch(&["refs/heads/*:refs/remotes/origin/*"], None, None)
-                    .and_then(|_| {
-                        self.repo
-                            .refname_to_id("refs/remotes/origin/master")
-                            .and_then(|oid| {
-                                self.last_seen_reference()
-                                    .and_then(|mut seen_ref| seen_ref.set_target(oid, ""))
-                                    .or_else(|_err| {
-                                        self.repo
-                                            .find_commit(oid)
-                                            .and_then(|commit| {
-                                                self.repo
-                                                    .branch(LAST_SEEN_REFNAME, &commit, true)
-                                                    .map(Branch::into_reference)
-                                            })
-                                    })
-                                    .map(|_| oid)
-                            })
-                    })
-            })?;
+        let to = {
+            self.repo
+                .find_remote("origin")
+                .and_then(|mut r| r.fetch(&["refs/heads/*:refs/remotes/origin/*"], None, None))?;
+            let latest_fetched_commit_oid = self.repo.refname_to_id("refs/remotes/origin/master")?;
+            self.last_seen_reference()
+                .and_then(|mut seen_ref| {
+                    seen_ref.set_target(latest_fetched_commit_oid,
+                                        "updating seen-ref head to latest fetched commit")
+                })
+                .or_else(|_err| {
+                    self.repo
+                        .find_commit(latest_fetched_commit_oid)
+                        .and_then(|commit| {
+                            self.repo
+                                .branch(self.seen_ref_name, &commit, true)
+                                .map(Branch::into_reference)
+                        })
+                })?;
+            latest_fetched_commit_oid
+        };
         self.changes_from_objects(self.repo.find_object(from, None)?,
                                   self.repo.find_object(to, None)?)
     }

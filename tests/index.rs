@@ -29,7 +29,8 @@ fn make_index() -> (Index, TempDir) {
 
 #[test]
 fn quick_changes_since_last_fetch() {
-    let (index, _) = make_index();
+    let (mut index, _) = make_index();
+    index.seen_ref_name = "our-test-ref_because-we-can";
     let origin_master = || index.repository().find_reference("refs/remotes/origin/master").unwrap();
     index.last_seen_reference().and_then(|mut r| r.delete()).ok();
     let num_changes_since_first_commit = index.fetch_changes().unwrap().len();

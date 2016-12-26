@@ -11,6 +11,7 @@ static LAST_SEEN_REFNAME: &'static str = "crates-index-diff_last-seen";
 static EMPTY_TREE_HASH: &'static str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 
 pub struct Index {
+    pub seen_ref_name: &'static str,
     repo: Repository,
 }
 
@@ -95,10 +96,10 @@ impl Index {
     }
 
     pub fn last_seen_reference(&self) -> Result<Reference, GitError> {
-        self.repo.find_branch(LAST_SEEN_REFNAME, BranchType::Local).map(Branch::into_reference)
+        self.repo.find_branch(self.seen_ref_name, BranchType::Local).map(Branch::into_reference)
     }
 
-    pub fn at_path<P>(path: P) -> Result<Index, GitError>
+    pub fn from_path_or_cloned<P>(path: P) -> Result<Index, GitError>
         where P: AsRef<Path>
     {
         let repo =
@@ -108,7 +109,10 @@ impl Index {
                     Err(err)
                 })?;
 
-        Ok(Index { repo: repo })
+        Ok(Index {
+            repo: repo,
+            seen_ref_name: LAST_SEEN_REFNAME,
+        })
     }
 
     pub fn fetch_changes(&self) -> Result<Vec<Crate>, GitError> {

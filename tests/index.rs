@@ -8,21 +8,19 @@ use std::path::PathBuf;
 
 const NUM_VERSIONS_AT_RECENT_COMMIT: usize = 39752;
 const REV_ONE_ADDED: &'static str = "615c9c41942a3ba13e088fbcb1470c61b169a187";
-const REV_RECENT_COMMIT: &'static str = REV_ONE_ADDED;
 const REV_ONE_YANKED: &'static str = "8cf8fbad7876586ced34c4b778f6a80fadd2a59b";
 const REV_ONE_UNYANKED: &'static str = "f8cb00181";
-const REV_FIRST_COMMIT: &'static str = "a33de1c98";
 
 #[test]
 fn clone_if_needed() {
     let tmp = TempDir::new("new-index").unwrap();
-    Index::at_path(tmp.path()).expect("successful clone to be created");
-    Index::at_path(tmp.path()).expect("second instance re-uses existing clone");
+    Index::from_path_or_cloned(tmp.path()).expect("successful clone to be created");
+    Index::from_path_or_cloned(tmp.path()).expect("second instance re-uses existing clone");
 }
 
 fn make_index() -> (Index, TempDir) {
     let tmp = TempDir::new("new-index").unwrap();
-    let index = Index::at_path(env::var("CRATES_INDEX_DIFF_TEST_EXISTING_INDEX")
+    let index = Index::from_path_or_cloned(env::var("CRATES_INDEX_DIFF_TEST_EXISTING_INDEX")
             .map(PathBuf::from)
             .unwrap_or(tmp.path().to_owned()))
         .expect("successful clone");

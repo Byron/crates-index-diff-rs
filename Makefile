@@ -15,5 +15,5 @@ test: $(bare_index_path)
 	RUST_BACKTRACE=1 CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=$(bare_index_path) cargo test
 	
 quick-test: $(bare_index_path)
-	CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=$(bare_index_path) && cargo test quick
+	CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=$(bare_index_path) cargo test quick
 	

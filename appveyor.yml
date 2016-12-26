@@ -5,6 +5,11 @@ environment:
       BITS: 64
       OPENSSL_VERSION: 1_1_0c
       OPENSSL_DIR: C:\OpenSSL
+
+    - TARGET: x86_64-pc-windows-gnu
+      BITS: 64
+      MSYS2: 1
+      OPENSSL_VERSION: 1_0_2j
 install:
   # install OpenSSL
   - ps: Start-FileDownload "http://slproweb.com/download/Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe"
@@ -26,7 +31,3 @@ test_script:
   - set RUST_BACKTRACE=1
   - set CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=index-bare
   - cargo test --target %TARGET%
-
-cache:
-  - target
-  - C:\Users\appveyor\.cargo\registry

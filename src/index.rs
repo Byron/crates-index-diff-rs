@@ -15,13 +15,13 @@ pub struct Index {
     repo: Repository,
 }
 
-#[derive(Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(RustcEncodable, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ChangeType {
     Added,
     Yanked,
 }
 
-#[derive(Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(RustcEncodable, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub struct Crate {
     pub name: String,
     pub state: ChangeType,
@@ -42,7 +42,7 @@ enum CrateDecodeError {
 use self::CrateDecodeError::*;
 
 impl Crate {
-    fn from_json(value: Json) -> Result<Crate, CrateDecodeError> {
+    fn from_crates_diff_json(value: Json) -> Result<Crate, CrateDecodeError> {
         fn extract<'a>(o: &'a json::Object,
                        field: &'static str)
                        -> Result<&'a Json, CrateDecodeError> {
@@ -66,26 +66,19 @@ impl Crate {
                 .map(Into::into)
         }
 
-        value.as_object().ok_or_else(|| InvalidTopology { json: value.clone() }).and_then(|o| {
-            extract(o, "name")
-                .and_then(into_string)
-                .and_then(|name| {
-                    extract(o, "vers")
-                        .and_then(into_string)
-                        .and_then(|version| {
-                            extract(o, "yanked").and_then(into_bool).map(|yanked| {
-                                Crate {
-                                    name: name,
-                                    state: if yanked {
-                                        ChangeType::Yanked
-                                    } else {
-                                        ChangeType::Added
-                                    },
-                                    version: version,
-                                }
-                            })
-                        })
-                })
+        let o = value.as_object().ok_or_else(|| InvalidTopology { json: value.clone() })?;
+        let name = extract(o, "name").and_then(into_string)?;
+        let version = extract(o, "vers").and_then(into_string)?;
+        let yanked = extract(o, "yanked").and_then(into_bool)?;
+
+        Ok(Crate {
+            name: name,
+            state: if yanked {
+                ChangeType::Yanked
+            } else {
+                ChangeType::Added
+            },
+            version: version,
         })
     }
 }
@@ -189,7 +182,7 @@ impl Index {
 
                 if let Some(c) = Json::from_str(content)
                     .ok()
-                    .and_then(|json| Crate::from_json(json).ok()) {
+                    .and_then(|json| Crate::from_crates_diff_json(json).ok()) {
                     res.push(c)
                 }
                 return true;

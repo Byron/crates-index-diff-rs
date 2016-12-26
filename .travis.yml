@@ -9,8 +9,7 @@ rust:
 before_script:
 - |
   if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then 
-    brew install --force openssl
-    brew link --force openssl
+    brew uninstall openssl && brew install openssl --universal --without-test
     export OPENSSL_DIR=/usr/local/opt/openssl
     export OPENSSL_ROOT_DIR=$OPENSSL_DIR
   else

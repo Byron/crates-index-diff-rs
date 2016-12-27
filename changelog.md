@@ -1,3 +1,9 @@
+<a name="v2.0.1"></a>
+### v2.0.1 (2016-12-27)
+
+Add a tutorial to the documentation.
+
+
 <a name="v2.0.0"></a>
 ## v2.0.0 (2016-12-26)
 

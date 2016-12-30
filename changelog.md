@@ -1,3 +1,9 @@
+<a name="v3.0.0"></a>
+## v3.0.0 (2016-12-30)
+
+* use git2 v0.6 instead of v0.4 to support openssl-sys 0.9.
+
+
 <a name="v2.0.1"></a>
 ### v2.0.1 (2016-12-27)
 

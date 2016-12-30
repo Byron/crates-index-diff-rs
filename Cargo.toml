@@ -6,10 +6,10 @@ keywords = ["crates", "index", "diff"]
 license = "MIT"
 name = "crates-index-diff"
 repository = "https://github.com/Byron/crates-index-diff-rs"
-version = "2.0.1"
+version = "3.0.0"
 
 [dependencies]
-git2 = "0.4"
+git2 = "0.6"
 quick-error = "1.1.0"
 rustc-serialize = "0.3.22"
 

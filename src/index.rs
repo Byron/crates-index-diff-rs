@@ -1,6 +1,6 @@
 use super::CrateVersion;
 use std::path::Path;
-use rustc_serialize::json::Json;
+use serde_json;
 
 use git2::build::RepoBuilder;
 use git2::{Object, Oid, Reference, Delta, DiffFormat, ObjectType, Tree, Repository, ErrorClass,
@@ -118,7 +118,7 @@ impl Index {
             .diff_tree_to_tree(Some(&into_tree(&self.repo, from)?),
                                Some(&into_tree(&self.repo, to)?),
                                None)?;
-        let mut res = Vec::new();
+        let mut res: Vec<CrateVersion> = Vec::new();
         diff.print(DiffFormat::Patch, |delta, _, diffline| {
                 if diffline.origin() != LINE_ADDED_INDICATOR {
                     return true;
@@ -136,9 +136,7 @@ impl Index {
                     Err(_) => return true,
                 };
 
-                if let Some(c) = Json::from_str(content)
-                    .ok()
-                    .and_then(|json| CrateVersion::from_crates_diff_json(json).ok()) {
+                if let Ok(c) = serde_json::from_str(content) {
                     res.push(c)
                 }
                 return true;

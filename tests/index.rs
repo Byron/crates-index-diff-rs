@@ -45,7 +45,6 @@ fn quick_changes_since_last_fetch() {
     let num_seen_after_reset = index.fetch_changes().unwrap().len();
     assert!(seen_marker_ref == origin_master());
     assert!(num_seen_after_reset < num_changes_since_first_commit);
-    assert!(num_seen_after_reset < NUM_VERSIONS_AT_RECENT_COMMIT);
     assert!(num_seen_after_reset > 1000);
 
     // nothing if there was no change

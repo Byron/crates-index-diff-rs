@@ -29,7 +29,7 @@ fn make_index() -> (Index, TempDir) {
 
 #[test]
 fn quick_changes_since_last_fetch() {
-    let (mut index, _) = make_index();
+    let (mut index, _tmp) = make_index();
     index.seen_ref_name = "refs/our-test-ref_because-we-can_hidden-from-ui";
     let origin_master = || index.repository().find_reference("refs/remotes/origin/master").unwrap();
     index.last_seen_reference().and_then(|mut r| r.delete()).ok();
@@ -59,7 +59,7 @@ fn changes_of(index: &Index, commit: &str) -> Vec<CrateVersion> {
 
 #[test]
 fn quick_traverse_unyanked_crates() {
-    let (index, _) = make_index();
+    let (index, _tmp) = make_index();
 
     let crates = changes_of(&index, REV_ONE_UNYANKED);
     assert_eq!(crates,
@@ -72,7 +72,7 @@ fn quick_traverse_unyanked_crates() {
 
 #[test]
 fn quick_traverse_yanked_crates() {
-    let (index, _) = make_index();
+    let (index, _tmp) = make_index();
 
     let crates = changes_of(&index, REV_ONE_YANKED);
     assert_eq!(crates,
@@ -85,7 +85,7 @@ fn quick_traverse_yanked_crates() {
 
 #[test]
 fn quick_traverse_added_crates() {
-    let (index, _) = make_index();
+    let (index, _tmp) = make_index();
     assert_eq!(index.changes("foo", REV_ONE_ADDED).is_err(), true);
     assert_eq!(index.changes(REV_ONE_ADDED, "bar").is_err(), true);
 

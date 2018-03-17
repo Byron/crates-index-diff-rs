@@ -1,3 +1,13 @@
+<a name="v4.0.0"></a>
+## v4.0.0 (2018-03-17)
+
+* switch from rustc-serialize to serde
+
+### Breaking Changes
+
+* `CrateVersion::from_crates_diff_json(...)` was removed in favor of `CrateVersion::from_str(...)`
+  which is powered by `serde`.
+
 <a name="v3.0.0"></a>
 ## v3.0.0 (2016-12-30)
 

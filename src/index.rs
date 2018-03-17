@@ -68,7 +68,7 @@ impl Index {
         let to = {
             self.repo
                 .find_remote("origin")
-                .and_then(|mut r| r.fetch(&["master"], None, None))?;
+                .and_then(|mut r| r.fetch(&["refs/heads/*:refs/remotes/origin/*"], None, None))?;
             let latest_fetched_commit_oid = self.repo.refname_to_id("refs/remotes/origin/master")?;
             self.last_seen_reference()
                 .and_then(|mut seen_ref| {

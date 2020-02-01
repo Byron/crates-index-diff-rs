@@ -1,3 +1,9 @@
+<a name="v5.0.2"></a>
+## v5.0.0 (2020-02-01)
+
+* update to libgit 0.11
+* provide all information known about the crates, similar to the `crates-index` crate
+
 <a name="v4.0.2"></a>
 ## v4.0.2 (2019-07-22)
 

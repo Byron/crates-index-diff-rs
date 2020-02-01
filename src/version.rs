@@ -1,5 +1,6 @@
 use serde::de::{Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
+use std::collections::HashMap;
 
 use std::fmt;
 
@@ -14,7 +15,8 @@ pub enum ChangeKind {
 
 impl<'de> Deserialize<'de> for ChangeKind {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where D: Deserializer<'de>
+    where
+        D: Deserializer<'de>,
     {
         struct Visitor;
         impl<'de> ::serde::de::Visitor<'de> for Visitor {
@@ -23,7 +25,8 @@ impl<'de> Deserialize<'de> for ChangeKind {
                 formatter.write_str("boolean")
             }
             fn visit_bool<E>(self, value: bool) -> Result<ChangeKind, E>
-                where E: ::serde::de::Error
+            where
+                E: ::serde::de::Error,
             {
                 if value {
                     Ok(ChangeKind::Yanked)
@@ -38,7 +41,8 @@ impl<'de> Deserialize<'de> for ChangeKind {
 
 impl Serialize for ChangeKind {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where S: Serializer
+    where
+        S: Serializer,
     {
         serializer.serialize_bool(self == &ChangeKind::Yanked)
     }
@@ -46,24 +50,58 @@ impl Serialize for ChangeKind {
 
 impl fmt::Display for ChangeKind {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f,
-               "{}",
-               match *self {
-                   ChangeKind::Added => "added",
-                   ChangeKind::Yanked => "yanked",
-               })
+        write!(
+            f,
+            "{}",
+            match *self {
+                ChangeKind::Added => "added",
+                ChangeKind::Yanked => "yanked",
+            }
+        )
     }
 }
 
 /// Pack all information we know about a change made to a version of a crate.
-#[derive(Serialize, Deserialize, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug)]
 pub struct CrateVersion {
     /// The crate name, i.e. `clap`.
     pub name: String,
     /// The kind of change.
-    #[serde(rename="yanked")]
+    #[serde(rename = "yanked")]
     pub kind: ChangeKind,
     /// The semantic version of the crate.
-    #[serde(rename="vers")]
+    #[serde(rename = "vers")]
     pub version: String,
+    /// The checksum over the crate archive
+    #[serde(rename = "cksum")]
+    pub checksum: String,
+    /// All cargo features
+    pub features: HashMap<String, Vec<String>>,
+    /// All crate dependencies
+    #[serde(rename = "deps")]
+    pub dependencies: Vec<Dependency>,
+}
+
+/// A single dependency of a specific crate version
+#[derive(Serialize, Deserialize, Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
+pub struct Dependency {
+    /// The crate name
+    name: String,
+    /// The version the parent crate requires of this dependency
+    #[serde(rename = "req")]
+    required_version: String,
+    /// All cargo features configured by the parent crate
+    features: Vec<String>,
+    /// True if this is an optional dependency
+    optional: bool,
+    /// True if default features are enabled
+    default_features: bool,
+    /// The name of the build target
+    target: Option<String>,
+    /// The kind of dependency, usually 'normal' or 'dev'
+    #[serde(skip_serializing_if = "Option::is_none")]
+    kind: Option<String>,
+    /// The package this crate is contained in
+    #[serde(skip_serializing_if = "Option::is_none")]
+    package: Option<String>,
 }

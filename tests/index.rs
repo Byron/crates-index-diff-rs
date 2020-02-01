@@ -75,6 +75,7 @@ fn changes_of(index: &Index, commit: &str) -> Vec<CrateVersion> {
 
 #[test]
 fn quick_traverse_unyanked_crates() {
+    //    [CrateVersion { dependencies: [Dependency { name: "freetype-rs", required_version: "^0.11", features: [], optional: false, default_features: true, target: None, kind: Some("normal"), package: None }, Dependency { name: "gfx", required_version: "^0.12.2", features: [], optional: false, default_features: true, target: None, kind: Some("normal"), package: None }, Dependency { name: "glutin", required_version: "^0.6", features: [], optional: false, default_features: true, target: None, kind: Some("dev"), package: None }, Dependency { name: "gfx_window_glutin", required_version: "^0.12", features: [], optional: false, default_features: true, target: None, kind: Some("dev"), package: None }] }]
     let (index, _tmp) = make_index();
 
     let crates = changes_of(&index, REV_ONE_UNYANKED);
@@ -84,9 +85,55 @@ fn quick_traverse_unyanked_crates() {
             name: "gfx_text".to_owned(),
             kind: ChangeKind::Added,
             version: "0.13.2".to_owned(),
-            dependencies: Vec::new(),
-            features: HashMap::new(),
-            checksum: "cksum".into()
+            dependencies: vec![
+                Dependency {
+                    name: "freetype-rs".into(),
+                    required_version: "^0.11".into(),
+                    features: vec![],
+                    optional: false,
+                    default_features: true,
+                    target: None,
+                    kind: Some("normal".into()),
+                    package: None
+                },
+                Dependency {
+                    name: "gfx".into(),
+                    required_version: "^0.12.2".into(),
+                    features: vec![],
+                    optional: false,
+                    default_features: true,
+                    target: None,
+                    kind: Some("normal".into()),
+                    package: None
+                },
+                Dependency {
+                    name: "glutin".into(),
+                    required_version: "^0.6".into(),
+                    features: vec![],
+                    optional: false,
+                    default_features: true,
+                    target: None,
+                    kind: Some("dev".into()),
+                    package: None
+                },
+                Dependency {
+                    name: "gfx_window_glutin".into(),
+                    required_version: "^0.12".into(),
+                    features: vec![],
+                    optional: false,
+                    default_features: true,
+                    target: None,
+                    kind: Some("dev".into()),
+                    package: None
+                }
+            ],
+            features: {
+                let mut h = HashMap::new();
+                h.insert("default".to_string(), vec!["include-font".to_string()]);
+                h.insert("include-font".into(), vec![]);
+                h
+            },
+            checksum: "d0b1240e3627e646f69685ddd3e7d83dd3ff3d586afe83bf3679082028183f2d".into(),
         }]
     );
 }
@@ -104,7 +151,7 @@ fn quick_traverse_yanked_crates() {
             version: "0.0.0".to_owned(),
             dependencies: Vec::new(),
             features: HashMap::new(),
-            checksum: "cksum".into()
+            checksum: "dbba9d72d3d04e2167fb9c76ce22aed118eb003727bbe59774b9bf3603fa1f43".into(),
         }]
     );
 }
@@ -122,9 +169,30 @@ fn quick_traverse_added_crates() {
             name: "rpwg".to_owned(),
             kind: ChangeKind::Added,
             version: "0.1.0".to_owned(),
-            dependencies: Vec::new(),
+            dependencies: vec![
+                Dependency {
+                    name: "rand".into(),
+                    required_version: "^0.3".into(),
+                    features: vec![],
+                    optional: false,
+                    default_features: true,
+                    target: None,
+                    kind: Some("normal".into()),
+                    package: None
+                },
+                Dependency {
+                    name: "clap".into(),
+                    required_version: "^2.19".into(),
+                    features: vec![],
+                    optional: false,
+                    default_features: true,
+                    target: None,
+                    kind: Some("normal".into()),
+                    package: None
+                }
+            ],
             features: HashMap::new(),
-            checksum: "cksum".into()
+            checksum: "14437a3702699dba0c49ddc401a0529898e83f8b769348549985a0f4d818d3ca".into(),
         }]
     );
 }

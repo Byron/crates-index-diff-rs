@@ -86,22 +86,22 @@ pub struct CrateVersion {
 #[derive(Serialize, Deserialize, Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub struct Dependency {
     /// The crate name
-    name: String,
+    pub name: String,
     /// The version the parent crate requires of this dependency
     #[serde(rename = "req")]
-    required_version: String,
+    pub required_version: String,
     /// All cargo features configured by the parent crate
-    features: Vec<String>,
+    pub features: Vec<String>,
     /// True if this is an optional dependency
-    optional: bool,
+    pub optional: bool,
     /// True if default features are enabled
-    default_features: bool,
+    pub default_features: bool,
     /// The name of the build target
-    target: Option<String>,
+    pub target: Option<String>,
     /// The kind of dependency, usually 'normal' or 'dev'
     #[serde(skip_serializing_if = "Option::is_none")]
-    kind: Option<String>,
+    pub kind: Option<String>,
     /// The package this crate is contained in
     #[serde(skip_serializing_if = "Option::is_none")]
-    package: Option<String>,
+    pub package: Option<String>,
 }

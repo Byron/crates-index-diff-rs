@@ -3,17 +3,8 @@ use serde_json;
 use std::path::Path;
 
 use git2::{
-    build::RepoBuilder,
-    Delta,
-    DiffFormat,
-    Error as GitError,
-    ErrorClass,
-    Object,
-    ObjectType,
-    Oid,
-    Reference,
-    Repository,
-    Tree
+    build::RepoBuilder, Delta, DiffFormat, Error as GitError, ErrorClass, Object, ObjectType, Oid,
+    Reference, Repository, Tree,
 };
 use std::str;
 
@@ -46,8 +37,7 @@ impl Index {
     /// clone of the `crates.io` index.
     /// If the directory does not contain the repository or does not exist, it will be cloned from
     /// the official location automatically (with complete history).
-    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, GitError>
-    {
+    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, GitError> {
         let repo = Repository::open(path.as_ref()).or_else(|err| {
             if err.class() == ErrorClass::Repository {
                 RepoBuilder::new()
@@ -112,8 +102,11 @@ impl Index {
     /// Learn more about specifying revisions
     /// in the
     /// [official documentation](https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html)
-    pub fn changes(&self, from: impl AsRef<str>, to: impl AsRef<str>) -> Result<Vec<CrateVersion>, GitError>
-    {
+    pub fn changes(
+        &self,
+        from: impl AsRef<str>,
+        to: impl AsRef<str>,
+    ) -> Result<Vec<CrateVersion>, GitError> {
         self.changes_from_objects(
             &self.repo.revparse_single(from.as_ref())?,
             &self.repo.revparse_single(to.as_ref())?,

@@ -2,16 +2,24 @@ use super::CrateVersion;
 use serde_json;
 use std::path::Path;
 
-use git2::build::RepoBuilder;
 use git2::{
-    Delta, DiffFormat, Error as GitError, ErrorClass, Object, ObjectType, Oid, Reference,
-    Repository, Tree,
+    build::RepoBuilder,
+    Delta,
+    DiffFormat,
+    Error as GitError,
+    ErrorClass,
+    Object,
+    ObjectType,
+    Oid,
+    Reference,
+    Repository,
+    Tree
 };
 use std::str;
 
-static INDEX_GIT_URL: &'static str = "https://github.com/rust-lang/crates.io-index";
-static LAST_SEEN_REFNAME: &'static str = "refs/heads/crates-index-diff_last-seen";
-static EMPTY_TREE_HASH: &'static str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
+static INDEX_GIT_URL: &str = "https://github.com/rust-lang/crates.io-index";
+static LAST_SEEN_REFNAME: &str = "refs/heads/crates-index-diff_last-seen";
+static EMPTY_TREE_HASH: &str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 static LINE_ADDED_INDICATOR: char = '+';
 
 /// A wrapper for a repository of the crates.io index.
@@ -38,9 +46,7 @@ impl Index {
     /// clone of the `crates.io` index.
     /// If the directory does not contain the repository or does not exist, it will be cloned from
     /// the official location automatically (with complete history).
-    pub fn from_path_or_cloned<P>(path: P) -> Result<Index, GitError>
-    where
-        P: AsRef<Path>,
+    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, GitError>
     {
         let repo = Repository::open(path.as_ref()).or_else(|err| {
             if err.class() == ErrorClass::Repository {
@@ -53,7 +59,7 @@ impl Index {
         })?;
 
         Ok(Index {
-            repo: repo,
+            repo,
             seen_ref_name: LAST_SEEN_REFNAME,
         })
     }
@@ -106,10 +112,7 @@ impl Index {
     /// Learn more about specifying revisions
     /// in the
     /// [official documentation](https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html)
-    pub fn changes<S1, S2>(&self, from: S1, to: S2) -> Result<Vec<CrateVersion>, GitError>
-    where
-        S1: AsRef<str>,
-        S2: AsRef<str>,
+    pub fn changes(&self, from: impl AsRef<str>, to: impl AsRef<str>) -> Result<Vec<CrateVersion>, GitError>
     {
         self.changes_from_objects(
             &self.repo.revparse_single(from.as_ref())?,
@@ -163,7 +166,7 @@ impl Index {
             if let Ok(c) = serde_json::from_str(content) {
                 res.push(c)
             }
-            return true;
+            true
         })
         .map(|_| res)
     }

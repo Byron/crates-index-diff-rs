@@ -11,11 +11,6 @@ It will only need a bare clone, which saves resources.
 Add this to your Cargo.toml
 ```toml
 [dependencies]
-crates-index-diff = "*"
-```
-
-Add this to your lib ...
-```Rust
-extern crate crates_index_diff;
+crates-index-diff = "5"
 ```
 

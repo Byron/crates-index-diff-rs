@@ -10,3 +10,5 @@ mod version;
 
 pub use index::*;
 pub use version::*;
+
+pub use git2;

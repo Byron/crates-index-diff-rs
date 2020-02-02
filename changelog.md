@@ -1,4 +1,9 @@
 <a name="v5.0.2"></a>
+## v5.0.1 (2020-02-02)
+
+* expose the 'git2' crate - useful for error handling
+
+<a name="v5.0.2"></a>
 ## v5.0.0 (2020-02-01)
 
 * update to libgit 0.11

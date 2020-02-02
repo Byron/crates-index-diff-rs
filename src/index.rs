@@ -151,12 +151,7 @@ impl Index {
                 return true;
             }
 
-            let content = match str::from_utf8(diffline.content()) {
-                Ok(c) => c,
-                Err(_) => return true,
-            };
-
-            if let Ok(c) = serde_json::from_str(content) {
+            if let Ok(c) = serde_json::from_slice(diffline.content()) {
                 res.push(c)
             }
             true

@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::fmt;
 
 /// Identify a kind of change that occurred to a crate
-#[derive(Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ChangeKind {
     /// A crate version was added
     Added,
@@ -62,7 +62,7 @@ impl fmt::Display for ChangeKind {
 }
 
 /// Pack all information we know about a change made to a version of a crate.
-#[derive(Serialize, Deserialize, Eq, PartialEq, Debug)]
+#[derive(Clone, Serialize, Deserialize, Eq, PartialEq, Debug)]
 pub struct CrateVersion {
     /// The crate name, i.e. `clap`.
     pub name: String,
@@ -83,7 +83,7 @@ pub struct CrateVersion {
 }
 
 /// A single dependency of a specific crate version
-#[derive(Serialize, Deserialize, Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(Clone, Serialize, Deserialize, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub struct Dependency {
     /// The crate name
     pub name: String,

@@ -13,6 +13,12 @@ pub enum ChangeKind {
     Yanked,
 }
 
+impl Default for ChangeKind {
+    fn default() -> Self {
+        ChangeKind::Added
+    }
+}
+
 impl<'de> Deserialize<'de> for ChangeKind {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where

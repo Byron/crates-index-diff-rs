@@ -105,9 +105,7 @@ pub struct Dependency {
     /// The name of the build target
     pub target: Option<String>,
     /// The kind of dependency, usually 'normal' or 'dev'
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
     /// The package this crate is contained in
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub package: Option<String>,
 }

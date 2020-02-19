@@ -67,7 +67,7 @@ fn quick_changes_since_last_fetch() {
     assert_eq!(index.fetch_changes().unwrap().len(), 0);
 }
 
-fn changes_of<'a>(index: &'a Index, commit: &str) -> Vec<CrateVersion<'a>> {
+fn changes_of(index: &Index, commit: &str) -> Vec<CrateVersion> {
     index
         .changes(format!("{}~1^{{tree}}", commit), format!("{}", commit))
         .expect("id to be valid and diff OK")
@@ -82,9 +82,9 @@ fn quick_traverse_unyanked_crates() {
     assert_eq!(
         crates,
         vec![CrateVersion {
-            name: "gfx_text".into(),
+            name: "gfx_text".to_owned(),
             kind: ChangeKind::Added,
-            version: "0.13.2".into(),
+            version: "0.13.2".to_owned(),
             dependencies: vec![
                 Dependency {
                     name: "freetype-rs".into(),
@@ -129,7 +129,7 @@ fn quick_traverse_unyanked_crates() {
             ],
             features: {
                 let mut h = HashMap::new();
-                h.insert("default".into(), vec!["include-font".into()]);
+                h.insert("default".to_string(), vec!["include-font".to_string()]);
                 h.insert("include-font".into(), vec![]);
                 h
             },
@@ -146,9 +146,9 @@ fn quick_traverse_yanked_crates() {
     assert_eq!(
         crates,
         vec![CrateVersion {
-            name: "sha3".into(),
+            name: "sha3".to_owned(),
             kind: ChangeKind::Yanked,
-            version: "0.0.0".into(),
+            version: "0.0.0".to_owned(),
             dependencies: Vec::new(),
             features: HashMap::new(),
             checksum: "dbba9d72d3d04e2167fb9c76ce22aed118eb003727bbe59774b9bf3603fa1f43".into(),
@@ -166,9 +166,9 @@ fn quick_traverse_added_crates() {
     assert_eq!(
         crates,
         vec![CrateVersion {
-            name: "rpwg".into(),
+            name: "rpwg".to_owned(),
             kind: ChangeKind::Added,
-            version: "0.1.0".into(),
+            version: "0.1.0".to_owned(),
             dependencies: vec![
                 Dependency {
                     name: "rand".into(),

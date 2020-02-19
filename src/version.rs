@@ -2,7 +2,6 @@ use serde::de::{Deserialize, Deserializer};
 use serde::ser::{Serialize, Serializer};
 use std::collections::HashMap;
 
-use std::borrow::Cow;
 use std::fmt;
 
 /// Identify a kind of change that occurred to a crate
@@ -70,20 +69,20 @@ impl fmt::Display for ChangeKind {
 
 /// Pack all information we know about a change made to a version of a crate.
 #[derive(Clone, Serialize, Deserialize, Eq, PartialEq, Debug)]
-pub struct CrateVersion<'a> {
+pub struct CrateVersion {
     /// The crate name, i.e. `clap`.
-    pub name: Cow<'a, str>,
+    pub name: String,
     /// The kind of change.
     #[serde(rename = "yanked")]
     pub kind: ChangeKind,
     /// The semantic version of the crate.
     #[serde(rename = "vers")]
-    pub version: Cow<'a, str>,
+    pub version: String,
     /// The checksum over the crate archive
     #[serde(rename = "cksum")]
-    pub checksum: Cow<'a, str>,
+    pub checksum: String,
     /// All cargo features
-    pub features: HashMap<Cow<'a, str>, Vec<Cow<'a, str>>>,
+    pub features: HashMap<String, Vec<String>>,
     /// All crate dependencies
     #[serde(rename = "deps")]
     pub dependencies: Vec<Dependency>,

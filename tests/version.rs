@@ -17,9 +17,9 @@ fn test_parse_crate_version() {
     assert_eq!(
         c,
         CrateVersion {
-            name: "test".into(),
+            name: "test".to_string(),
             kind: ChangeKind::Yanked,
-            version: "1.0.0".into(),
+            version: "1.0.0".to_string(),
             dependencies: Vec::new(),
             features: HashMap::new(),
             checksum: "cksum".into()

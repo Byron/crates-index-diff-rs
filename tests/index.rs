@@ -1,4 +1,5 @@
 use crates_index_diff::*;
+use git2::Reference;
 use std::{collections::HashMap, env, path::PathBuf};
 use tempdir::TempDir;
 
@@ -26,26 +27,33 @@ fn make_index() -> (Index, TempDir) {
     (index, tmp)
 }
 
+fn origin_master_of(index: &Index) -> Reference<'_> {
+    index
+        .repository()
+        .find_reference("refs/remotes/origin/master")
+        .unwrap()
+}
+
 #[test]
 fn quick_changes_since_last_fetch() {
     let (mut index, _tmp) = make_index();
     index.seen_ref_name = "refs/our-test-ref_because-we-can_hidden-from-ui";
-    let origin_master = || {
-        index
-            .repository()
-            .find_reference("refs/remotes/origin/master")
-            .unwrap()
-    };
     index
         .last_seen_reference()
         .and_then(|mut r| r.delete())
         .ok();
     let num_changes_since_first_commit = index.fetch_changes().unwrap().len();
-    assert!(num_changes_since_first_commit >= NUM_VERSIONS_AT_RECENT_COMMIT);
+    assert!(
+        num_changes_since_first_commit >= NUM_VERSIONS_AT_RECENT_COMMIT,
+        "should have fetched enough commits"
+    );
     let mut seen_marker_ref = index
         .last_seen_reference()
         .expect("must be created/update now");
-    assert!(seen_marker_ref == origin_master());
+    assert!(
+        seen_marker_ref == origin_master_of(&index),
+        "should update the last_seen_reference to latest remote origin master"
+    );
 
     // reset to previous one
     seen_marker_ref
@@ -59,12 +67,33 @@ fn quick_changes_since_last_fetch() {
         )
         .expect("reset success");
     let num_seen_after_reset = index.fetch_changes().unwrap().len();
-    assert!(seen_marker_ref == origin_master());
+    assert!(seen_marker_ref == origin_master_of(&index));
     assert!(num_seen_after_reset < num_changes_since_first_commit);
     assert!(num_seen_after_reset > 1000);
 
     // nothing if there was no change
     assert_eq!(index.fetch_changes().unwrap().len(), 0);
+}
+
+#[test]
+fn peek_changes_since_last_fetch() {
+    let (mut index, _tmp) = make_index();
+    index.seen_ref_name = "refs/our-test-ref_because-we-can_hidden-from-ui";
+    index
+        .last_seen_reference()
+        .and_then(|mut r| r.delete())
+        .ok();
+    let (changes, last_seen_rev) = index.peek_changes().unwrap();
+    assert!(changes.len() >= NUM_VERSIONS_AT_RECENT_COMMIT);
+    assert_eq!(
+        last_seen_rev,
+        origin_master_of(&index).target().unwrap(),
+        "last seen reference should be origin"
+    );
+    assert!(
+        index.last_seen_reference().is_err(),
+        "the last-seen reference has not been created (or updated, but we don't test that yet)"
+    );
 }
 
 fn changes_of(index: &Index, commit: &str) -> Vec<CrateVersion> {

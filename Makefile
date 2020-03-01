@@ -12,8 +12,8 @@ $(bare_index_path):
 	git clone --bare https://github.com/rust-lang/crates.io-index $@
 
 test: $(bare_index_path)
-	RUST_BACKTRACE=1 CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=$(bare_index_path) cargo test
+	RUST_BACKTRACE=1 CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=$(bare_index_path) cargo test --jobs 1
 	
 quick-test: $(bare_index_path)
-	CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=$(bare_index_path) cargo test quick
+	CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=$(bare_index_path) cargo test --jobs 1 quick
 	

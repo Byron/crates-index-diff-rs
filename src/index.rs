@@ -54,12 +54,14 @@ impl Index {
         })
     }
 
-    /// Return all `CrateVersion`s that are observed between the last time this method was called
+    /// Return all `CrateVersion`s that are observed between the last time `fetch_changes(…)` was called
     /// and the latest state of the `crates.io` index repository, which is obtained by fetching
     /// the remote called `origin`.
-    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
-    /// state, which causes this method to have a different result each time it is called.
-    pub fn fetch_changes(&self) -> Result<Vec<CrateVersion>, GitError> {
+    /// The `last_seen_reference()` will not be created or updated.
+    /// The second field in the returned tuple is the commit object to which the changes were provided.
+    /// If one would set the `last_seen_reference()` to that object, the effect is exactly the same
+    /// as if `fetch_changes(…)` had been called.
+    pub fn peek_changes(&self) -> Result<(Vec<CrateVersion>, git2::Oid), GitError> {
         let from = self
             .last_seen_reference()
             .and_then(|r| {
@@ -74,27 +76,40 @@ impl Index {
                 .and_then(|mut r| r.fetch(&["refs/heads/*:refs/remotes/origin/*"], None, None))?;
             let latest_fetched_commit_oid =
                 self.repo.refname_to_id("refs/remotes/origin/master")?;
-            self.last_seen_reference()
-                .and_then(|mut seen_ref| {
-                    seen_ref.set_target(
-                        latest_fetched_commit_oid,
-                        "updating seen-ref head to latest fetched commit",
-                    )
-                })
-                .or_else(|_err| {
-                    self.repo.reference(
-                        self.seen_ref_name,
-                        latest_fetched_commit_oid,
-                        true,
-                        "creating seen-ref at latest fetched commit",
-                    )
-                })?;
             latest_fetched_commit_oid
         };
-        self.changes_from_objects(
-            &self.repo.find_object(from, None)?,
-            &self.repo.find_object(to, None)?,
-        )
+
+        Ok((
+            self.changes_from_objects(
+                &self.repo.find_object(from, None)?,
+                &self.repo.find_object(to, None)?,
+            )?,
+            to,
+        ))
+    }
+
+    /// Return all `CrateVersion`s that are observed between the last time this method was called
+    /// and the latest state of the `crates.io` index repository, which is obtained by fetching
+    /// the remote called `origin`.
+    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
+    /// state, which causes this method to have a different result each time it is called.
+    pub fn fetch_changes(&self) -> Result<Vec<CrateVersion>, GitError> {
+        let (changes, to) = self.peek_changes()?;
+
+        self.last_seen_reference()
+            .and_then(|mut seen_ref| {
+                seen_ref.set_target(to, "updating seen-ref head to latest fetched commit")
+            })
+            .or_else(|_err| {
+                self.repo.reference(
+                    self.seen_ref_name,
+                    to,
+                    true,
+                    "creating seen-ref at latest fetched commit",
+                )
+            })?;
+
+        Ok(changes)
     }
 
     /// Return all `CreateVersion`s observed between `from` and `to`. Both parameter are ref-specs

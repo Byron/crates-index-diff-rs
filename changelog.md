@@ -1,3 +1,8 @@
+## v5.1.0 (2020-03-01)
+
+* add `peek_changes()` method, which is like `fetch_changes()`, but doesn't remember which changes it already saw. Use `indx.last_seen_reference().set_target(oid)`
+  to get a similar effect as if `fetch_changes()` had been called.
+  
 ## v5.0.2 (2020-02-02)
 
 * speed up diff parsing - skip conversion to utf8

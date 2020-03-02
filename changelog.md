@@ -1,3 +1,7 @@
+## v6.0.0 (2020-03-03)
+
+* Update to git2 v0.12.0
+  
 ## v5.1.0 (2020-03-01)
 
 * add `peek_changes()` method, which is like `fetch_changes()`, but doesn't remember which changes it already saw. Use `indx.last_seen_reference().set_target(oid)`

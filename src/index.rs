@@ -54,6 +54,11 @@ impl Index {
         })
     }
 
+    /// As `peek_changes_with_options`, but without the options.
+    pub fn peek_changes(&self) -> Result<(Vec<CrateVersion>, git2::Oid), GitError> {
+        self.peek_changes_with_options(None)
+    }
+
     /// Return all `CrateVersion`s that are observed between the last time `fetch_changes(…)` was called
     /// and the latest state of the `crates.io` index repository, which is obtained by fetching
     /// the remote called `origin`.
@@ -61,7 +66,10 @@ impl Index {
     /// The second field in the returned tuple is the commit object to which the changes were provided.
     /// If one would set the `last_seen_reference()` to that object, the effect is exactly the same
     /// as if `fetch_changes(…)` had been called.
-    pub fn peek_changes(&self) -> Result<(Vec<CrateVersion>, git2::Oid), GitError> {
+    pub fn peek_changes_with_options(
+        &self,
+        opts: Option<&mut git2::FetchOptions<'_>>,
+    ) -> Result<(Vec<CrateVersion>, git2::Oid), GitError> {
         let from = self
             .last_seen_reference()
             .and_then(|r| {
@@ -73,7 +81,7 @@ impl Index {
         let to = {
             self.repo
                 .find_remote("origin")
-                .and_then(|mut r| r.fetch(&["refs/heads/*:refs/remotes/origin/*"], None, None))?;
+                .and_then(|mut r| r.fetch(&["refs/heads/*:refs/remotes/origin/*"], opts, None))?;
             let latest_fetched_commit_oid =
                 self.repo.refname_to_id("refs/remotes/origin/master")?;
             latest_fetched_commit_oid
@@ -88,13 +96,21 @@ impl Index {
         ))
     }
 
+    /// As `fetch_changes_with_options`, but without the options.
+    pub fn fetch_changes(&self) -> Result<Vec<CrateVersion>, GitError> {
+        self.fetch_changes_with_options(None)
+    }
+
     /// Return all `CrateVersion`s that are observed between the last time this method was called
     /// and the latest state of the `crates.io` index repository, which is obtained by fetching
     /// the remote called `origin`.
     /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
     /// state, which causes this method to have a different result each time it is called.
-    pub fn fetch_changes(&self) -> Result<Vec<CrateVersion>, GitError> {
-        let (changes, to) = self.peek_changes()?;
+    pub fn fetch_changes_with_options(
+        &self,
+        opts: Option<&mut git2::FetchOptions<'_>>,
+    ) -> Result<Vec<CrateVersion>, GitError> {
+        let (changes, to) = self.peek_changes_with_options(opts)?;
 
         self.last_seen_reference()
             .and_then(|mut seen_ref| {

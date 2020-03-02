@@ -1,3 +1,7 @@
+## v6.1.0 (2020-03-03)
+
+* Add support for progress messages by adding the `(fetch|peek)_changes_with_options(git2::FetchOptions)` variants.
+
 ## v6.0.0 (2020-03-03)
 
 * Update to git2 v0.12.0

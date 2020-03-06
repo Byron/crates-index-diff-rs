@@ -111,7 +111,12 @@ impl Index {
         opts: Option<&mut git2::FetchOptions<'_>>,
     ) -> Result<Vec<CrateVersion>, GitError> {
         let (changes, to) = self.peek_changes_with_options(opts)?;
+        self.set_last_seen_reference(to)?;
+        Ok(changes)
+    }
 
+    /// Set the last seen reference to the given Oid. It will be created if it does not yet exists.
+    pub fn set_last_seen_reference(&self, to: Oid) -> Result<(), GitError> {
         self.last_seen_reference()
             .and_then(|mut seen_ref| {
                 seen_ref.set_target(to, "updating seen-ref head to latest fetched commit")
@@ -124,8 +129,7 @@ impl Index {
                     "creating seen-ref at latest fetched commit",
                 )
             })?;
-
-        Ok(changes)
+        Ok(())
     }
 
     /// Return all `CreateVersion`s observed between `from` and `to`. Both parameter are ref-specs

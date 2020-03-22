@@ -1,3 +1,7 @@
+## v7.0.0 (2020-03-22)
+
+* update dependencies and upgrade git2 to 0.13.0
+
 ## v6.2.0 (2020-03-06)
 
 * Add support for setting the last seen reference directly. Useful in conjunction with `peek_changes(…)`.

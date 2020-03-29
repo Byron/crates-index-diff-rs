@@ -1,3 +1,7 @@
+## v7.0.1 (2020-03-29)
+
+* disable unused dependency in git2 for lower compile times
+
 ## v7.0.0 (2020-03-22)
 
 * update dependencies and upgrade git2 to 0.13.0

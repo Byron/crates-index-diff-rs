@@ -14,3 +14,9 @@ Add this to your Cargo.toml
 crates-index-diff = "5"
 ```
 
+# Notes…
+
+## …about collapsing of the crates.io history
+
+Usually every 6 months the crates.io index repository's history is collapse for improved performance. This library handles that case gracefully.
+

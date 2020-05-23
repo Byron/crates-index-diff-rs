@@ -1,3 +1,7 @@
+## v7.1.1 (2020-05-23)
+
+* Make new feature from v7.1.0 actually usable
+
 ## v7.1.0 (2020-05-23)
 
 * Add `Index::from_path_or_cloned_with_options(…)` to allow cloning from different crates repositories.

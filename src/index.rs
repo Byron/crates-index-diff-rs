@@ -23,7 +23,6 @@ pub struct Index {
 }
 
 /// Options for use in `Index::from_path_or_cloned_with_options`
-#[non_exhaustive]
 pub struct CloneOptions {
     pub repository_url: String,
 }
@@ -55,13 +54,16 @@ impl Index {
     /// An error will occour if the repository exists and the remote URL does not match the given repository URL.
     ///
     /// # Examples
-    /// 
-    /// ```
+    ///
+    /// ```no_run
     /// use crates_index_diff::{CloneOptions, Index};
     ///
     /// # let path = tempdir::TempDir::new("index").unwrap();
-    /// let mut options = CloneOptions::default();
-    /// options.repository_url = "https://github.com/rust-lang/staging.crates.io-index".into();
+    /// let mut options = CloneOptions {
+    ///   repository_url: "https://github.com/rust-lang/staging.crates.io-index".into(),
+    ///   ..Default::default()
+    /// };
+    ///
     ///
     /// let index = Index::from_path_or_cloned_with_options(path, options)?;
     /// # Ok::<(), git2::Error>(())

@@ -22,6 +22,11 @@ pub struct Index {
     repo: Repository,
 }
 
+/// Options for use in `Index::from_path_or_cloned_with_options`
+pub struct CloneOptions {
+    repository_url: String,
+}
+
 impl Index {
     /// Return the crates.io repository.
     pub fn repository(&self) -> &Repository {
@@ -37,21 +42,54 @@ impl Index {
     /// clone of the `crates.io` index.
     /// If the directory does not contain the repository or does not exist, it will be cloned from
     /// the official location automatically (with complete history).
-    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, GitError> {
+    ///
+    /// An error will occour if the repository exists and the remote URL does not match the given repository URL.
+    pub fn from_path_or_cloned_with_options(
+        path: impl AsRef<Path>,
+        options: CloneOptions,
+    ) -> Result<Index, GitError> {
+        let mut repo_did_exist = true;
         let repo = Repository::open(path.as_ref()).or_else(|err| {
             if err.class() == ErrorClass::Repository {
+                repo_did_exist = false;
                 RepoBuilder::new()
                     .bare(true)
-                    .clone(INDEX_GIT_URL, path.as_ref())
+                    .clone(&options.repository_url, path.as_ref())
             } else {
                 Err(err)
             }
         })?;
 
+        if repo_did_exist {
+            let remote = repo.find_remote("origin")?;
+            let actual_remote_url = remote
+                .url()
+                .ok_or_else(|| GitError::from_str("did not obtain URL of remote named 'origin'"))?;
+            if actual_remote_url != options.repository_url {
+                return Err(GitError::from_str(&format!(
+                    "Actual 'origin' remote url {:#?} did not match desired one at {:#?}",
+                    actual_remote_url, options.repository_url
+                )));
+            }
+        }
+
         Ok(Index {
             repo,
             seen_ref_name: LAST_SEEN_REFNAME,
         })
+    }
+
+    /// Return a new `Index` instance from the given `path`, which should contain a bare or non-bare
+    /// clone of the `crates.io` index.
+    /// If the directory does not contain the repository or does not exist, it will be cloned from
+    /// the official location automatically (with complete history).
+    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, GitError> {
+        Index::from_path_or_cloned_with_options(
+            path,
+            CloneOptions {
+                repository_url: INDEX_GIT_URL.into(),
+            },
+        )
     }
 
     /// As `peek_changes_with_options`, but without the options.
@@ -68,7 +106,7 @@ impl Index {
     /// as if `fetch_changes(…)` had been called.
     pub fn peek_changes_with_options(
         &self,
-        opts: Option<&mut git2::FetchOptions<'_>>,
+        options: Option<&mut git2::FetchOptions<'_>>,
     ) -> Result<(Vec<CrateVersion>, git2::Oid), GitError> {
         let from = self
             .last_seen_reference()
@@ -79,9 +117,9 @@ impl Index {
             })
             .or_else(|_| Oid::from_str(EMPTY_TREE_HASH))?;
         let to = {
-            self.repo
-                .find_remote("origin")
-                .and_then(|mut r| r.fetch(&["refs/heads/*:refs/remotes/origin/*"], opts, None))?;
+            self.repo.find_remote("origin").and_then(|mut r| {
+                r.fetch(&["refs/heads/*:refs/remotes/origin/*"], options, None)
+            })?;
             let latest_fetched_commit_oid =
                 self.repo.refname_to_id("refs/remotes/origin/master")?;
             latest_fetched_commit_oid
@@ -108,9 +146,9 @@ impl Index {
     /// state, which causes this method to have a different result each time it is called.
     pub fn fetch_changes_with_options(
         &self,
-        opts: Option<&mut git2::FetchOptions<'_>>,
+        options: Option<&mut git2::FetchOptions<'_>>,
     ) -> Result<Vec<CrateVersion>, GitError> {
-        let (changes, to) = self.peek_changes_with_options(opts)?;
+        let (changes, to) = self.peek_changes_with_options(options)?;
         self.set_last_seen_reference(to)?;
         Ok(changes)
     }

@@ -23,8 +23,17 @@ pub struct Index {
 }
 
 /// Options for use in `Index::from_path_or_cloned_with_options`
+#[non_exhaustive]
 pub struct CloneOptions {
-    repository_url: String,
+    pub repository_url: String,
+}
+
+impl Default for CloneOptions {
+    fn default() -> Self {
+        CloneOptions {
+            repository_url: INDEX_GIT_URL.into(),
+        }
+    }
 }
 
 impl Index {
@@ -44,6 +53,19 @@ impl Index {
     /// the official location automatically (with complete history).
     ///
     /// An error will occour if the repository exists and the remote URL does not match the given repository URL.
+    ///
+    /// # Examples
+    /// 
+    /// ```
+    /// use crates_index_diff::{CloneOptions, Index};
+    ///
+    /// # let path = tempdir::TempDir::new("index").unwrap();
+    /// let mut options = CloneOptions::default();
+    /// options.repository_url = "https://github.com/rust-lang/staging.crates.io-index".into();
+    ///
+    /// let index = Index::from_path_or_cloned_with_options(path, options)?;
+    /// # Ok::<(), git2::Error>(())
+    /// ```
     pub fn from_path_or_cloned_with_options(
         path: impl AsRef<Path>,
         options: CloneOptions,
@@ -84,12 +106,7 @@ impl Index {
     /// If the directory does not contain the repository or does not exist, it will be cloned from
     /// the official location automatically (with complete history).
     pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, GitError> {
-        Index::from_path_or_cloned_with_options(
-            path,
-            CloneOptions {
-                repository_url: INDEX_GIT_URL.into(),
-            },
-        )
+        Index::from_path_or_cloned_with_options(path, CloneOptions::default())
     }
 
     /// As `peek_changes_with_options`, but without the options.

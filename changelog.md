@@ -1,3 +1,7 @@
+## v7.1.0 (2020-05-23)
+
+* Add `Index::from_path_or_cloned_with_options(…)` to allow cloning from different crates repositories.
+
 ## v7.0.1 (2020-03-29)
 
 * disable unused dependency in git2 for lower compile times

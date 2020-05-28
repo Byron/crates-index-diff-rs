@@ -1,3 +1,7 @@
+## v7.1.2 (2020-05-28)
+
+* Documentation update
+
 ## v7.1.1 (2020-05-23)
 
 * Make new feature from v7.1.0 actually usable

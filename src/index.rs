@@ -23,14 +23,16 @@ pub struct Index {
 }
 
 /// Options for use in `Index::from_path_or_cloned_with_options`
-pub struct CloneOptions {
+pub struct CloneOptions<'a> {
     pub repository_url: String,
+    pub fetch_options: Option<git2::FetchOptions<'a>>,
 }
 
-impl Default for CloneOptions {
+impl<'a> Default for CloneOptions<'a> {
     fn default() -> Self {
         CloneOptions {
             repository_url: INDEX_GIT_URL.into(),
+            fetch_options: None,
         }
     }
 }
@@ -70,15 +72,20 @@ impl Index {
     /// ```
     pub fn from_path_or_cloned_with_options(
         path: impl AsRef<Path>,
-        options: CloneOptions,
+        CloneOptions {
+            repository_url,
+            fetch_options,
+        }: CloneOptions,
     ) -> Result<Index, GitError> {
         let mut repo_did_exist = true;
         let repo = Repository::open(path.as_ref()).or_else(|err| {
             if err.class() == ErrorClass::Repository {
                 repo_did_exist = false;
-                RepoBuilder::new()
-                    .bare(true)
-                    .clone(&options.repository_url, path.as_ref())
+                let mut builder = RepoBuilder::new();
+                if let Some(fo) = fetch_options {
+                    builder.fetch_options(fo);
+                }
+                builder.bare(true).clone(&repository_url, path.as_ref())
             } else {
                 Err(err)
             }
@@ -89,10 +96,10 @@ impl Index {
             let actual_remote_url = remote
                 .url()
                 .ok_or_else(|| GitError::from_str("did not obtain URL of remote named 'origin'"))?;
-            if actual_remote_url != options.repository_url {
+            if actual_remote_url != repository_url {
                 return Err(GitError::from_str(&format!(
                     "Actual 'origin' remote url {:#?} did not match desired one at {:#?}",
-                    actual_remote_url, options.repository_url
+                    actual_remote_url, repository_url
                 )));
             }
         }

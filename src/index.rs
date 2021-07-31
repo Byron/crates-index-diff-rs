@@ -23,7 +23,6 @@ pub struct Index {
 }
 
 /// Options for use in `Index::from_path_or_cloned_with_options`
-#[non_exhaustive]
 pub struct CloneOptions<'a> {
     pub repository_url: String,
     pub fetch_options: Option<git2::FetchOptions<'a>>,

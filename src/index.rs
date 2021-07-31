@@ -70,6 +70,34 @@ impl Index {
     /// let index = Index::from_path_or_cloned_with_options(path, options)?;
     /// # Ok::<(), git2::Error>(())
     /// ```
+    /// Or to access a private repository, use fetch options.
+    ///
+    /// ```no_run
+    /// use crates_index_diff::{CloneOptions, Index};
+    /// let fo = {
+    ///     let mut fo = git2::FetchOptions::new();
+    ///     fo.remote_callbacks({
+    ///         let mut callbacks = git2::RemoteCallbacks::new();
+    ///         callbacks.credentials(|_url, username_from_url, _allowed_types| {
+    ///             git2::Cred::ssh_key_from_memory(
+    ///                 username_from_url.unwrap(),
+    ///                 None,
+    ///                 &std::env::var("PRIVATE_KEY").unwrap(),
+    ///                 None,
+    ///             )
+    ///         });
+    ///         callbacks
+    ///     });
+    ///     fo
+    /// };
+    /// Index::from_path_or_cloned_with_options(
+    ///     "index",
+    ///     CloneOptions {
+    ///         repository_url: "git@github.com:private-index/goes-here.git".into(),
+    ///         fetch_options: Some(fo),
+    ///     },
+    /// ).unwrap();
+    /// ```
     pub fn from_path_or_cloned_with_options(
         path: impl AsRef<Path>,
         CloneOptions {

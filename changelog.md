@@ -1,3 +1,7 @@
+## v8.0.0 (2021-07-31)
+
+* Add fetch-options to `CloneOptions` to allow private crate index repositories
+
 ## v7.1.2 (2020-05-28)
 
 * Documentation update

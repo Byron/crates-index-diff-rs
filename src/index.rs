@@ -180,7 +180,7 @@ impl Index {
             .or_else(|_| Oid::from_str(EMPTY_TREE_HASH))?;
         let to = {
             self.repo.find_remote("origin").and_then(|mut r| {
-                r.fetch(&["refs/heads/*:refs/remotes/origin/*"], options, None)
+                r.fetch(&["refs/heads/master:refs/remotes/origin/master"], options, None)
             })?;
             let latest_fetched_commit_oid =
                 self.repo.refname_to_id("refs/remotes/origin/master")?;

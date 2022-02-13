@@ -67,7 +67,15 @@ fn quick_changes_since_last_fetch() {
         )
         .expect("reset success");
     let num_seen_after_reset = index.fetch_changes().unwrap().len();
-    assert!(seen_marker_ref == origin_master_of(&index));
+    let origin_master = origin_master_of(&index);
+    assert!(
+        seen_marker_ref == origin_master,
+        "{} ({}) != {} ({})",
+        seen_marker_ref.name().unwrap(),
+        seen_marker_ref.peel_to_commit().unwrap().id(),
+        origin_master.name().unwrap(),
+        origin_master.peel_to_commit().unwrap().id()
+    );
     assert!(num_seen_after_reset < num_changes_since_first_commit);
     assert!(num_seen_after_reset > 1000);
 

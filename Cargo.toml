@@ -9,7 +9,7 @@ repository = "https://github.com/Byron/crates-index-diff-rs"
 version = "8.0.0"
 edition = "2018"
 readme = "changelog.md"
-include = ["src/**/*", "LICENSE.md", "README.md", "changelog.md"]
+include = ["src/**/*", "LICENSE.md", "README.md", "CHANGELOG.md"]
 
 [dependencies]
 serde = "1"

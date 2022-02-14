@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 8.0.1 (2022-02-14)
 
  - Only download the master branch on clone, not all branches, to greatly reduce the initial download size from nearly 800MB to just about 100MB.
 
@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
-    - prepare changelog ([`962ff4e`](https://github.com/Byron/crates-index-diff-rs/commit/962ff4e504584da0f1cb852b73a756827020d91d))
+    - prepare changelog ([`76ae38d`](https://github.com/Byron/crates-index-diff-rs/commit/76ae38d8bccc3518c11bb9f5154b8fd8a993e13f))
     - Add some more debugging info to failing test ([`b111e03`](https://github.com/Byron/crates-index-diff-rs/commit/b111e037619a9e36f5227957b46eaaeece8321f4))
     - Only fetch the master crates.io branch, not all branches ([`79cf4ca`](https://github.com/Byron/crates-index-diff-rs/commit/79cf4cab3c444b3c53c43050fd222db984e4c717))
 </details>
@@ -599,19 +599,11 @@ Add a tutorial to the documentation.
 
 * **makefile:**  make quick tests quick again ([9aa756ae](https://github.com/Byron/crates-index-diff-rs/commit/9aa756ae534e78fc1c9148a0f6eda27ff07350b5))
  - <csr-id-9aa756ae534e78fc1c9148a0f6eda27ff07350b5/> make quick tests quick again
-
-#### Features
-
 * **display:**  implementation for changetype ([8ed9a81f](https://github.com/Byron/crates-index-diff-rs/commit/8ed9a81f0a84c43944f29f8407554303d84f7248))
-
-
 
 ### New Features
 
  - <csr-id-8ed9a81f0a84c43944f29f8407554303d84f7248/> implementation for changetype
-
-#### Chore
-
  - <csr-id-de4a284687fb476dd70bed3a4eb7e1737aff57ea/> v1.0.1
 
 ### Commit Statistics
@@ -634,6 +626,9 @@ Add a tutorial to the documentation.
     - make quick tests quick again ([`9aa756a`](https://github.com/Byron/crates-index-diff-rs/commit/9aa756ae534e78fc1c9148a0f6eda27ff07350b5))
     - crates.io badge ([`304dfaf`](https://github.com/Byron/crates-index-diff-rs/commit/304dfafe95b23703f3b6d11230b487304d5d6bd0))
 </details>
+
+<csr-unknown>
+FeaturesChore<csr-unknown/>
 
 ## v1.0.0 (2016-12-26)
 

@@ -17,7 +17,7 @@ serde_derive = "1"
 serde_json = "1"
 
 [dependencies.git2]
-version = "0.13.0"
+version = "0.14.0"
 default-features = false
 features = ["https"]
 

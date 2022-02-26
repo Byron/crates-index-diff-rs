@@ -4,6 +4,7 @@ use std::{collections::HashMap, env, path::PathBuf};
 use tempdir::TempDir;
 
 const NUM_VERSIONS_AT_RECENT_COMMIT: usize = 39752;
+// TODO: find new hashes for the ones below with similar states as they don't exist anymore. See ignored tests.
 const REV_ONE_ADDED: &'static str = "615c9c41942a3ba13e088fbcb1470c61b169a187";
 const REV_ONE_YANKED: &'static str = "8cf8fbad7876586ced34c4b778f6a80fadd2a59b";
 const REV_ONE_UNYANKED: &'static str = "f8cb00181";
@@ -35,6 +36,7 @@ fn origin_master_of(index: &Index) -> Reference<'_> {
 }
 
 #[test]
+#[ignore]
 fn quick_changes_since_last_fetch() {
     let (mut index, _tmp) = make_index();
     index.seen_ref_name = "refs/our-test-ref_because-we-can_hidden-from-ui";
@@ -111,6 +113,7 @@ fn changes_of(index: &Index, commit: &str) -> Vec<CrateVersion> {
 }
 
 #[test]
+#[ignore]
 fn quick_traverse_unyanked_crates() {
     //    [CrateVersion { dependencies: [Dependency { name: "freetype-rs", required_version: "^0.11", features: [], optional: false, default_features: true, target: None, kind: Some("normal"), package: None }, Dependency { name: "gfx", required_version: "^0.12.2", features: [], optional: false, default_features: true, target: None, kind: Some("normal"), package: None }, Dependency { name: "glutin", required_version: "^0.6", features: [], optional: false, default_features: true, target: None, kind: Some("dev"), package: None }, Dependency { name: "gfx_window_glutin", required_version: "^0.12", features: [], optional: false, default_features: true, target: None, kind: Some("dev"), package: None }] }]
     let (index, _tmp) = make_index();
@@ -176,6 +179,7 @@ fn quick_traverse_unyanked_crates() {
 }
 
 #[test]
+#[ignore]
 fn quick_traverse_yanked_crates() {
     let (index, _tmp) = make_index();
 
@@ -194,6 +198,7 @@ fn quick_traverse_yanked_crates() {
 }
 
 #[test]
+#[ignore]
 fn quick_traverse_added_crates() {
     let (index, _tmp) = make_index();
     assert_eq!(index.changes("foo", REV_ONE_ADDED).is_err(), true);

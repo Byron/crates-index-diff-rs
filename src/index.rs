@@ -180,13 +180,11 @@ impl Index {
             .or_else(|_| Oid::from_str(EMPTY_TREE_HASH))?;
         let to = {
             self.repo.find_remote("origin").and_then(|mut r| {
-                let refspec = if cfg!(debug_assertions) {
-                    // NOTE: this is just to make tests work which need the entire ever growing history
-                    "refs/heads/*:refs/remotes/origin/*"
-                } else {
-                    "refs/heads/master:refs/remotes/origin/master"
-                };
-                r.fetch(&[refspec], options, None)
+                r.fetch(
+                    &["refs/heads/master:refs/remotes/origin/master"],
+                    options,
+                    None,
+                )
             })?;
             let latest_fetched_commit_oid =
                 self.repo.refname_to_id("refs/remotes/origin/master")?;

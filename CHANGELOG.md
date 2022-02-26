@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- Upgrade to `git2` v0.14, a BREAKING change. In order to use this release, assure that other dependencies also use `git2` v0.14.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 5 commits contributed to the release.
+ - 12 days passed between releases.
+ - 0 commits where understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - ignore certain tests fo now until new hashes are found that work ([`e78694f`](https://github.com/Byron/crates-index-diff-rs/commit/e78694f123f715bdd4bb79d150bcee8d00b49822))
+    - Revert "see if this special case fixes tests" ([`5af8ec4`](https://github.com/Byron/crates-index-diff-rs/commit/5af8ec4b39ab067f73c0cb46526170270dbefefb))
+    - prep for renaming 'master' to 'main' ([`e228d92`](https://github.com/Byron/crates-index-diff-rs/commit/e228d92e36869ae562ac5b272912ec773ce01d35))
+    - see if this special case fixes tests ([`f00226b`](https://github.com/Byron/crates-index-diff-rs/commit/f00226be073cdab00afc7933eb7065a6c48ff972))
+    - upgrade git2 to 0.14.0 ([`448eec7`](https://github.com/Byron/crates-index-diff-rs/commit/448eec7bb9cfeca8ea869429f3272aa44a750035))
+</details>
+
 ## 8.0.1 (2022-02-14)
 
  - Only download the master branch on clone, not all branches, to greatly reduce the initial download size from nearly 800MB to just about 100MB.
@@ -13,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
+ - 4 commits contributed to the release.
  - 197 days passed between releases.
  - 0 commits where understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
@@ -25,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v8.0.1 ([`91df107`](https://github.com/Byron/crates-index-diff-rs/commit/91df107100b41ae7448ae64976f9b404776382bc))
     - prepare changelog ([`76ae38d`](https://github.com/Byron/crates-index-diff-rs/commit/76ae38d8bccc3518c11bb9f5154b8fd8a993e13f))
     - Add some more debugging info to failing test ([`b111e03`](https://github.com/Byron/crates-index-diff-rs/commit/b111e037619a9e36f5227957b46eaaeece8321f4))
     - Only fetch the master crates.io branch, not all branches ([`79cf4ca`](https://github.com/Byron/crates-index-diff-rs/commit/79cf4cab3c444b3c53c43050fd222db984e4c717))
@@ -626,9 +654,6 @@ Add a tutorial to the documentation.
     - make quick tests quick again ([`9aa756a`](https://github.com/Byron/crates-index-diff-rs/commit/9aa756ae534e78fc1c9148a0f6eda27ff07350b5))
     - crates.io badge ([`304dfaf`](https://github.com/Byron/crates-index-diff-rs/commit/304dfafe95b23703f3b6d11230b487304d5d6bd0))
 </details>
-
-<csr-unknown>
-FeaturesChore<csr-unknown/>
 
 ## v1.0.0 (2016-12-26)
 

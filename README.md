@@ -10,7 +10,7 @@ It will only need a bare clone, which saves resources.
 Add this to your Cargo.toml
 ```toml
 [dependencies]
-crates-index-diff = "5"
+crates-index-diff = "9"
 ```
 
 # Notes…

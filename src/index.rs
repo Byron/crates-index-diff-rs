@@ -1,9 +1,8 @@
-use super::CrateVersion;
-use serde_json;
+use super::{Change, CrateVersion};
 use std::path::Path;
 
 use git2::{
-    build::RepoBuilder, Delta, DiffFormat, Error as GitError, ErrorClass, Object, ObjectType, Oid,
+    build::RepoBuilder, Delta, Error as GitError, ErrorClass, Object, ObjectType, Oid,
     Reference, Repository, Tree,
 };
 use std::str;
@@ -147,11 +146,11 @@ impl Index {
     }
 
     /// As `peek_changes_with_options`, but without the options.
-    pub fn peek_changes(&self) -> Result<(Vec<CrateVersion>, git2::Oid), GitError> {
+    pub fn peek_changes(&self) -> Result<(Vec<Change>, git2::Oid), GitError> {
         self.peek_changes_with_options(None)
     }
 
-    /// Return all `CrateVersion`s that are observed between the last time `fetch_changes(…)` was called
+    /// Return all `Change`s that are observed between the last time `fetch_changes(…)` was called
     /// and the latest state of the `crates.io` index repository, which is obtained by fetching
     /// the remote called `origin`.
     /// The `last_seen_reference()` will not be created or updated.
@@ -169,7 +168,7 @@ impl Index {
     pub fn peek_changes_with_options(
         &self,
         options: Option<&mut git2::FetchOptions<'_>>,
-    ) -> Result<(Vec<CrateVersion>, git2::Oid), GitError> {
+    ) -> Result<(Vec<Change>, git2::Oid), GitError> {
         let from = self
             .last_seen_reference()
             .and_then(|r| {
@@ -201,11 +200,11 @@ impl Index {
     }
 
     /// As `fetch_changes_with_options`, but without the options.
-    pub fn fetch_changes(&self) -> Result<Vec<CrateVersion>, GitError> {
+    pub fn fetch_changes(&self) -> Result<Vec<Change>, GitError> {
         self.fetch_changes_with_options(None)
     }
 
-    /// Return all `CrateVersion`s that are observed between the last time this method was called
+    /// Return all `Change`s that are observed between the last time this method was called
     /// and the latest state of the `crates.io` index repository, which is obtained by fetching
     /// the remote called `origin`.
     /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
@@ -221,7 +220,7 @@ impl Index {
     pub fn fetch_changes_with_options(
         &self,
         options: Option<&mut git2::FetchOptions<'_>>,
-    ) -> Result<Vec<CrateVersion>, GitError> {
+    ) -> Result<Vec<Change>, GitError> {
         let (changes, to) = self.peek_changes_with_options(options)?;
         self.set_last_seen_reference(to)?;
         Ok(changes)
@@ -253,7 +252,7 @@ impl Index {
         &self,
         from: impl AsRef<str>,
         to: impl AsRef<str>,
-    ) -> Result<Vec<CrateVersion>, GitError> {
+    ) -> Result<Vec<Change>, GitError> {
         self.changes_from_objects(
             &self.repo.revparse_single(from.as_ref())?,
             &self.repo.revparse_single(to.as_ref())?,
@@ -266,7 +265,7 @@ impl Index {
         &self,
         from: &Object,
         to: &Object,
-    ) -> Result<Vec<CrateVersion>, GitError> {
+    ) -> Result<Vec<Change>, GitError> {
         fn into_tree<'a>(repo: &'a Repository, obj: &Object) -> Result<Tree<'a>, GitError> {
             repo.find_tree(match obj.kind() {
                 Some(ObjectType::Commit) => obj
@@ -285,24 +284,41 @@ impl Index {
             Some(&into_tree(&self.repo, to)?),
             None,
         )?;
-        let mut res: Vec<CrateVersion> = Vec::new();
-        diff.print(DiffFormat::Patch, |delta, _, diffline| {
-            if diffline.origin() != LINE_ADDED_INDICATOR {
-                return true;
-            }
+        let mut changes: Vec<Change> = Vec::new();
+        let mut deletes: Vec<String> = Vec::new();
+        diff.foreach(
+            &mut |delta, _| {
+                if delta.status() == Delta::Deleted {
+                    if let Some(path) = delta.new_file().path() {
+                        if let Some(file_name) = path.file_name() {
+                            deletes.push(file_name.to_string_lossy().to_string());
+                        }
+                    }
+                }
+                true
+            },
+            None,
+            None,
+            Some(&mut |delta, _hunk, diffline| {
+                if diffline.origin() != LINE_ADDED_INDICATOR {
+                    return true;
+                }
+                if !matches!(delta.status(), Delta::Added | Delta::Modified) {
+                    return true;
+                }
 
-            if !match delta.status() {
-                Delta::Added | Delta::Modified => true,
-                _ => false,
-            } {
-                return true;
-            }
+                if let Ok(crate_version) = serde_json::from_slice::<CrateVersion>(diffline.content()) {
+                    if crate_version.yanked {
+                        changes.push(Change::Yanked(crate_version));
+                    } else {
+                        changes.push(Change::Added(crate_version));
+                    }
+                }
+                true
+            }),
+        )?;
 
-            if let Ok(c) = serde_json::from_slice(diffline.content()) {
-                res.push(c)
-            }
-            true
-        })
-        .map(|_| res)
+        changes.extend(deletes.iter().map(|krate| Change::Deleted(krate.clone())));
+        Ok(changes)
     }
 }

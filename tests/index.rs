@@ -8,6 +8,7 @@ const NUM_VERSIONS_AT_RECENT_COMMIT: usize = 39752;
 const REV_ONE_ADDED: &'static str = "615c9c41942a3ba13e088fbcb1470c61b169a187";
 const REV_ONE_YANKED: &'static str = "8cf8fbad7876586ced34c4b778f6a80fadd2a59b";
 const REV_ONE_UNYANKED: &'static str = "f8cb00181";
+const REV_CRATE_DELETE: &str = "de5be3e8bb6cd7a3179857bdbdf28ca4fa23f84c";
 
 #[test]
 #[ignore] // This test takes too long for my taste, this library is stable by now
@@ -106,10 +107,18 @@ fn peek_changes_since_last_fetch() {
     );
 }
 
-fn changes_of(index: &Index, commit: &str) -> Vec<CrateVersion> {
+fn changes_of(index: &Index, commit: &str) -> Vec<Change> {
     index
-        .changes(format!("{}~1^{{tree}}", commit), format!("{}", commit))
+        .changes(format!("{}~1^{{tree}}", commit), commit)
         .expect("id to be valid and diff OK")
+}
+
+#[test]
+fn crate_delete() {
+    let (index, _tmp) = make_index();
+
+    let changes = changes_of(&index, REV_CRATE_DELETE);
+    assert_eq!(changes, vec![Change::Deleted("rustdecimal".to_string())],);
 }
 
 #[test]
@@ -121,9 +130,9 @@ fn quick_traverse_unyanked_crates() {
     let crates = changes_of(&index, REV_ONE_UNYANKED);
     assert_eq!(
         crates,
-        vec![CrateVersion {
+        vec![Change::Added(CrateVersion {
             name: "gfx_text".to_owned(),
-            kind: ChangeKind::Added,
+            yanked: false,
             version: "0.13.2".to_owned(),
             dependencies: vec![
                 Dependency {
@@ -174,7 +183,7 @@ fn quick_traverse_unyanked_crates() {
                 h
             },
             checksum: "d0b1240e3627e646f69685ddd3e7d83dd3ff3d586afe83bf3679082028183f2d".into(),
-        }]
+        })]
     );
 }
 
@@ -186,14 +195,14 @@ fn quick_traverse_yanked_crates() {
     let crates = changes_of(&index, REV_ONE_YANKED);
     assert_eq!(
         crates,
-        vec![CrateVersion {
+        vec![Change::Yanked(CrateVersion {
             name: "sha3".to_owned(),
-            kind: ChangeKind::Yanked,
+            yanked: true,
             version: "0.0.0".to_owned(),
             dependencies: Vec::new(),
             features: HashMap::new(),
             checksum: "dbba9d72d3d04e2167fb9c76ce22aed118eb003727bbe59774b9bf3603fa1f43".into(),
-        }]
+        })]
     );
 }
 
@@ -207,9 +216,9 @@ fn quick_traverse_added_crates() {
     let crates = changes_of(&index, REV_ONE_ADDED);
     assert_eq!(
         crates,
-        vec![CrateVersion {
+        vec![Change::Added(CrateVersion {
             name: "rpwg".to_owned(),
-            kind: ChangeKind::Added,
+            yanked: false,
             version: "0.1.0".to_owned(),
             dependencies: vec![
                 Dependency {
@@ -235,6 +244,6 @@ fn quick_traverse_added_crates() {
             ],
             features: HashMap::new(),
             checksum: "14437a3702699dba0c49ddc401a0529898e83f8b769348549985a0f4d818d3ca".into(),
-        }]
+        })]
     );
 }

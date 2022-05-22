@@ -18,7 +18,7 @@ fn test_parse_crate_version() {
         c,
         CrateVersion {
             name: "test".to_string(),
-            kind: ChangeKind::Yanked,
+            yanked: true,
             version: "1.0.0".to_string(),
             dependencies: Vec::new(),
             features: HashMap::new(),

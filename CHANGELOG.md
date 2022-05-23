@@ -5,17 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 10.0.0 (2022-05-23)
 
 ### New Features (BREAKING)
 
-- <csr-id-38319375d07ca5d09700d40a778c367564cd8a66/> Add support for detecting deleted crates.
-  Previously there was no need to do that as deletions couldn't happen -
-  crates are yanked instead.
-
-  Now that the ecosystem experienced its first (known) supply-chain attack
-  crates can also be deleted and we should be able to detect that to allow
-  downstream users to act on this automatically.
+ - <csr-id-38319375d07ca5d09700d40a778c367564cd8a66/> Add support for detecting deleted crates.
+   Previously there was no need to do that as deletions couldn't happen -
+   crates are yanked instead.
+   
+   Now that the ecosystem experienced its first (known) supply-chain attack
+   crates can also be deleted and we should be able to detect that to allow
+   downstream users to act on this automatically.
 
 ### Bug Fixes
 
@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 8 commits contributed to the release over the course of 84 calendar days.
+ - 9 commits contributed to the release over the course of 84 calendar days.
  - 85 days passed between releases.
  - 2 commits where understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - prepare changelog prior to release ([`cc19788`](https://github.com/Byron/crates-index-diff-rs/commit/cc1978812ca6d6d0177fb3f2b4550181b5f32465))
     - Assure tests run serially without needing --jobs 1 ([`2701f5c`](https://github.com/Byron/crates-index-diff-rs/commit/2701f5c65fd104c9d481ebdf041806e6dee2f07a))
     - Merge branch 'syphar-handle-crate-delets' ([`aba9087`](https://github.com/Byron/crates-index-diff-rs/commit/aba908736924935c9d3b07ab793c28879368bc5f))
     - thanks clippy ([`df91215`](https://github.com/Byron/crates-index-diff-rs/commit/df912155a89f765853c6901e71df388558bd11b7))
@@ -672,6 +673,7 @@ Add a tutorial to the documentation.
 ## v1.0.1 (2016-12-26)
 
 <csr-id-de4a284687fb476dd70bed3a4eb7e1737aff57ea/>
+<csr-id-304dfafe95b23703f3b6d11230b487304d5d6bd0/>
 
 ### Other
 
@@ -732,6 +734,21 @@ Add a tutorial to the documentation.
 <csr-id-97b417ad71b3070e3663d1ce6d998f24a0bf1365/>
 <csr-id-fdf281ee3b301ab370fe1d3ea6aeb1dd5e0536d1/>
 <csr-id-1c0b2c0a3723afd587779880337f5a5516c063f1/>
+<csr-id-706636b5198595ff8573505350f49aad241edfc6/>
+<csr-id-91bf44d4f3c4454316f32489ba30cd250422065d/>
+<csr-id-c4bf948b5e2c5590e58a134a3003acde7738e42d/>
+<csr-id-b0f19b0a5d754cd9153b30ca9b363fa9534777da/>
+<csr-id-56d416aae569d8dbcd568428a7489072eb749249/>
+<csr-id-ed7ca366454a0c99698f18beb5955cd6606c7e1e/>
+<csr-id-708d9c0680b797026da731bc9a9874ac71bc125b/>
+<csr-id-2ef9c028812134af6bf23f72a4ea9850c407a06a/>
+<csr-id-8048a2cf00618d669c9176b0e94353dd1cfa9011/>
+<csr-id-887c088495ef78e21ca88091963dbfd0661e08ec/>
+<csr-id-8801ec2d1d718eb73200d29ff23a958b5b1ba9d7/>
+<csr-id-e451067a939a848082def317e1cceb487910aba2/>
+<csr-id-d49f62fa41dbba9278ec2080ae2b91f72dc6834e/>
+<csr-id-094c788f0b9ebd7beda17a8a7ee71d88ebbaad71/>
+<csr-id-f9d531a63269e8e236489c9a7bb56a6bafdd9eeb/>
 
 ### Chore
 

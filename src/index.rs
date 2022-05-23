@@ -2,8 +2,8 @@ use super::{Change, CrateVersion};
 use std::path::Path;
 
 use git2::{
-    build::RepoBuilder, Delta, Error as GitError, ErrorClass, Object, ObjectType, Oid,
-    Reference, Repository, Tree,
+    build::RepoBuilder, Delta, Error as GitError, ErrorClass, Object, ObjectType, Oid, Reference,
+    Repository, Tree,
 };
 use std::str;
 
@@ -23,7 +23,9 @@ pub struct Index {
 
 /// Options for use in `Index::from_path_or_cloned_with_options`
 pub struct CloneOptions<'a> {
+    /// The url from which the repository should be cloned.
     pub repository_url: String,
+    /// Git2 fetch options to control exactly how to clone.
     pub fetch_options: Option<git2::FetchOptions<'a>>,
 }
 
@@ -307,7 +309,9 @@ impl Index {
                     return true;
                 }
 
-                if let Ok(crate_version) = serde_json::from_slice::<CrateVersion>(diffline.content()) {
+                if let Ok(crate_version) =
+                    serde_json::from_slice::<CrateVersion>(diffline.content())
+                {
                     if crate_version.yanked {
                         changes.push(Change::Yanked(crate_version));
                     } else {

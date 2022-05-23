@@ -14,7 +14,7 @@ pub enum Change {
 }
 
 impl fmt::Display for Change {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
             "{}",
@@ -28,7 +28,7 @@ impl fmt::Display for Change {
 }
 
 /// Pack all information we know about a change made to a version of a crate.
-#[derive(Clone, Serialize, Deserialize, Eq, PartialEq, Debug)]
+#[derive(Clone, serde::Serialize, serde::Deserialize, Eq, PartialEq, Debug)]
 pub struct CrateVersion {
     /// The crate name, i.e. `clap`.
     pub name: String,
@@ -48,7 +48,7 @@ pub struct CrateVersion {
 }
 
 /// A single dependency of a specific crate version
-#[derive(Clone, Serialize, Deserialize, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(Clone, serde::Serialize, serde::Deserialize, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub struct Dependency {
     /// The crate name
     pub name: String,

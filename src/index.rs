@@ -45,7 +45,7 @@ impl Index {
     }
 
     /// Return the reference pointing to the state we have seen after calling `fetch_changes()`.
-    pub fn last_seen_reference(&self) -> Result<Reference, GitError> {
+    pub fn last_seen_reference(&self) -> Result<Reference<'_>, GitError> {
         self.repo.find_reference(self.seen_ref_name)
     }
 
@@ -104,7 +104,7 @@ impl Index {
         CloneOptions {
             repository_url,
             fetch_options,
-        }: CloneOptions,
+        }: CloneOptions<'_>,
     ) -> Result<Index, GitError> {
         let mut repo_did_exist = true;
         let repo = Repository::open(path.as_ref()).or_else(|err| {
@@ -265,10 +265,10 @@ impl Index {
     /// to either `Commit`s or `Tree`s.
     pub fn changes_from_objects(
         &self,
-        from: &Object,
-        to: &Object,
+        from: &Object<'_>,
+        to: &Object<'_>,
     ) -> Result<Vec<Change>, GitError> {
-        fn into_tree<'a>(repo: &'a Repository, obj: &Object) -> Result<Tree<'a>, GitError> {
+        fn into_tree<'a>(repo: &'a Repository, obj: &Object<'_>) -> Result<Tree<'a>, GitError> {
             repo.find_tree(match obj.kind() {
                 Some(ObjectType::Commit) => obj
                     .as_commit()

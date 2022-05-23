@@ -22,3 +22,4 @@ features = ["https"]
 
 [dev-dependencies]
 tempdir = "0.3.5"
+serial_test = "0.6.0"

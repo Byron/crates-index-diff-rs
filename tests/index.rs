@@ -1,5 +1,6 @@
 use crates_index_diff::*;
 use git2::Reference;
+use serial_test::serial;
 use std::{collections::HashMap, env, path::PathBuf};
 use tempdir::TempDir;
 
@@ -37,6 +38,7 @@ fn origin_master_of(index: &Index) -> Reference<'_> {
 }
 
 #[test]
+#[serial]
 #[ignore]
 fn quick_changes_since_last_fetch() {
     let (mut index, _tmp) = make_index();
@@ -87,6 +89,7 @@ fn quick_changes_since_last_fetch() {
 }
 
 #[test]
+#[serial]
 fn peek_changes_since_last_fetch() {
     let (mut index, _tmp) = make_index();
     index.seen_ref_name = "refs/our-test-ref_because-we-can_hidden-from-ui";
@@ -114,6 +117,7 @@ fn changes_of(index: &Index, commit: &str) -> Vec<Change> {
 }
 
 #[test]
+#[serial]
 fn crate_delete() {
     let (index, _tmp) = make_index();
 
@@ -123,6 +127,7 @@ fn crate_delete() {
 
 #[test]
 #[ignore]
+#[serial]
 fn quick_traverse_unyanked_crates() {
     //    [CrateVersion { dependencies: [Dependency { name: "freetype-rs", required_version: "^0.11", features: [], optional: false, default_features: true, target: None, kind: Some("normal"), package: None }, Dependency { name: "gfx", required_version: "^0.12.2", features: [], optional: false, default_features: true, target: None, kind: Some("normal"), package: None }, Dependency { name: "glutin", required_version: "^0.6", features: [], optional: false, default_features: true, target: None, kind: Some("dev"), package: None }, Dependency { name: "gfx_window_glutin", required_version: "^0.12", features: [], optional: false, default_features: true, target: None, kind: Some("dev"), package: None }] }]
     let (index, _tmp) = make_index();
@@ -189,6 +194,7 @@ fn quick_traverse_unyanked_crates() {
 
 #[test]
 #[ignore]
+#[serial]
 fn quick_traverse_yanked_crates() {
     let (index, _tmp) = make_index();
 
@@ -208,6 +214,7 @@ fn quick_traverse_yanked_crates() {
 
 #[test]
 #[ignore]
+#[serial]
 fn quick_traverse_added_crates() {
     let (index, _tmp) = make_index();
     assert!(index.changes("foo", REV_ONE_ADDED).is_err());

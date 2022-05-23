@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### New Features (BREAKING)
+
+- <csr-id-38319375d07ca5d09700d40a778c367564cd8a66/> Add support for detecting deleted crates.
+  Previously there was no need to do that as deletions couldn't happen -
+  crates are yanked instead.
+
+  Now that the ecosystem experienced its first (known) supply-chain attack
+  crates can also be deleted and we should be able to detect that to allow
+  downstream users to act on this automatically.
+
+### Bug Fixes
+
+ - <csr-id-d273245d99836ef799946373444a0b85e02523d0/> update version in usage example
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 8 commits contributed to the release over the course of 84 calendar days.
+ - 85 days passed between releases.
+ - 2 commits where understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Thanks Clippy
+
+<csr-read-only-do-not-edit/>
+
+[Clippy](https://github.com/rust-lang/rust-clippy) helped 1 time to make code idiomatic. 
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Assure tests run serially without needing --jobs 1 ([`2701f5c`](https://github.com/Byron/crates-index-diff-rs/commit/2701f5c65fd104c9d481ebdf041806e6dee2f07a))
+    - Merge branch 'syphar-handle-crate-delets' ([`aba9087`](https://github.com/Byron/crates-index-diff-rs/commit/aba908736924935c9d3b07ab793c28879368bc5f))
+    - thanks clippy ([`df91215`](https://github.com/Byron/crates-index-diff-rs/commit/df912155a89f765853c6901e71df388558bd11b7))
+    - disallow Rust 2018 idioms for clearer code ([`220b943`](https://github.com/Byron/crates-index-diff-rs/commit/220b9435b1b1da33410f4630166b41e376409df3))
+    - Add support for detecting deleted crates. ([`3831937`](https://github.com/Byron/crates-index-diff-rs/commit/38319375d07ca5d09700d40a778c367564cd8a66))
+    - Upgrade makefile for better auto-docs ([`0301da5`](https://github.com/Byron/crates-index-diff-rs/commit/0301da56a751018c8405ea0a46ba07487d9e2648))
+    - refactor logic to handle crate-deletes ([`40655bd`](https://github.com/Byron/crates-index-diff-rs/commit/40655bdc5b1ba2ba20c6c9a99269fe13f124367a))
+    - update version in usage example ([`d273245`](https://github.com/Byron/crates-index-diff-rs/commit/d273245d99836ef799946373444a0b85e02523d0))
+</details>
+
 ## 9.0.0 (2022-02-26)
 
 - Upgrade to `git2` v0.14, a BREAKING change. In order to use this release, assure that other dependencies also use `git2` v0.14.
@@ -13,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release.
+ - 7 commits contributed to the release.
  - 12 days passed between releases.
  - 0 commits where understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
@@ -25,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v9.0.0 ([`31e82c7`](https://github.com/Byron/crates-index-diff-rs/commit/31e82c799c3da9dade6f78082aaf4640204eb44d))
     - update changelog; bump major version ([`997ea73`](https://github.com/Byron/crates-index-diff-rs/commit/997ea73473ffe42a7c72bf2bcfe93372902497da))
     - ignore certain tests fo now until new hashes are found that work ([`e78694f`](https://github.com/Byron/crates-index-diff-rs/commit/e78694f123f715bdd4bb79d150bcee8d00b49822))
     - Revert "see if this special case fixes tests" ([`5af8ec4`](https://github.com/Byron/crates-index-diff-rs/commit/5af8ec4b39ab067f73c0cb46526170270dbefefb))
@@ -624,6 +673,11 @@ Add a tutorial to the documentation.
 
 <csr-id-de4a284687fb476dd70bed3a4eb7e1737aff57ea/>
 
+### Other
+
+ - <csr-id-304dfafe95b23703f3b6d11230b487304d5d6bd0/> crates.io badge
+   [skip ci]
+
 ### Bug Fixes
 
 * **makefile:**  make quick tests quick again ([9aa756ae](https://github.com/Byron/crates-index-diff-rs/commit/9aa756ae534e78fc1c9148a0f6eda27ff07350b5))
@@ -691,6 +745,33 @@ Add a tutorial to the documentation.
  - <csr-id-3ce91e89b520b6497eceb961065e8898c5aba883/> intermediate crate info from hunk
    However, it's not yet working
  - <csr-id-f1568c02652781163055bcbc18bc4af0e6914cd2/> first commit
+
+### Other
+
+ - <csr-id-706636b5198595ff8573505350f49aad241edfc6/> docs for all remaining methods.
+ - <csr-id-91bf44d4f3c4454316f32489ba30cd250422065d/> documentation for crateversion
+ - <csr-id-c4bf948b5e2c5590e58a134a3003acde7738e42d/> customizations for us
+   This could possibly work actually
+ - <csr-id-b0f19b0a5d754cd9153b30ca9b363fa9534777da/> test osx as well
+ - <csr-id-56d416aae569d8dbcd568428a7489072eb749249/> allow to change seen-ref name
+ - <csr-id-ed7ca366454a0c99698f18beb5955cd6606c7e1e/> show backtrace
+ - <csr-id-708d9c0680b797026da731bc9a9874ac71bc125b/> attempt of fetch_changes implementation
+   It fails as it cannot create the correct reference.
+ - <csr-id-2ef9c028812134af6bf23f72a4ea9850c407a06a/> support for unyanking
+   We just count it as adding a crate, which also makes sense.
+ - <csr-id-8048a2cf00618d669c9176b0e94353dd1cfa9011/> handle yanked files
+ - <csr-id-887c088495ef78e21ca88091963dbfd0661e08ec/> now seeing the first added crates
+ - <csr-id-8801ec2d1d718eb73200d29ff23a958b5b1ba9d7/> automate running tests quickly
+   Using an existing checkout is important enough to put it into
+   a makefile for documentation and automation.
+ - <csr-id-e451067a939a848082def317e1cceb487910aba2/> support for commit'ishs for diffs
+ - <csr-id-d49f62fa41dbba9278ec2080ae2b91f72dc6834e/> first traversal method
+   The test fails for the wrong reason though, as it fails to
+   parse my refspec even though libgit2 seems to be able to do it
+   properly, and a recent-enough version is used.
+ - <csr-id-094c788f0b9ebd7beda17a8a7ee71d88ebbaad71/> test against all versions of rust
+ - <csr-id-f9d531a63269e8e236489c9a7bb56a6bafdd9eeb/> simplify travis
+   travis-cargo does nothing for us in this case.
 
 ### New Features
 

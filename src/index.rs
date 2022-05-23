@@ -187,9 +187,7 @@ impl Index {
                     None,
                 )
             })?;
-            let latest_fetched_commit_oid =
-                self.repo.refname_to_id("refs/remotes/origin/master")?;
-            latest_fetched_commit_oid
+            self.repo.refname_to_id("refs/remotes/origin/master")?
         };
 
         Ok((

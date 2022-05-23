@@ -5,9 +5,9 @@ use tempdir::TempDir;
 
 const NUM_VERSIONS_AT_RECENT_COMMIT: usize = 39752;
 // TODO: find new hashes for the ones below with similar states as they don't exist anymore. See ignored tests.
-const REV_ONE_ADDED: &'static str = "615c9c41942a3ba13e088fbcb1470c61b169a187";
-const REV_ONE_YANKED: &'static str = "8cf8fbad7876586ced34c4b778f6a80fadd2a59b";
-const REV_ONE_UNYANKED: &'static str = "f8cb00181";
+const REV_ONE_ADDED: &str = "615c9c41942a3ba13e088fbcb1470c61b169a187";
+const REV_ONE_YANKED: &str = "8cf8fbad7876586ced34c4b778f6a80fadd2a59b";
+const REV_ONE_UNYANKED: &str = "f8cb00181";
 const REV_CRATE_DELETE: &str = "de5be3e8bb6cd7a3179857bdbdf28ca4fa23f84c";
 
 #[test]
@@ -23,7 +23,7 @@ fn make_index() -> (Index, TempDir) {
     let index = Index::from_path_or_cloned(
         env::var("CRATES_INDEX_DIFF_TEST_EXISTING_INDEX")
             .map(PathBuf::from)
-            .unwrap_or(tmp.path().to_owned()),
+            .unwrap_or_else(|_| tmp.path().to_owned()),
     )
     .expect("successful clone");
     (index, tmp)
@@ -210,8 +210,8 @@ fn quick_traverse_yanked_crates() {
 #[ignore]
 fn quick_traverse_added_crates() {
     let (index, _tmp) = make_index();
-    assert_eq!(index.changes("foo", REV_ONE_ADDED).is_err(), true);
-    assert_eq!(index.changes(REV_ONE_ADDED, "bar").is_err(), true);
+    assert!(index.changes("foo", REV_ONE_ADDED).is_err());
+    assert!(index.changes(REV_ONE_ADDED, "bar").is_err());
 
     let crates = changes_of(&index, REV_ONE_ADDED);
     assert_eq!(

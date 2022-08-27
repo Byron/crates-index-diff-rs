@@ -9,12 +9,13 @@ mod changes_from_objects {
 
     #[test]
     fn addition() -> crate::Result {
-        let _index = index_ro()?;
-        let changes = changes(&_index, "initial commit")?;
+        let changes = changes(&index_ro()?, ":/initial commit")?;
         assert_eq!(changes.len(), 3228);
         assert!(matches!(
-            changes.first().expect("present"),
-            Change::Added(CrateVersion {name, ..}) if name == "gi-get-artifact"
+            changes
+                .first()
+                .and_then(|c| c.added().map(|v| v.name.as_str())),
+            Some("gi-get-artifact")
         ));
         assert!(matches!(
             changes.last().expect("present"),
@@ -22,13 +23,43 @@ mod changes_from_objects {
         ));
         Ok(())
     }
+    #[test]
+    fn deletion() -> crate::Result {
+        let changes = changes(&index_ro()?, "@~326")?;
+        assert_eq!(changes.len(), 1);
+        assert_eq!(changes.first().and_then(|c| c.deleted()), Some("girl"));
+        Ok(())
+    }
 
-    fn changes(index: &Index, commit_message: &str) -> crate::Result<Vec<Change>> {
+    #[test]
+    fn new_version() -> crate::Result {
+        let changes = changes(&index_ro()?, ":/Updating crate `git-repository#0.22.1`")?;
+        assert_eq!(changes.len(), 1);
+        assert_eq!(
+            changes
+                .first()
+                .and_then(|c| c.added().map(|v| v.name.as_str())),
+            Some("git-repository")
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn yanked() -> crate::Result {
+        let changes = changes(&index_ro()?, ":/Yanking crate `github_release_rs#0.1.0`")?;
+        assert_eq!(changes.len(), 1);
+        assert_eq!(
+            changes
+                .first()
+                .and_then(|c| c.yanked().map(|v| v.name.as_str())),
+            Some("github_release_rs")
+        );
+        Ok(())
+    }
+
+    fn changes(index: &Index, revspec: &str) -> crate::Result<Vec<Change>> {
         let repo = git::open(index.repository().path())?;
-        let commit = repo
-            .rev_parse(format!(":/{commit_message}").as_str())?
-            .single()
-            .unwrap();
+        let commit = repo.rev_parse(revspec)?.single().unwrap();
         let ancestor_tree = commit
             .object()?
             .into_commit()

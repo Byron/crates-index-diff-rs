@@ -77,7 +77,7 @@ mod changes_from_objects {
             .parent_ids()
             .next()
             .and_then(|parent| parent.object().ok()?.into_commit().tree_id().ok())
-            .unwrap_or(git::hash::ObjectId::empty_tree(repo.object_hash()).attach(&repo));
+            .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()).attach(&repo));
         Ok(index.changes_from_objects(
             &index
                 .repository()

@@ -9,6 +9,6 @@
 pub mod index;
 mod types;
 
-pub use types::{Index, Change, Dependency, CrateVersion};
+pub use types::{Change, CrateVersion, Dependency, Index};
 
 pub use git2;

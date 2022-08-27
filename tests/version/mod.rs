@@ -2,7 +2,7 @@ use crates_index_diff::*;
 use std::collections::HashMap;
 
 #[test]
-fn test_parse_crate_version() {
+fn parse_crate_version() {
     let c: CrateVersion = serde_json::from_str(
         r#"{
         "name": "test",

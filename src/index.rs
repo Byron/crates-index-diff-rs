@@ -1,12 +1,12 @@
 use super::{Change, CrateVersion};
 use std::path::Path;
 
+use crate::Index;
 use git2::{
     build::RepoBuilder, Delta, Error as GitError, ErrorClass, Object, ObjectType, Oid, Reference,
     Repository, Tree,
 };
 use std::str;
-use crate::Index;
 
 static INDEX_GIT_URL: &str = "https://github.com/rust-lang/crates.io-index";
 static LAST_SEEN_REFNAME: &str = "refs/heads/crates-index-diff_last-seen";
@@ -30,6 +30,7 @@ impl<'a> Default for CloneOptions<'a> {
     }
 }
 
+/// Access
 impl Index {
     /// Return the crates.io repository.
     pub fn repository(&self) -> &Repository {
@@ -40,7 +41,10 @@ impl Index {
     pub fn last_seen_reference(&self) -> Result<Reference<'_>, GitError> {
         self.repo.find_reference(self.seen_ref_name)
     }
+}
 
+/// Initialization
+impl Index {
     /// Return a new `Index` instance from the given `path`, which should contain a bare or non-bare
     /// clone of the `crates.io` index.
     /// If the directory does not contain the repository or does not exist, it will be cloned from
@@ -138,7 +142,10 @@ impl Index {
     pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, GitError> {
         Index::from_path_or_cloned_with_options(path, CloneOptions::default())
     }
+}
 
+/// Find changes without modifying the underling repository
+impl Index {
     /// As `peek_changes_with_options`, but without the options.
     pub fn peek_changes(&self) -> Result<(Vec<Change>, git2::Oid), GitError> {
         self.peek_changes_with_options(None)
@@ -189,66 +196,6 @@ impl Index {
             )?,
             to,
         ))
-    }
-
-    /// As `fetch_changes_with_options`, but without the options.
-    pub fn fetch_changes(&self) -> Result<Vec<Change>, GitError> {
-        self.fetch_changes_with_options(None)
-    }
-
-    /// Return all `Change`s that are observed between the last time this method was called
-    /// and the latest state of the `crates.io` index repository, which is obtained by fetching
-    /// the remote called `origin`.
-    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
-    /// state, which causes this method to have a different result each time it is called.
-    ///
-    /// # Resource Usage
-    ///
-    /// As this method fetches the git repository, loose objects or small packs may be created. Over time,
-    /// these will accumulate and either slow down subsequent operations, or cause them to fail due to exhaustion
-    /// of the maximum number of open file handles as configured with `ulimit`.
-    ///
-    /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
-    pub fn fetch_changes_with_options(
-        &self,
-        options: Option<&mut git2::FetchOptions<'_>>,
-    ) -> Result<Vec<Change>, GitError> {
-        let (changes, to) = self.peek_changes_with_options(options)?;
-        self.set_last_seen_reference(to)?;
-        Ok(changes)
-    }
-
-    /// Set the last seen reference to the given Oid. It will be created if it does not yet exists.
-    pub fn set_last_seen_reference(&self, to: Oid) -> Result<(), GitError> {
-        self.last_seen_reference()
-            .and_then(|mut seen_ref| {
-                seen_ref.set_target(to, "updating seen-ref head to latest fetched commit")
-            })
-            .or_else(|_err| {
-                self.repo.reference(
-                    self.seen_ref_name,
-                    to,
-                    true,
-                    "creating seen-ref at latest fetched commit",
-                )
-            })?;
-        Ok(())
-    }
-
-    /// Return all `CreateVersion`s observed between `from` and `to`. Both parameter are ref-specs
-    /// pointing to either a commit or a tree.
-    /// Learn more about specifying revisions
-    /// in the
-    /// [official documentation](https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html)
-    pub fn changes(
-        &self,
-        from: impl AsRef<str>,
-        to: impl AsRef<str>,
-    ) -> Result<Vec<Change>, GitError> {
-        self.changes_from_objects(
-            &self.repo.revparse_single(from.as_ref())?,
-            &self.repo.revparse_single(to.as_ref())?,
-        )
     }
 
     /// Similar to `changes()`, but requires `from` and `to` objects to be provided. They may point
@@ -314,5 +261,68 @@ impl Index {
 
         changes.extend(deletes.iter().map(|krate| Change::Deleted(krate.clone())));
         Ok(changes)
+    }
+}
+
+/// Find changes while changing the underlying repository in one way or another.
+impl Index {
+    /// As `fetch_changes_with_options`, but without the options.
+    pub fn fetch_changes(&self) -> Result<Vec<Change>, GitError> {
+        self.fetch_changes_with_options(None)
+    }
+
+    /// Return all `Change`s that are observed between the last time this method was called
+    /// and the latest state of the `crates.io` index repository, which is obtained by fetching
+    /// the remote called `origin`.
+    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
+    /// state, which causes this method to have a different result each time it is called.
+    ///
+    /// # Resource Usage
+    ///
+    /// As this method fetches the git repository, loose objects or small packs may be created. Over time,
+    /// these will accumulate and either slow down subsequent operations, or cause them to fail due to exhaustion
+    /// of the maximum number of open file handles as configured with `ulimit`.
+    ///
+    /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
+    pub fn fetch_changes_with_options(
+        &self,
+        options: Option<&mut git2::FetchOptions<'_>>,
+    ) -> Result<Vec<Change>, GitError> {
+        let (changes, to) = self.peek_changes_with_options(options)?;
+        self.set_last_seen_reference(to)?;
+        Ok(changes)
+    }
+
+    /// Set the last seen reference to the given Oid. It will be created if it does not yet exists.
+    pub fn set_last_seen_reference(&self, to: Oid) -> Result<(), GitError> {
+        self.last_seen_reference()
+            .and_then(|mut seen_ref| {
+                seen_ref.set_target(to, "updating seen-ref head to latest fetched commit")
+            })
+            .or_else(|_err| {
+                self.repo.reference(
+                    self.seen_ref_name,
+                    to,
+                    true,
+                    "creating seen-ref at latest fetched commit",
+                )
+            })?;
+        Ok(())
+    }
+
+    /// Return all `CreateVersion`s observed between `from` and `to`. Both parameter are ref-specs
+    /// pointing to either a commit or a tree.
+    /// Learn more about specifying revisions
+    /// in the
+    /// [official documentation](https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html)
+    pub fn changes(
+        &self,
+        from: impl AsRef<str>,
+        to: impl AsRef<str>,
+    ) -> Result<Vec<Change>, GitError> {
+        self.changes_from_objects(
+            &self.repo.revparse_single(from.as_ref())?,
+            &self.repo.revparse_single(to.as_ref())?,
+        )
     }
 }

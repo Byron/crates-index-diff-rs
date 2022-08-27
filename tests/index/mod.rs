@@ -57,6 +57,17 @@ mod changes_from_objects {
         Ok(())
     }
 
+    #[test]
+    fn normalization() -> crate::Result {
+        let changes = changes(&index_ro()?, ":/normalize")?;
+        assert_eq!(
+            changes.len(),
+            2356, // should be 0
+            "normalization changes the representation, but the data itself stays the same, BUT we can't do it yet"
+        );
+        Ok(())
+    }
+
     fn changes(index: &Index, revspec: &str) -> crate::Result<Vec<Change>> {
         let repo = git::open(index.repository().path())?;
         let commit = repo.rev_parse(revspec)?.single().unwrap();

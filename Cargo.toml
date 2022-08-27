@@ -24,6 +24,6 @@ default-features = false
 features = ["https"]
 
 [dev-dependencies]
-git-testtools = "0.7.1"
+git-testtools = "0.8.0"
 tempdir = "0.3.5"
 serial_test = "0.6.0"

@@ -1,6 +1,16 @@
 use std::collections::HashMap;
 
 use std::fmt;
+use git2::Repository;
+
+/// A wrapper for a repository of the crates.io index.
+pub struct Index {
+    /// The name and path of the reference used to keep track of the last seen state of the
+    /// crates.io repository. The default value is `refs/heads/crates-index-diff_last-seen`.
+    pub seen_ref_name: &'static str,
+    /// The crates.io repository.
+    pub(crate) repo: Repository,
+}
 
 /// Identify a kind of change that occurred to a crate
 #[derive(Clone, Eq, PartialEq, Debug)]

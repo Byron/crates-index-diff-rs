@@ -6,20 +6,12 @@ use git2::{
     Repository, Tree,
 };
 use std::str;
+use crate::Index;
 
 static INDEX_GIT_URL: &str = "https://github.com/rust-lang/crates.io-index";
 static LAST_SEEN_REFNAME: &str = "refs/heads/crates-index-diff_last-seen";
 static EMPTY_TREE_HASH: &str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 static LINE_ADDED_INDICATOR: char = '+';
-
-/// A wrapper for a repository of the crates.io index.
-pub struct Index {
-    /// The name and path of the reference used to keep track of the last seen state of the
-    /// crates.io repository. The default value is `refs/heads/crates-index-diff_last-seen`.
-    pub seen_ref_name: &'static str,
-    /// The crates.io repository.
-    repo: Repository,
-}
 
 /// Options for use in `Index::from_path_or_cloned_with_options`
 pub struct CloneOptions<'a> {

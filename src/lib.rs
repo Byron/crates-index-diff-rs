@@ -5,10 +5,10 @@
 #![forbid(missing_docs)]
 #![deny(rust_2018_idioms)]
 
-mod index;
-mod version;
+///
+pub mod index;
+mod types;
 
-pub use index::*;
-pub use version::*;
+pub use types::{Index, Change, Dependency, CrateVersion};
 
 pub use git2;

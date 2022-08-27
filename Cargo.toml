@@ -25,6 +25,7 @@ features = ["https"]
 
 [dev-dependencies]
 git-testtools = "0.8.0"
-git-repository = "0.22.1"
+# git-repository = "0.22.1"
+git-repository = { version = "0.22.1", git = "https://github.com/Byron/gitoxide", branch = "for-crates-index-diff" }
 tempdir = "0.3.5"
 serial_test = "0.6.0"

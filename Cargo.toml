@@ -12,7 +12,6 @@ readme = "changelog.md"
 include = ["src/**/*", "LICENSE.md", "README.md", "CHANGELOG.md"]
 
 [lib]
-doctest = false
 test = false
 
 [dependencies]

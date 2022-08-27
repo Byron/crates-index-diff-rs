@@ -51,10 +51,10 @@ impl Index {
     /// # Examples
     ///
     /// ```no_run
-    /// use crates_index_diff::{CloneOptions, Index};
+    /// use crates_index_diff::{Index, index};
     ///
     /// # let path = tempdir::TempDir::new("index").unwrap();
-    /// let mut options = CloneOptions {
+    /// let mut options = index::CloneOptions {
     ///   repository_url: "https://github.com/rust-lang/staging.crates.io-index".into(),
     ///   ..Default::default()
     /// };
@@ -66,7 +66,7 @@ impl Index {
     /// Or to access a private repository, use fetch options.
     ///
     /// ```no_run
-    /// use crates_index_diff::{CloneOptions, Index};
+    /// use crates_index_diff::{index, Index};
     /// let fo = {
     ///     let mut fo = git2::FetchOptions::new();
     ///     fo.remote_callbacks({
@@ -85,7 +85,7 @@ impl Index {
     /// };
     /// Index::from_path_or_cloned_with_options(
     ///     "index",
-    ///     CloneOptions {
+    ///     index::CloneOptions {
     ///         repository_url: "git@github.com:private-index/goes-here.git".into(),
     ///         fetch_options: Some(fo),
     ///     },

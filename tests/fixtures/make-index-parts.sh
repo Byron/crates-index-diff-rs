@@ -21,5 +21,6 @@ mkdir -p "$out"
   tail +2 "$revlist" > "$commit_list"
   while read -r commit; do
     git diff "$commit"~1.."$commit" -- $path > "$out/$commit".diff
+    git log --format=%B -n1 "$commit" > "$out/$commit.msg"
   done < "$commit_list"
 )

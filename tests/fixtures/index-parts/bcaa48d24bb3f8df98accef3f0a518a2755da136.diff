@@ -1,0 +1,7 @@
+diff --git a/gi/t-/git-function-history-gui b/gi/t-/git-function-history-gui
+new file mode 100644
+index 0000000000..2309ac6bdb
+--- /dev/null
++++ b/gi/t-/git-function-history-gui
+@@ -0,0 +1 @@
++{"name":"git-function-history-gui","vers":"0.1.0","deps":[],"cksum":"63b4c2071dc5455e63ef4c46342a01b94b0cc0bdc73c1d5b2ef5cb2790eb68db","features":{},"yanked":false,"links":null}

@@ -1,0 +1,7 @@
+diff --git a/gi/t-/git-refspec b/gi/t-/git-refspec
+new file mode 100644
+index 0000000000..5885a64817
+--- /dev/null
++++ b/gi/t-/git-refspec
+@@ -0,0 +1 @@
++{"name":"git-refspec","vers":"0.0.0","deps":[{"name":"bstr","req":"^0.2.13","features":["std"],"optional":false,"default_features":false,"target":null,"kind":"normal"},{"name":"thiserror","req":"^1.0.26","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"98cd6c82ae276924594c0feccd482581f7c15e22a66fa69be1742bfb6dd85fcb","features":{},"yanked":false,"links":null}

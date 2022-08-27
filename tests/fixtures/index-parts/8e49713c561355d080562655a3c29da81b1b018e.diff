@@ -1,0 +1,9 @@
+diff --git a/gi/t-/git-home b/gi/t-/git-home
+index 9e766ad75b..4e6a2bdac4 100644
+--- a/gi/t-/git-home
++++ b/gi/t-/git-home
+@@ -5,3 +5,4 @@
+ {"name":"git-home","vers":"0.0.7","deps":[{"name":"chrono","req":"^0.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"git2","req":"^0.14.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"5eb4d16988afce809f8e7f8072ba3f87ff84e344fae3dd055be53aa4b4002d21","features":{},"yanked":false,"links":null}
+ {"name":"git-home","vers":"0.1.1-alpha.1","deps":[{"name":"chrono","req":"^0.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"git2","req":"^0.14.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"6281d40b4b85481fe1d9f9a62e348fdcc7ccc3cb7416af77666ddbbc26c40551","features":{},"yanked":false,"links":null}
+ {"name":"git-home","vers":"0.1.1-alpha.2","deps":[{"name":"chrono","req":"^0.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"git2","req":"^0.14.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"a62df5d956d3671a961f475c74cbf8a7d5526d21056f820c53169fbc64d29873","features":{},"yanked":false,"links":null}
++{"name":"git-home","vers":"0.1.1-alpha.3","deps":[{"name":"chrono","req":"^0.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"edit","req":"^0.1.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"git2","req":"^0.14.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"98034e5a7b6f1a451d75ebbb741ab6231d8398559a805f91591b150aafd3fc5d","features":{},"yanked":false,"links":null}

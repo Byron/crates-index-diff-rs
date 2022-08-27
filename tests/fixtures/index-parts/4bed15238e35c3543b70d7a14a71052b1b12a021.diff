@@ -1,0 +1,7 @@
+diff --git a/gi/gn/gign b/gi/gn/gign
+new file mode 100644
+index 0000000000..e55ee3b847
+--- /dev/null
++++ b/gi/gn/gign
+@@ -0,0 +1 @@
++{"name":"gign","vers":"0.1.0","deps":[{"name":"clap","req":"^3.2.8","features":["cargo"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"colored","req":"^2","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"dirs","req":"^1.0.4","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"triple_accel","req":"^0.4.0","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"walkdir","req":"^2.3.2","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"2dc4f0a530d8c78dca38718d7e8724f8bafca0149d1abee76a7a7f1118599c3d","features":{},"yanked":false,"links":null}

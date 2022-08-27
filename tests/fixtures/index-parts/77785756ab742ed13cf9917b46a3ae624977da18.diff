@@ -1,0 +1,8 @@
+diff --git a/gi/t_/git_function_history b/gi/t_/git_function_history
+index 7abcc7ecad..9793436d5d 100644
+--- a/gi/t_/git_function_history
++++ b/gi/t_/git_function_history
+@@ -1,2 +1,3 @@
+ {"name":"git_function_history","vers":"0.1.0","deps":[],"cksum":"0c89d211d4ca387f270aa81cc2b78356b9570865074f3c13c688e0206423f945","features":{},"yanked":false,"links":null}
+ {"name":"git_function_history","vers":"0.1.1","deps":[],"cksum":"db46181a6a6a8b18c7603942b827514153ca4479a6c47b61d520d5fe6a2938dd","features":{},"yanked":false,"links":null}
++{"name":"git_function_history","vers":"0.1.2","deps":[{"name":"lazy_static","req":"^1.4.0","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"regex","req":"^1.6.0","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"serde_json","req":"^1.0","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"fb5cf60edc9492d7a42a83afcdba77554e39484167a937cd4a1642623595de5a","features":{},"yanked":false,"links":null}

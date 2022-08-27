@@ -1,0 +1,9 @@
+diff --git a/gi/t-/git-shell b/gi/t-/git-shell
+index 3c0132e92e..07587b7b5e 100644
+--- a/gi/t-/git-shell
++++ b/gi/t-/git-shell
+@@ -7,3 +7,4 @@
+ {"name":"git-shell","vers":"0.1.6+main","deps":[{"name":"dia-semver","req":">=9, <10","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"9847ea0baec73325e9bd22959f19688f0a16fed52fe7635e1dff2d454a26b95b","features":{},"yanked":false,"links":null}
+ {"name":"git-shell","vers":"0.1.7+main","deps":[{"name":"dia-semver","req":">=9, <10","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"8a495f2c425e6cb8e627cd0980fa99f37c8914034b29b52bce1dfaa14464fd45","features":{},"yanked":false,"links":null}
+ {"name":"git-shell","vers":"0.2.0","deps":[{"name":"dia-semver","req":">=9.0.1, <10","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"7f5780bd30eb5d5e0e16ec655ea79d9a29371e64e59584248b8fadc3bfdbe074","features":{},"yanked":false,"links":null}
++{"name":"git-shell","vers":"0.3.0","deps":[{"name":"dia-semver","req":">=9.0.1, <10","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"57f518aa81cbeb005305e8d231d7c0cceaeb3960ebce7c81cb034f5ac0585290","features":{},"yanked":false,"links":null}

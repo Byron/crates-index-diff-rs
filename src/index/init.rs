@@ -75,19 +75,6 @@ impl Index {
             }
         })?;
 
-        if repo_did_exist {
-            let remote = repo.find_remote("origin")?;
-            let actual_remote_url = remote.url().ok_or_else(|| {
-                git2::Error::from_str("did not obtain URL of remote named 'origin'")
-            })?;
-            if actual_remote_url != repository_url {
-                return Err(git2::Error::from_str(&format!(
-                    "Actual 'origin' remote url {:#?} did not match desired one at {:#?}",
-                    actual_remote_url, repository_url
-                )));
-            }
-        }
-
         Ok(Index {
             repo,
             seen_ref_name: LAST_SEEN_REFNAME,

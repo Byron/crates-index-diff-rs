@@ -18,5 +18,5 @@ fn index_ro() -> Index {
             .map(|p| p.to_str().unwrap().to_owned()),
     )
     .unwrap();
-    Index::from_path_or_cloned(dir).unwrap()
+    Index::from_path_or_cloned(dir.join("base")).unwrap()
 }

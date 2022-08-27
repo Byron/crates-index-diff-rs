@@ -89,6 +89,7 @@ fn quick_changes_since_last_fetch() {
 }
 
 #[test]
+#[ignore]
 #[serial]
 fn peek_changes_since_last_fetch() {
     let (mut index, _tmp) = make_index();
@@ -118,6 +119,7 @@ fn changes_of(index: &Index, commit: &str) -> Vec<Change> {
 
 #[test]
 #[serial]
+#[ignore]
 fn crate_delete() {
     let (index, _tmp) = make_index();
 

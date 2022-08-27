@@ -21,4 +21,5 @@ mkdir worktree
 )
 
 git clone --bare --no-local ./worktree base
-git clone --bare ./worktree clone
+rm -Rf worktree
+git clone --bare base clone

@@ -5,6 +5,85 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 11.0.0 (2022-08-28)
+
+### Changed (BREAKING)
+
+ - <csr-id-2d3a182819077a1fe068cb16fdfeceed2f6882da/> Use `gitoxide` `Repository` instead of `git2::Repository`
+   This comes with plenty of changes to the API of the
+   `last_seen_reference()` and to the lower-level methods that take
+   object ids (now `git::hash::ObjectId`.
+   
+   Note that `git2` is still used internally for fetching and cloning.
+   This change was made to assure that at no time there are two open
+   repositories (once for git2, once for `gitoxide`), as this has the
+   potential to double resource usage for file handles.
+ - <csr-id-07f4b6c022ae8c48907250314db3a9eeb59ae89e/> move `CloneOptions` into `index` module.
+   The `index` module is now public for that reason.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 38 commits contributed to the release over the course of 1 calendar day.
+ - 97 days passed between releases.
+ - 2 commits where understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#16](https://github.com/Byron/crates-index-diff-rs/issues/16)
+
+### Thanks Clippy
+
+<csr-read-only-do-not-edit/>
+
+[Clippy](https://github.com/rust-lang/rust-clippy) helped 2 times to make code idiomatic. 
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#16](https://github.com/Byron/crates-index-diff-rs/issues/16)**
+    - update to latest release of `gitoxide` ([`23e14af`](https://github.com/Byron/crates-index-diff-rs/commit/23e14af509e72efaa65215f3f6f88166e32dbeb0))
+    - and normalization works now ([`eb148e5`](https://github.com/Byron/crates-index-diff-rs/commit/eb148e512bc29cdc81f4eb35bda0a1819d9abd69))
+    - first stab at normalization can reduce 245 version, but… ([`ae3f971`](https://github.com/Byron/crates-index-diff-rs/commit/ae3f971e627d491e239220bb5ba15a89c026302e))
+    - adapt to changes in git-repository ([`68ff142`](https://github.com/Byron/crates-index-diff-rs/commit/68ff142961f4afc2d2d31b4d457047a6db321156))
+    - remove git2 verion of the diff algorithm ([`371b512`](https://github.com/Byron/crates-index-diff-rs/commit/371b51293047b41beac82be7a9e9d1bd43fd5d7a))
+    - refactor ([`3749220`](https://github.com/Byron/crates-index-diff-rs/commit/374922041710eb9ace92a7a319c2c407a4897baa))
+    - refactor ([`7cee17e`](https://github.com/Byron/crates-index-diff-rs/commit/7cee17eccd74757277049e92c8074ee41cceedaf))
+    - all diff-tests pass like before ([`9ba7921`](https://github.com/Byron/crates-index-diff-rs/commit/9ba79212042a501e1cae21ce28daea2a3637a383))
+    - handle modifications and yanks ([`3416414`](https://github.com/Byron/crates-index-diff-rs/commit/34164140dd5aada52907a30d0ea483490d6da833))
+    - handle entire crate deletions as well ([`eadc65f`](https://github.com/Byron/crates-index-diff-rs/commit/eadc65ff9b86cd02aeb29161511b6fec5d19cb04))
+    - first sketch of addition is working ([`55d71dc`](https://github.com/Byron/crates-index-diff-rs/commit/55d71dc2f2f7c78af9940e1f9128e56753ac2191))
+    - frame for diffing ([`cd86f5b`](https://github.com/Byron/crates-index-diff-rs/commit/cd86f5b82c8ac57106fa5ed1c254189fa894c3cd))
+    - refactor ([`fa9cfab`](https://github.com/Byron/crates-index-diff-rs/commit/fa9cfab4053c630b8793a782ef732d7330b6f6c6))
+    - Use `gitoxide` `Repository` instead of `git2::Repository` ([`2d3a182`](https://github.com/Byron/crates-index-diff-rs/commit/2d3a182819077a1fe068cb16fdfeceed2f6882da))
+    - port all old tests to the new fixture ([`272bec8`](https://github.com/Byron/crates-index-diff-rs/commit/272bec8848e277eda4747523ed7497ef5d7f4d06))
+    - test for auto-clone ([`8a1bc25`](https://github.com/Byron/crates-index-diff-rs/commit/8a1bc25ac020cc03513bf2bafd6d576b0dc2dded))
+    - remove redundant tests ([`45494f0`](https://github.com/Byron/crates-index-diff-rs/commit/45494f081a2154f478929c19268f163e86595f29))
+    - test for peek changes ([`61e217a`](https://github.com/Byron/crates-index-diff-rs/commit/61e217a2e0ef84e0f7bf091c0636a84804dd2fcf))
+    - refactor ([`aeb6f45`](https://github.com/Byron/crates-index-diff-rs/commit/aeb6f45b9866e1c15862f336b6fe49bb3cf2dc2c))
+    - use most recent git version of gitoxide for now ([`6dadfb7`](https://github.com/Byron/crates-index-diff-rs/commit/6dadfb759324e9858ea3a0774d6be89d6b9e5251))
+    - thanks clippy ([`ebacafd`](https://github.com/Byron/crates-index-diff-rs/commit/ebacafd7855dda736fc5c6c90a608f06eb22b355))
+    - normalization test ([`877b519`](https://github.com/Byron/crates-index-diff-rs/commit/877b5197fd13b7057b8daa6a75f9a517fa802d91))
+    - add more tests for typical operations ([`56bfad7`](https://github.com/Byron/crates-index-diff-rs/commit/56bfad785be8dcc7259043b91cda8c4a267f617b))
+    - first successful test for addition ([`365bcf0`](https://github.com/Byron/crates-index-diff-rs/commit/365bcf040b2493bb98da050fdcb6b420ac2f9b68))
+    - simplify CI.yml ([`c0295c5`](https://github.com/Byron/crates-index-diff-rs/commit/c0295c53d8115e22536def570d9e09991bd186e9))
+    - fix fixture script ([`0efccd4`](https://github.com/Byron/crates-index-diff-rs/commit/0efccd493aa61f4d33e1ffd5f18bb48d61555ce9))
+    - first test can instantiate an `Index` on the new fixture ([`f9e31f2`](https://github.com/Byron/crates-index-diff-rs/commit/f9e31f20608ce093f590307d8fe46fd5fac91479))
+    - add support for git-lfs to support archives ([`9a2ce43`](https://github.com/Byron/crates-index-diff-rs/commit/9a2ce43ef2961daef2951a0bc4fbc186917cd920))
+    - build git repository from parts ([`d28591b`](https://github.com/Byron/crates-index-diff-rs/commit/d28591be86fb10b00f4db4f07cb1399c3b4305de))
+    - also add commit-message information ([`7e85688`](https://github.com/Byron/crates-index-diff-rs/commit/7e85688272bc02e6e9ba923bfc72e219ee228a7a))
+    - refactor ([`0c77e40`](https://github.com/Byron/crates-index-diff-rs/commit/0c77e40654abc741ae1f7ed08dba7129437a10bd))
+    - refactor ([`78e05bd`](https://github.com/Byron/crates-index-diff-rs/commit/78e05bdd93ed3b88013ea5439b857d83f827e21c))
+    - re-enable and fix doc-tests ([`946ca4c`](https://github.com/Byron/crates-index-diff-rs/commit/946ca4c8d7b9bc528569a89c6d2a14895c4e2314))
+    - move `CloneOptions` into `index` module. ([`07f4b6c`](https://github.com/Byron/crates-index-diff-rs/commit/07f4b6c022ae8c48907250314db3a9eeb59ae89e))
+    - refactor ([`ecd84eb`](https://github.com/Byron/crates-index-diff-rs/commit/ecd84eb489824abd7589526c864cbd8dfebb3a55))
+    - a script to create an index fixture ([`9a5f312`](https://github.com/Byron/crates-index-diff-rs/commit/9a5f312b781e82a35d7ae9812e8d8095e371d656))
+ * **Uncategorized**
+    - Merge branch 'semantic-stability' ([`b7574d8`](https://github.com/Byron/crates-index-diff-rs/commit/b7574d8e518390e00d5eb50579c8644ed2f85eb2))
+    - thanks clippy ([`9e9b972`](https://github.com/Byron/crates-index-diff-rs/commit/9e9b9726c4ea59ead04f071928042e65bc2e0204))
+</details>
+
 ## 10.0.0 (2022-05-23)
 
 ### New Features (BREAKING)
@@ -25,7 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 9 commits contributed to the release over the course of 84 calendar days.
+ - 10 commits contributed to the release over the course of 84 calendar days.
  - 85 days passed between releases.
  - 2 commits where understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
@@ -43,6 +122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v10.0.0 ([`43c63ca`](https://github.com/Byron/crates-index-diff-rs/commit/43c63ca51487aa15d6eac3ee5733809bdbaffd43))
     - prepare changelog prior to release ([`cc19788`](https://github.com/Byron/crates-index-diff-rs/commit/cc1978812ca6d6d0177fb3f2b4550181b5f32465))
     - Assure tests run serially without needing --jobs 1 ([`2701f5c`](https://github.com/Byron/crates-index-diff-rs/commit/2701f5c65fd104c9d481ebdf041806e6dee2f07a))
     - Merge branch 'syphar-handle-crate-delets' ([`aba9087`](https://github.com/Byron/crates-index-diff-rs/commit/aba908736924935c9d3b07ab793c28879368bc5f))

@@ -72,7 +72,7 @@ fn normalization() -> crate::Result {
     assert_eq!(
         changes.len(),
         0,
-        "normalization changes the representation, but the data itself stays the same, BUT we can't do it yet"
+        "normalization changes the representation, but the data itself stays the same"
     );
     Ok(())
 }

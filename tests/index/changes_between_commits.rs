@@ -71,7 +71,7 @@ fn normalization() -> crate::Result {
     let changes = changes(index_ro()?, ":/normalize")?;
     assert_eq!(
         changes.len(),
-        2356, // should be 0
+        2111, // should be 0
         "normalization changes the representation, but the data itself stays the same, BUT we can't do it yet"
     );
     Ok(())

@@ -84,7 +84,7 @@ fn quick_changes_since_last_fetch() -> crate::Result {
         "seen branch was updated again"
     );
     assert_eq!(
-        num_seen_after_reset, 2357,
+        num_seen_after_reset, 2112,
         "normalization has no changes, but the commit before has one"
     );
 

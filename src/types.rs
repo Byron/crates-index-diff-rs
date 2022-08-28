@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use git_repository as git;
 use std::fmt;
+use std::hash::{Hash, Hasher};
 
 /// A wrapper for a repository of the crates.io index.
 pub struct Index {
@@ -88,8 +89,22 @@ pub struct CrateVersion {
     pub dependencies: Vec<Dependency>,
 }
 
+impl CrateVersion {
+    pub(crate) fn id(&self) -> u64 {
+        let mut s = std::collections::hash_map::DefaultHasher::new();
+        self.name.hash(&mut s);
+        self.yanked.hash(&mut s);
+        self.version.hash(&mut s);
+        self.checksum.hash(&mut s);
+        self.dependencies.hash(&mut s);
+        s.finish()
+    }
+}
+
 /// A single dependency of a specific crate version
-#[derive(Clone, serde::Serialize, serde::Deserialize, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[derive(
+    Clone, serde::Serialize, serde::Deserialize, Ord, PartialOrd, Eq, PartialEq, Debug, Hash,
+)]
 pub struct Dependency {
     /// The crate name
     pub name: String,

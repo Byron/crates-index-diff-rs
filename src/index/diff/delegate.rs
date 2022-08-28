@@ -3,10 +3,11 @@ use crate::{Change, CrateVersion};
 use git_repository as git;
 use git_repository::diff::tree::visit::Action;
 use similar::ChangeTag;
+use std::collections::BTreeSet;
 
 pub(crate) struct Delegate<'repo> {
     changes: Vec<Change>,
-    deletes: Vec<CrateVersion>,
+    delete_version_ids: BTreeSet<u64>,
     file_name: git::bstr::BString,
     err: Option<Error>,
     repo: &'repo git::Repository,
@@ -16,7 +17,7 @@ impl<'repo> Delegate<'repo> {
     pub fn from_repo(repo: &'repo git::Repository) -> Self {
         Delegate {
             changes: Vec::new(),
-            deletes: Vec::new(),
+            delete_version_ids: BTreeSet::new(),
             err: None,
             file_name: Default::default(),
             repo,
@@ -74,7 +75,7 @@ impl<'repo> Delegate<'repo> {
                                         Change::Added(version)
                                     });
                                 } else {
-                                    self.deletes.push(version);
+                                    self.delete_version_ids.insert(version.id());
                                 }
                             }
                             ChangeTag::Equal => {}
@@ -85,15 +86,21 @@ impl<'repo> Delegate<'repo> {
         }
         Ok(())
     }
-    pub fn into_result(self) -> Result<Vec<Change>, Error> {
-        // assert_eq!(
-        //     self.deletes.len(),
-        //     0,
-        //     "TODO: handle apparent version deletions"
-        // );
+    pub fn into_result(mut self) -> Result<Vec<Change>, Error> {
         match self.err {
             Some(err) => Err(err),
-            None => Ok(self.changes),
+            None => {
+                if !self.delete_version_ids.is_empty() {
+                    let deleted_version_ids = &self.delete_version_ids;
+                    self.changes.retain(|change| match change {
+                        Change::Added(v) | Change::Yanked(v) => {
+                            !deleted_version_ids.contains(&v.id())
+                        }
+                        Change::Deleted { .. } => true,
+                    })
+                }
+                Ok(self.changes)
+            }
         }
     }
 }

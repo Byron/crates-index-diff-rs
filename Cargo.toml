@@ -15,8 +15,7 @@ include = ["src/**/*", "LICENSE.md", "README.md", "CHANGELOG.md"]
 test = false
 
 [dependencies]
-# git-repository = "0.22.1"
-git-repository = { version = "0.22.1", git = "https://github.com/Byron/gitoxide", branch = "for-crates-index-diff" }
+git-repository = "0.23.0"
 similar = { version = "2.2.0", features = ["bytes"] }
 serde = { version = "1", features = ["std", "derive"] }
 serde_json = "1"

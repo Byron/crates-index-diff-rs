@@ -67,7 +67,6 @@ fn new_version() -> crate::Result {
 }
 
 #[test]
-#[ignore]
 fn new_version2() -> crate::Result {
     let changes = changes2(index_ro()?, ":/Updating crate `git-repository#0.22.1`")?;
     assert_eq!(changes.len(), 1);

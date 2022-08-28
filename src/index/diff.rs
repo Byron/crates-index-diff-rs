@@ -4,6 +4,7 @@ use git_repository::bstr::BStr;
 use git_repository::diff::tree::visit::Action;
 use git_repository::prelude::{FindExt, ObjectIdExt, TreeIterExt};
 use git_repository::refs::transaction::PreviousValue;
+use similar::ChangeTag;
 use std::convert::TryFrom;
 
 static LINE_ADDED_INDICATOR: char = '+';
@@ -209,11 +210,8 @@ impl Index {
                     Addition { entry_mode, oid } => {
                         if let Some(obj) = entry_data(self.repo, entry_mode, oid)? {
                             for line in (&obj.data).lines() {
-                                self.changes.push(Change::Added(serde_json::from_slice::<
-                                    CrateVersion,
-                                >(
-                                    line
-                                )?));
+                                self.changes
+                                    .push(Change::Added(serde_json::from_slice(line)?));
                             }
                         }
                     }
@@ -230,8 +228,25 @@ impl Index {
                     } => {
                         let pair = entry_data(self.repo, previous_entry_mode, previous_oid)?
                             .zip(entry_data(self.repo, entry_mode, oid)?);
-                        if let Some((_prev, _new)) = pair {
-                            todo!("modification")
+                        if let Some((old, new)) = pair {
+                            let diff = similar::TextDiffConfig::default()
+                                .algorithm(similar::Algorithm::Myers)
+                                .diff_lines(old.data.as_slice(), new.data.as_slice());
+                            for change in diff.iter_all_changes() {
+                                match change.tag() {
+                                    ChangeTag::Delete => todo!("deletion"),
+                                    ChangeTag::Insert => {
+                                        let version =
+                                            serde_json::from_slice::<CrateVersion>(change.value())?;
+                                        self.changes.push(if version.yanked {
+                                            Change::Yanked(version)
+                                        } else {
+                                            Change::Added(version)
+                                        });
+                                    }
+                                    ChangeTag::Equal => {}
+                                }
+                            }
                         }
                     }
                 }

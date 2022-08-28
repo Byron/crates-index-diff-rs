@@ -1,19 +1,10 @@
 use crates_index_diff::*;
 use git2::Reference;
-use serial_test::serial;
 use std::{env, path::PathBuf};
 use tempdir::TempDir;
 
 const NUM_VERSIONS_AT_RECENT_COMMIT: usize = 39752;
 const REV_ONE_UNYANKED: &str = "f8cb00181";
-
-#[test]
-#[ignore] // This test takes too long for my taste, this library is stable by now
-fn clone_if_needed() {
-    let tmp = TempDir::new("new-index").unwrap();
-    Index::from_path_or_cloned(tmp.path()).expect("successful clone to be created");
-    Index::from_path_or_cloned(tmp.path()).expect("second instance re-uses existing clone");
-}
 
 fn make_index() -> (Index, TempDir) {
     let tmp = TempDir::new("new-index").unwrap();
@@ -34,7 +25,6 @@ fn origin_master_of(index: &Index) -> Reference<'_> {
 }
 
 #[test]
-#[serial]
 #[ignore]
 fn quick_changes_since_last_fetch() {
     let (mut index, _tmp) = make_index();

@@ -1,4 +1,6 @@
 use crates_index_diff::Index;
+use git_testtools::tempfile::TempDir;
+use std::path::PathBuf;
 
 mod changes_from_objects;
 
@@ -32,14 +34,31 @@ fn peek_changes() {
     );
 }
 
-mod old;
+#[test]
+fn clone_if_needed() {
+    let tmp = TempDir::new().unwrap();
+    let options = || crates_index_diff::index::CloneOptions {
+        repository_url: fixture_dir().unwrap().join("base").display().to_string(),
+        fetch_options: None,
+    };
+    Index::from_path_or_cloned_with_options(tmp.path(), options())
+        .expect("successful clone to be created");
+    Index::from_path_or_cloned_with_options(tmp.path(), options())
+        .expect("second instance re-uses existing clone");
+}
 
 fn index_ro() -> crate::Result<Index> {
-    let dir = git_testtools::scripted_fixture_repo_read_only_with_args(
+    let dir = fixture_dir()?;
+    Ok(Index::from_path_or_cloned(dir.join("clone"))?)
+}
+
+fn fixture_dir() -> crate::Result<PathBuf> {
+    Ok(git_testtools::scripted_fixture_repo_read_only_with_args(
         "make-index-from-parts.sh",
         std::env::current_dir()
             .ok()
             .map(|p| p.to_str().unwrap().to_owned()),
-    )?;
-    Ok(Index::from_path_or_cloned(dir.join("clone"))?)
+    )?)
 }
+
+mod old;

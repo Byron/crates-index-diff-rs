@@ -55,6 +55,19 @@ fn yanked() -> crate::Result {
 }
 
 #[test]
+fn unyanked_crates_recognized_as_added() -> crate::Result {
+    let changes = changes(&index_ro()?, ":/Unyanking crate `git2mail#0.3.2`")?;
+    assert_eq!(changes.len(), 1);
+    assert_eq!(
+        changes
+            .first()
+            .and_then(|c| c.added().map(|v| v.name.as_str())),
+        Some("git2mail")
+    );
+    Ok(())
+}
+
+#[test]
 fn normalization() -> crate::Result {
     let changes = changes(&index_ro()?, ":/normalize")?;
     assert_eq!(

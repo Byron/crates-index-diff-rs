@@ -151,7 +151,9 @@ impl Index {
             }),
         )?;
 
-        changes.extend(deletes.iter().map(|krate| Change::Deleted(krate.clone())));
+        changes.extend(deletes.iter().map(|krate| Change::Deleted {
+            name: krate.clone(),
+        }));
         Ok(changes)
     }
 
@@ -174,6 +176,8 @@ impl Index {
         let to = into_tree(to.into())?;
         struct Delegate<'repo> {
             changes: Vec<Change>,
+            deletes: Vec<CrateVersion>,
+            file_name: git::bstr::BString,
             err: Option<Error>,
             repo: &'repo git::Repository,
         }
@@ -181,7 +185,9 @@ impl Index {
             fn from_repo(repo: &'repo git::Repository) -> Self {
                 Delegate {
                     changes: Vec::new(),
+                    deletes: Vec::new(),
                     err: None,
+                    file_name: Default::default(),
                     repo,
                 }
             }
@@ -211,23 +217,32 @@ impl Index {
                             }
                         }
                     }
-                    Deletion { entry_mode, oid } => {
-                        if let Some(_obj) = entry_data(self.repo, entry_mode, oid)? {
-                            todo!("deletion")
-                        }
+                    Deletion { .. } => {
+                        self.changes.push(Change::Deleted {
+                            name: self.file_name.to_string(),
+                        });
                     }
                     Modification {
-                        previous_entry_mode: _,
-                        previous_oid: _,
-                        entry_mode: _,
-                        oid: _,
+                        previous_entry_mode,
+                        previous_oid,
+                        entry_mode,
+                        oid,
                     } => {
-                        todo!("modification")
+                        let pair = entry_data(self.repo, previous_entry_mode, previous_oid)?
+                            .zip(entry_data(self.repo, entry_mode, oid)?);
+                        if let Some((_prev, _new)) = pair {
+                            todo!("modification")
+                        }
                     }
                 }
                 Ok(())
             }
             fn into_result(self) -> Result<Vec<Change>, Error> {
+                assert_eq!(
+                    self.deletes.len(),
+                    0,
+                    "TODO: handle apparent version deletions"
+                );
                 match self.err {
                     Some(err) => Err(err),
                     None => Ok(self.changes),
@@ -237,7 +252,11 @@ impl Index {
         impl git::diff::tree::Visit for Delegate<'_> {
             fn pop_front_tracked_path_and_set_current(&mut self) {}
             fn push_back_tracked_path_component(&mut self, _component: &BStr) {}
-            fn push_path_component(&mut self, _component: &BStr) {}
+            fn push_path_component(&mut self, component: &BStr) {
+                use git::bstr::ByteVec;
+                self.file_name.clear();
+                self.file_name.push_str(component);
+            }
             fn pop_path_component(&mut self) {}
 
             fn visit(&mut self, change: git::diff::tree::visit::Change) -> Action {

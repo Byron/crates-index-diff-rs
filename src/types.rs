@@ -21,8 +21,11 @@ pub enum Change {
     Added(CrateVersion),
     /// A crate version was yanked.
     Yanked(CrateVersion),
-    /// A crate was deleted
-    Deleted(String),
+    /// The name of the deleted crate, which implies all versions were deleted as well.
+    Deleted {
+        /// The name of the deleted crate.
+        name: String,
+    },
 }
 
 impl Change {
@@ -45,7 +48,7 @@ impl Change {
     /// Return the deleted crate, if this is this kind of change.
     pub fn deleted(&self) -> Option<&str> {
         match self {
-            Change::Deleted(v) => Some(v.as_str()),
+            Change::Deleted { name } => Some(name.as_str()),
             _ => None,
         }
     }
@@ -59,7 +62,7 @@ impl fmt::Display for Change {
             match *self {
                 Change::Added(_) => "added",
                 Change::Yanked(_) => "yanked",
-                Change::Deleted(_) => "deleted",
+                Change::Deleted { .. } => "deleted",
             }
         )
     }

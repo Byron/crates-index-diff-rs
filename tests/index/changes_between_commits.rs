@@ -46,6 +46,14 @@ fn deletion() -> crate::Result {
 }
 
 #[test]
+fn deletion2() -> crate::Result {
+    let changes = changes2(index_ro()?, "@~326")?;
+    assert_eq!(changes.len(), 1);
+    assert_eq!(changes.first().and_then(|c| c.deleted()), Some("girl"));
+    Ok(())
+}
+
+#[test]
 fn new_version() -> crate::Result {
     let changes = changes(&index_ro()?, ":/Updating crate `git-repository#0.22.1`")?;
     assert_eq!(changes.len(), 1);

@@ -8,6 +8,8 @@ pub struct Index {
     /// The name and path of the reference used to keep track of the last seen state of the
     /// crates.io repository. The default value is `refs/heads/crates-index-diff_last-seen`.
     pub seen_ref_name: &'static str,
+    /// The name of the branch to fetch. This value also affects the tracking branch.
+    pub branch_name: &'static str,
     /// The crates.io repository.
     pub(crate) repo: Repository,
 }

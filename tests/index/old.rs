@@ -88,29 +88,6 @@ fn quick_changes_since_last_fetch() {
     assert_eq!(index.fetch_changes().unwrap().len(), 0);
 }
 
-#[test]
-#[ignore]
-#[serial]
-fn peek_changes_since_last_fetch() {
-    let (mut index, _tmp) = make_index();
-    index.seen_ref_name = "refs/our-test-ref_because-we-can_hidden-from-ui";
-    index
-        .last_seen_reference()
-        .and_then(|mut r| r.delete())
-        .ok();
-    let (changes, last_seen_rev) = index.peek_changes().unwrap();
-    assert!(changes.len() >= NUM_VERSIONS_AT_RECENT_COMMIT);
-    assert_eq!(
-        last_seen_rev,
-        origin_master_of(&index).target().unwrap(),
-        "last seen reference should be origin"
-    );
-    assert!(
-        index.last_seen_reference().is_err(),
-        "the last-seen reference has not been created (or updated, but we don't test that yet)"
-    );
-}
-
 fn changes_of(index: &Index, commit: &str) -> Vec<Change> {
     index
         .changes(format!("{}~1^{{tree}}", commit), commit)

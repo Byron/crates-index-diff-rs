@@ -40,12 +40,16 @@ impl Index {
         let to = {
             self.repo.find_remote("origin").and_then(|mut r| {
                 r.fetch(
-                    &["refs/heads/master:refs/remotes/origin/master"],
+                    &[format!(
+                        "refs/heads/{branch}:refs/remotes/origin/{branch}",
+                        branch = self.branch_name
+                    )],
                     options,
                     None,
                 )
             })?;
-            self.repo.refname_to_id("refs/remotes/origin/master")?
+            self.repo
+                .refname_to_id(&format!("refs/remotes/origin/{}", self.branch_name))?
         };
 
         Ok((

@@ -77,6 +77,7 @@ impl Index {
 
         Ok(Index {
             repo,
+            branch_name: "master",
             seen_ref_name: LAST_SEEN_REFNAME,
         })
     }

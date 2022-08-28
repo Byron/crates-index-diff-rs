@@ -86,8 +86,10 @@ impl Index {
             }
         })?;
 
+        let mut repo = git::open(repo.path())?.apply_environment();
+        repo.object_cache_size_if_unset(4 * 1024 * 1024);
         Ok(Index {
-            repo: git::open(repo.path())?,
+            repo,
             branch_name: "master",
             seen_ref_name: LAST_SEEN_REFNAME,
         })

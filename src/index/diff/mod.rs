@@ -1,10 +1,8 @@
-use crate::{Change, CrateVersion, Index};
+use crate::{Change, Index};
 use git_repository as git;
 use git_repository::prelude::{FindExt, ObjectIdExt, TreeIterExt};
 use git_repository::refs::transaction::PreviousValue;
 use std::convert::TryFrom;
-
-static LINE_ADDED_INDICATOR: char = '+';
 
 mod delegate;
 use delegate::Delegate;
@@ -90,82 +88,6 @@ impl Index {
         from: impl Into<git::hash::ObjectId>,
         to: impl Into<git::hash::ObjectId>,
     ) -> Result<Vec<Change>, Error> {
-        let repo = git2::Repository::open(self.repo.git_dir())?;
-        let from = git2::Oid::from_bytes(from.into().as_slice())?;
-        let to = git2::Oid::from_bytes(to.into().as_slice())?;
-        fn into_tree<'a>(
-            repo: &'a git2::Repository,
-            obj: &git2::Object<'_>,
-        ) -> Result<git2::Tree<'a>, git2::Error> {
-            repo.find_tree(match obj.kind() {
-                Some(git2::ObjectType::Commit) => obj
-                    .as_commit()
-                    .expect("object of kind commit yields commit")
-                    .tree_id(),
-                _ =>
-                /* let it possibly fail later */
-                {
-                    obj.id()
-                }
-            })
-        }
-        let from = repo.find_object(from, None)?;
-        let to = repo.find_object(to, None)?;
-        let diff = repo.diff_tree_to_tree(
-            Some(&into_tree(&repo, &from)?),
-            Some(&into_tree(&repo, &to)?),
-            None,
-        )?;
-        let mut changes: Vec<Change> = Vec::new();
-        let mut deletes: Vec<String> = Vec::new();
-        diff.foreach(
-            &mut |delta, _| {
-                if delta.status() == git2::Delta::Deleted {
-                    if let Some(path) = delta.new_file().path() {
-                        if let Some(file_name) = path.file_name() {
-                            deletes.push(file_name.to_string_lossy().to_string());
-                        }
-                    }
-                }
-                true
-            },
-            None,
-            None,
-            Some(&mut |delta, _hunk, diffline| {
-                if diffline.origin() != LINE_ADDED_INDICATOR {
-                    return true;
-                }
-                if !matches!(delta.status(), git2::Delta::Added | git2::Delta::Modified) {
-                    return true;
-                }
-
-                if let Ok(crate_version) =
-                    serde_json::from_slice::<CrateVersion>(diffline.content())
-                {
-                    if crate_version.yanked {
-                        changes.push(Change::Yanked(crate_version));
-                    } else {
-                        changes.push(Change::Added(crate_version));
-                    }
-                }
-                true
-            }),
-        )?;
-
-        changes.extend(deletes.iter().map(|krate| Change::Deleted {
-            name: krate.clone(),
-        }));
-        Ok(changes)
-    }
-
-    /// Similar to `changes()`, but requires `from` and `to` objects to be provided. They may point
-    /// to either `Commit`s or `Tree`s.
-    pub fn changes_between_commits2(
-        &mut self,
-        from: impl Into<git::hash::ObjectId>,
-        to: impl Into<git::hash::ObjectId>,
-    ) -> Result<Vec<Change>, Error> {
-        self.repo.object_cache_size_if_unset(4 * 1024 * 1024);
         let into_tree = |id: git::hash::ObjectId| -> Result<git::Tree<'_>, Error> {
             Ok(id
                 .attach(&self.repo)

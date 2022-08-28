@@ -1,6 +1,6 @@
 use crate::{Change, Index};
 use git_repository as git;
-use git_repository::prelude::{FindExt, ObjectIdExt, TreeIterExt};
+use git_repository::prelude::{FindExt, ObjectIdExt};
 use git_repository::refs::transaction::PreviousValue;
 use std::convert::TryFrom;
 
@@ -98,12 +98,14 @@ impl Index {
         let from = into_tree(from.into())?;
         let to = into_tree(to.into())?;
         let mut delegate = Delegate::from_repo(&self.repo);
-        let file_changes = git::objs::TreeRefIter::from_bytes(&from.data).changes_needed(
-            git::objs::TreeRefIter::from_bytes(&to.data),
-            git::diff::tree::State::default(),
-            |id, buf| self.repo.objects.find_tree_iter(id, buf).ok(),
-            &mut delegate,
-        );
+        let file_changes =
+            git::diff::tree::Changes::from(git::objs::TreeRefIter::from_bytes(&from.data))
+                .needed_to_obtain(
+                    git::objs::TreeRefIter::from_bytes(&to.data),
+                    git::diff::tree::State::default(),
+                    |id, buf| self.repo.objects.find_tree_iter(id, buf),
+                    &mut delegate,
+                );
         match file_changes.err() {
             None | Some(git::diff::tree::changes::Error::Cancelled) => { /*error in delegate*/ }
             Some(err) => return Err(err.into()),

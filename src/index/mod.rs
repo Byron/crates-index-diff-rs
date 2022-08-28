@@ -29,6 +29,11 @@ impl Index {
         &self.repo
     }
 
+    /// Return the crates.io repository, mutably.
+    pub fn repository_mut(&mut self) -> &mut git::Repository {
+        &mut self.repo
+    }
+
     /// Return the reference pointing to the state we have seen after calling `fetch_changes()`.
     pub fn last_seen_reference(
         &self,

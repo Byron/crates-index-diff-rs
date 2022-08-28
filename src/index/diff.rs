@@ -24,6 +24,8 @@ pub enum Error {
     PeelToTree(#[from] git::object::peel::to_kind::Error),
     #[error(transparent)]
     Diff(#[from] git::diff::tree::changes::Error),
+    #[error(transparent)]
+    VersionDecode(#[from] serde_json::Error),
 }
 
 /// Find changes without modifying the underling repository
@@ -160,7 +162,6 @@ impl Index {
         from: impl Into<git::hash::ObjectId>,
         to: impl Into<git::hash::ObjectId>,
     ) -> Result<Vec<Change>, Error> {
-        let changes = Vec::new();
         self.repo.object_cache_size_if_unset(4 * 1024 * 1024);
         let into_tree = |id: git::hash::ObjectId| -> Result<git::Tree<'_>, Error> {
             Ok(id
@@ -171,36 +172,97 @@ impl Index {
         };
         let from = into_tree(from.into())?;
         let to = into_tree(to.into())?;
-        struct Delegate;
-        impl git::diff::tree::Visit for Delegate {
-            fn pop_front_tracked_path_and_set_current(&mut self) {
-                todo!()
+        struct Delegate<'repo> {
+            changes: Vec<Change>,
+            err: Option<Error>,
+            repo: &'repo git::Repository,
+        }
+        impl<'repo> Delegate<'repo> {
+            fn from_repo(repo: &'repo git::Repository) -> Self {
+                Delegate {
+                    changes: Vec::new(),
+                    err: None,
+                    repo,
+                }
             }
-
-            fn push_back_tracked_path_component(&mut self, _component: &BStr) {
-                todo!()
+            fn handle(&mut self, change: git::diff::tree::visit::Change) -> Result<(), Error> {
+                use git::diff::tree::visit::Change::*;
+                use git::objs::tree::EntryMode::*;
+                fn entry_data(
+                    repo: &git::Repository,
+                    entry: git::objs::tree::EntryMode,
+                    oid: git::hash::ObjectId,
+                ) -> Result<Option<git::Object<'_>>, Error> {
+                    matches!(entry, Blob | BlobExecutable)
+                        .then(|| repo.find_object(oid))
+                        .transpose()
+                        .map_err(Into::into)
+                }
+                use git::bstr::ByteSlice;
+                match change {
+                    Addition { entry_mode, oid } => {
+                        if let Some(obj) = entry_data(self.repo, entry_mode, oid)? {
+                            for line in (&obj.data).lines() {
+                                self.changes.push(Change::Added(serde_json::from_slice::<
+                                    CrateVersion,
+                                >(
+                                    line
+                                )?));
+                            }
+                        }
+                    }
+                    Deletion { entry_mode, oid } => {
+                        if let Some(_obj) = entry_data(self.repo, entry_mode, oid)? {
+                            todo!("deletion")
+                        }
+                    }
+                    Modification {
+                        previous_entry_mode: _,
+                        previous_oid: _,
+                        entry_mode: _,
+                        oid: _,
+                    } => {
+                        todo!("modification")
+                    }
+                }
+                Ok(())
             }
-
-            fn push_path_component(&mut self, _component: &BStr) {
-                todo!()
-            }
-
-            fn pop_path_component(&mut self) {
-                todo!()
-            }
-
-            fn visit(&mut self, _change: git::diff::tree::visit::Change) -> Action {
-                todo!()
+            fn into_result(self) -> Result<Vec<Change>, Error> {
+                match self.err {
+                    Some(err) => Err(err),
+                    None => Ok(self.changes),
+                }
             }
         }
-        git::objs::TreeRefIter::from_bytes(&from.data).changes_needed(
+        impl git::diff::tree::Visit for Delegate<'_> {
+            fn pop_front_tracked_path_and_set_current(&mut self) {}
+            fn push_back_tracked_path_component(&mut self, _component: &BStr) {}
+            fn push_path_component(&mut self, _component: &BStr) {}
+            fn pop_path_component(&mut self) {}
+
+            fn visit(&mut self, change: git::diff::tree::visit::Change) -> Action {
+                match self.handle(change) {
+                    Ok(()) => Action::Continue,
+                    Err(err) => {
+                        self.err = err.into();
+                        Action::Cancel
+                    }
+                }
+            }
+        }
+
+        let mut delegate = Delegate::from_repo(&self.repo);
+        let file_changes = git::objs::TreeRefIter::from_bytes(&from.data).changes_needed(
             git::objs::TreeRefIter::from_bytes(&to.data),
             git::diff::tree::State::default(),
             |id, buf| self.repo.objects.find_tree_iter(id, buf).ok(),
-            &mut Delegate,
-        )?;
-
-        Ok(changes)
+            &mut delegate,
+        );
+        match file_changes.err() {
+            None | Some(git::diff::tree::changes::Error::Cancelled) => { /*error in delegate*/ }
+            Some(err) => return Err(err.into()),
+        }
+        delegate.into_result()
     }
 }
 

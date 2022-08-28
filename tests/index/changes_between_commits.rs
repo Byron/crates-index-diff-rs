@@ -21,6 +21,23 @@ fn addition() -> crate::Result {
 }
 
 #[test]
+fn addition2() -> crate::Result {
+    let changes = changes2(index_ro()?, ":/initial commit")?;
+    assert_eq!(changes.len(), 3228);
+    assert!(matches!(
+        changes
+            .first()
+            .and_then(|c| c.added().map(|v| v.name.as_str())),
+        Some("gi-get-artifact")
+    ));
+    assert!(matches!(
+        changes.last().expect("present"),
+        Change::Added(CrateVersion {name, ..}) if name == "gizmo"
+    ));
+    Ok(())
+}
+
+#[test]
 fn deletion() -> crate::Result {
     let changes = changes(&index_ro()?, "@~326")?;
     assert_eq!(changes.len(), 1);
@@ -31,6 +48,20 @@ fn deletion() -> crate::Result {
 #[test]
 fn new_version() -> crate::Result {
     let changes = changes(&index_ro()?, ":/Updating crate `git-repository#0.22.1`")?;
+    assert_eq!(changes.len(), 1);
+    assert_eq!(
+        changes
+            .first()
+            .and_then(|c| c.added().map(|v| v.name.as_str())),
+        Some("git-repository")
+    );
+    Ok(())
+}
+
+#[test]
+#[ignore]
+fn new_version2() -> crate::Result {
+    let changes = changes2(index_ro()?, ":/Updating crate `git-repository#0.22.1`")?;
     assert_eq!(changes.len(), 1);
     assert_eq!(
         changes
@@ -89,4 +120,16 @@ fn changes(index: &Index, revspec: &str) -> crate::Result<Vec<Change>> {
         .and_then(|parent| parent.object().ok()?.into_commit().tree_id().ok())
         .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()).attach(&repo));
     Ok(index.changes_between_commits(ancestor_tree, commit)?)
+}
+fn changes2(mut index: Index, revspec: &str) -> crate::Result<Vec<Change>> {
+    let repo = git::open(index.repository().path())?;
+    let commit = repo.rev_parse(revspec)?.single().unwrap();
+    let ancestor_tree = commit
+        .object()?
+        .into_commit()
+        .parent_ids()
+        .next()
+        .and_then(|parent| parent.object().ok()?.into_commit().tree_id().ok())
+        .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()).attach(&repo));
+    Ok(index.changes_between_commits2(ancestor_tree, commit)?)
 }

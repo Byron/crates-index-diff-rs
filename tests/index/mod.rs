@@ -109,12 +109,12 @@ fn index_rw() -> crate::Result<(Index, TempDir)> {
 }
 
 fn fixture_dir() -> crate::Result<PathBuf> {
-    Ok(git_testtools::scripted_fixture_repo_read_only_with_args(
+    git_testtools::scripted_fixture_repo_read_only_with_args(
         "make-index-from-parts.sh",
         std::env::current_dir()
             .ok()
             .map(|p| p.to_str().unwrap().to_owned()),
-    )?)
+    )
 }
 
 fn clone_options() -> crates_index_diff::index::CloneOptions<'static> {

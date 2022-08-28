@@ -88,18 +88,5 @@ fn changes(index: &Index, revspec: &str) -> crate::Result<Vec<Change>> {
         .next()
         .and_then(|parent| parent.object().ok()?.into_commit().tree_id().ok())
         .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()).attach(&repo));
-    Ok(index.changes_from_objects(
-        &index
-            .repository()
-            .find_object(object_id_to_oid(ancestor_tree), None)
-            .expect("ancestor tree is available"),
-        &index
-            .repository()
-            .find_object(object_id_to_oid(commit), None)
-            .expect("first object exists"),
-    )?)
-}
-
-fn object_id_to_oid(oid: impl Into<git::ObjectId>) -> git2::Oid {
-    git2::Oid::from_bytes(oid.into().as_bytes()).expect("valid")
+    Ok(index.changes_between_commits(ancestor_tree, commit)?)
 }

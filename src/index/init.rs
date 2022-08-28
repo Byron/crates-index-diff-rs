@@ -1,6 +1,17 @@
 use crate::index::{CloneOptions, LAST_SEEN_REFNAME};
 use crate::Index;
+use git_repository as git;
 use std::path::Path;
+
+/// The error returned by various initialization methods.
+#[derive(Debug, thiserror::Error)]
+#[allow(missing_docs)]
+pub enum Error {
+    #[error(transparent)]
+    Clone(#[from] git2::Error),
+    #[error(transparent)]
+    Open(#[from] git::open::Error),
+}
 
 /// Initialization
 impl Index {
@@ -24,7 +35,7 @@ impl Index {
     ///
     ///
     /// let index = Index::from_path_or_cloned_with_options(path, options)?;
-    /// # Ok::<(), git2::Error>(())
+    /// # Ok::<(), crates_index_diff::index::init::Error>(())
     /// ```
     /// Or to access a private repository, use fetch options.
     ///
@@ -60,7 +71,7 @@ impl Index {
             repository_url,
             fetch_options,
         }: CloneOptions<'_>,
-    ) -> Result<Index, git2::Error> {
+    ) -> Result<Index, Error> {
         let mut repo_did_exist = true;
         let repo = git2::Repository::open(path.as_ref()).or_else(|err| {
             if err.class() == git2::ErrorClass::Repository {
@@ -76,7 +87,7 @@ impl Index {
         })?;
 
         Ok(Index {
-            repo,
+            repo: git::open(repo.path())?,
             branch_name: "master",
             seen_ref_name: LAST_SEEN_REFNAME,
         })
@@ -86,7 +97,7 @@ impl Index {
     /// clone of the `crates.io` index.
     /// If the directory does not contain the repository or does not exist, it will be cloned from
     /// the official location automatically (with complete history).
-    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, git2::Error> {
+    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, Error> {
         Index::from_path_or_cloned_with_options(path, CloneOptions::default())
     }
 }

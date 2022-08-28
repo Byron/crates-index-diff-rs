@@ -1,12 +1,26 @@
 use crate::{Change, CrateVersion, Index};
+use git_repository as git;
+use git_repository::refs::transaction::PreviousValue;
+use std::convert::TryFrom;
 
-static EMPTY_TREE_HASH: &str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 static LINE_ADDED_INDICATOR: char = '+';
+
+/// The error returned by methods dealing with obtaining index changes.
+#[derive(Debug, thiserror::Error)]
+#[allow(missing_docs)]
+pub enum Error {
+    #[error(transparent)]
+    Fetch(#[from] git2::Error),
+    #[error(transparent)]
+    ReferenceEdit(#[from] git::reference::edit::Error),
+    #[error(transparent)]
+    RevParse(#[from] git::revision::spec::parse::Error),
+}
 
 /// Find changes without modifying the underling repository
 impl Index {
     /// As `peek_changes_with_options`, but without the options.
-    pub fn peek_changes(&self) -> Result<(Vec<Change>, git2::Oid), git2::Error> {
+    pub fn peek_changes(&self) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
         self.peek_changes_with_options(None)
     }
 
@@ -28,17 +42,16 @@ impl Index {
     pub fn peek_changes_with_options(
         &self,
         options: Option<&mut git2::FetchOptions<'_>>,
-    ) -> Result<(Vec<Change>, git2::Oid), git2::Error> {
-        let from = self
-            .last_seen_reference()
-            .and_then(|r| {
-                r.target().ok_or_else(|| {
-                    git2::Error::from_str("last-seen reference did not have a valid target")
-                })
-            })
-            .or_else(|_| git2::Oid::from_str(EMPTY_TREE_HASH))?;
+    ) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
+        let repo = &self.repo;
+        let from = repo
+            .find_reference(self.seen_ref_name)
+            .ok()
+            .and_then(|r| r.try_id().map(|id| id.detach()))
+            .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()));
         let to = {
-            self.repo.find_remote("origin").and_then(|mut r| {
+            let repo = git2::Repository::open(repo.git_dir())?;
+            repo.find_remote("origin").and_then(|mut r| {
                 r.fetch(
                     &[format!(
                         "refs/heads/{branch}:refs/remotes/origin/{branch}",
@@ -48,26 +61,26 @@ impl Index {
                     None,
                 )
             })?;
-            self.repo
-                .refname_to_id(&format!("refs/remotes/origin/{}", self.branch_name))?
+            git::hash::ObjectId::try_from(
+                repo.refname_to_id(&format!("refs/remotes/origin/{}", self.branch_name))?
+                    .as_bytes(),
+            )
+            .expect("valid oid")
         };
 
-        Ok((
-            self.changes_from_objects(
-                &self.repo.find_object(from, None)?,
-                &self.repo.find_object(to, None)?,
-            )?,
-            to,
-        ))
+        Ok((self.changes_between_commits(from, to)?, to))
     }
 
     /// Similar to `changes()`, but requires `from` and `to` objects to be provided. They may point
     /// to either `Commit`s or `Tree`s.
-    pub fn changes_from_objects(
+    pub fn changes_between_commits(
         &self,
-        from: &git2::Object<'_>,
-        to: &git2::Object<'_>,
-    ) -> Result<Vec<Change>, git2::Error> {
+        from: impl Into<git::hash::ObjectId>,
+        to: impl Into<git::hash::ObjectId>,
+    ) -> Result<Vec<Change>, Error> {
+        let repo = git2::Repository::open(self.repo.git_dir())?;
+        let from = git2::Oid::from_bytes(from.into().as_slice())?;
+        let to = git2::Oid::from_bytes(to.into().as_slice())?;
         fn into_tree<'a>(
             repo: &'a git2::Repository,
             obj: &git2::Object<'_>,
@@ -84,9 +97,11 @@ impl Index {
                 }
             })
         }
-        let diff = self.repo.diff_tree_to_tree(
-            Some(&into_tree(&self.repo, from)?),
-            Some(&into_tree(&self.repo, to)?),
+        let from = repo.find_object(from, None)?;
+        let to = repo.find_object(to, None)?;
+        let diff = repo.diff_tree_to_tree(
+            Some(&into_tree(&repo, &from)?),
+            Some(&into_tree(&repo, &to)?),
             None,
         )?;
         let mut changes: Vec<Change> = Vec::new();
@@ -133,7 +148,7 @@ impl Index {
 /// Find changes while changing the underlying repository in one way or another.
 impl Index {
     /// As `fetch_changes_with_options`, but without the options.
-    pub fn fetch_changes(&self) -> Result<Vec<Change>, git2::Error> {
+    pub fn fetch_changes(&self) -> Result<Vec<Change>, Error> {
         self.fetch_changes_with_options(None)
     }
 
@@ -153,26 +168,21 @@ impl Index {
     pub fn fetch_changes_with_options(
         &self,
         options: Option<&mut git2::FetchOptions<'_>>,
-    ) -> Result<Vec<Change>, git2::Error> {
+    ) -> Result<Vec<Change>, Error> {
         let (changes, to) = self.peek_changes_with_options(options)?;
         self.set_last_seen_reference(to)?;
         Ok(changes)
     }
 
     /// Set the last seen reference to the given Oid. It will be created if it does not yet exists.
-    pub fn set_last_seen_reference(&self, to: git2::Oid) -> Result<(), git2::Error> {
-        self.last_seen_reference()
-            .and_then(|mut seen_ref| {
-                seen_ref.set_target(to, "updating seen-ref head to latest fetched commit")
-            })
-            .or_else(|_err| {
-                self.repo.reference(
-                    self.seen_ref_name,
-                    to,
-                    true,
-                    "creating seen-ref at latest fetched commit",
-                )
-            })?;
+    pub fn set_last_seen_reference(&self, to: git::hash::ObjectId) -> Result<(), Error> {
+        let repo = self.repository();
+        repo.reference(
+            self.seen_ref_name,
+            to,
+            PreviousValue::Any,
+            "updating seen-ref head to latest fetched commit",
+        )?;
         Ok(())
     }
 
@@ -185,10 +195,18 @@ impl Index {
         &self,
         from: impl AsRef<str>,
         to: impl AsRef<str>,
-    ) -> Result<Vec<Change>, git2::Error> {
-        self.changes_from_objects(
-            &self.repo.revparse_single(from.as_ref())?,
-            &self.repo.revparse_single(to.as_ref())?,
-        )
+    ) -> Result<Vec<Change>, Error> {
+        let repo = self.repository();
+        let from = repo
+            .rev_parse(from.as_ref())?
+            .single()
+            .expect("revspec was not a range")
+            .detach();
+        let to = repo
+            .rev_parse(to.as_ref())?
+            .single()
+            .expect("revspec was not a range")
+            .detach();
+        self.changes_between_commits(from, to)
     }
 }

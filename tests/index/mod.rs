@@ -26,7 +26,7 @@ fn peek_changes() -> crate::Result {
         .find_reference("refs/remotes/origin/main")?;
     assert_eq!(
         last_seen_revision,
-        origin_main.target().expect("direct ref"),
+        origin_main.id(),
         "last seen reference should the latest state from the clone"
     );
     assert!(
@@ -69,18 +69,19 @@ fn quick_changes_since_last_fetch() {
 
     // reset to previous one
     marker
-        .set_target(
+        .set_target_id(
             index
                 .repository()
-                .revparse_single(&format!("{}~2", index.seen_ref_name))
+                .rev_parse(format!("{}~2", index.seen_ref_name).as_str())
                 .unwrap()
-                .id(),
+                .single()
+                .unwrap(),
             "resetting to previous commit",
         )
         .expect("reset success");
     let num_seen_after_reset = index.fetch_changes().unwrap().len();
     assert_eq!(
-        marker.target(),
+        index.last_seen_reference().unwrap().target(),
         remote_main.target(),
         "seen branch was updated again"
     );

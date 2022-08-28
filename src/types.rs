@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use git2::Repository;
+use git_repository as git;
 use std::fmt;
 
 /// A wrapper for a repository of the crates.io index.
@@ -10,8 +10,8 @@ pub struct Index {
     pub seen_ref_name: &'static str,
     /// The name of the branch to fetch. This value also affects the tracking branch.
     pub branch_name: &'static str,
-    /// The crates.io repository.
-    pub(crate) repo: Repository,
+    /// The git repository to use for diffing
+    pub(crate) repo: git::Repository,
 }
 
 /// Identify a kind of change that occurred to a crate

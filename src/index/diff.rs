@@ -234,15 +234,18 @@ impl Index {
                                 .diff_lines(old.data.as_slice(), new.data.as_slice());
                             for change in diff.iter_all_changes() {
                                 match change.tag() {
-                                    ChangeTag::Delete => todo!("deletion"),
-                                    ChangeTag::Insert => {
+                                    ChangeTag::Delete | ChangeTag::Insert => {
                                         let version =
                                             serde_json::from_slice::<CrateVersion>(change.value())?;
-                                        self.changes.push(if version.yanked {
-                                            Change::Yanked(version)
+                                        if change.tag() == ChangeTag::Insert {
+                                            self.changes.push(if version.yanked {
+                                                Change::Yanked(version)
+                                            } else {
+                                                Change::Added(version)
+                                            });
                                         } else {
-                                            Change::Added(version)
-                                        });
+                                            self.deletes.push(version);
+                                        }
                                     }
                                     ChangeTag::Equal => {}
                                 }
@@ -253,11 +256,11 @@ impl Index {
                 Ok(())
             }
             fn into_result(self) -> Result<Vec<Change>, Error> {
-                assert_eq!(
-                    self.deletes.len(),
-                    0,
-                    "TODO: handle apparent version deletions"
-                );
+                // assert_eq!(
+                //     self.deletes.len(),
+                //     0,
+                //     "TODO: handle apparent version deletions"
+                // );
                 match self.err {
                     Some(err) => Err(err),
                     None => Ok(self.changes),

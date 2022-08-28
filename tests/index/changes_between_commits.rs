@@ -93,6 +93,19 @@ fn yanked() -> crate::Result {
 }
 
 #[test]
+fn yanked2() -> crate::Result {
+    let changes = changes2(index_ro()?, ":/Yanking crate `github_release_rs#0.1.0`")?;
+    assert_eq!(changes.len(), 1);
+    assert_eq!(
+        changes
+            .first()
+            .and_then(|c| c.yanked().map(|v| v.name.as_str())),
+        Some("github_release_rs")
+    );
+    Ok(())
+}
+
+#[test]
 fn unyanked_crates_recognized_as_added() -> crate::Result {
     let changes = changes(&index_ro()?, ":/Unyanking crate `git2mail#0.3.2`")?;
     assert_eq!(changes.len(), 1);
@@ -106,8 +119,32 @@ fn unyanked_crates_recognized_as_added() -> crate::Result {
 }
 
 #[test]
+fn unyanked_crates_recognized_as_added2() -> crate::Result {
+    let changes = changes2(index_ro()?, ":/Unyanking crate `git2mail#0.3.2`")?;
+    assert_eq!(changes.len(), 1);
+    assert_eq!(
+        changes
+            .first()
+            .and_then(|c| c.added().map(|v| v.name.as_str())),
+        Some("git2mail")
+    );
+    Ok(())
+}
+
+#[test]
 fn normalization() -> crate::Result {
     let changes = changes(&index_ro()?, ":/normalize")?;
+    assert_eq!(
+        changes.len(),
+        2356, // should be 0
+        "normalization changes the representation, but the data itself stays the same, BUT we can't do it yet"
+    );
+    Ok(())
+}
+
+#[test]
+fn normalization2() -> crate::Result {
+    let changes = changes2(index_ro()?, ":/normalize")?;
     assert_eq!(
         changes.len(),
         2356, // should be 0

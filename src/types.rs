@@ -96,7 +96,6 @@ impl CrateVersion {
         self.yanked.hash(&mut s);
         self.version.hash(&mut s);
         self.checksum.hash(&mut s);
-        self.dependencies.hash(&mut s);
         s.finish()
     }
 }

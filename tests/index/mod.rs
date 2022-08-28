@@ -2,7 +2,7 @@ use crates_index_diff::Index;
 use git_testtools::tempfile::TempDir;
 use std::path::PathBuf;
 
-mod changes_from_objects;
+mod changes_between_commits;
 
 const NUM_CHANGES_SINCE_EVER: usize = 3516;
 
@@ -46,10 +46,10 @@ fn clone_if_needed() {
 }
 
 #[test]
-fn quick_changes_since_last_fetch() {
-    let (index, _tmp) = index_rw().unwrap();
+fn quick_changes_since_last_fetch() -> crate::Result {
+    let (index, _tmp) = index_rw()?;
     assert!(index.last_seen_reference().is_err(), "no marker exists");
-    let num_changes_since_first_commit = index.fetch_changes().unwrap().len();
+    let num_changes_since_first_commit = index.fetch_changes()?.len();
     assert_eq!(
         num_changes_since_first_commit, NUM_CHANGES_SINCE_EVER,
         "all changes since ever"
@@ -59,8 +59,7 @@ fn quick_changes_since_last_fetch() {
         .expect("must be created/update now");
     let remote_main = index
         .repository()
-        .find_reference("refs/remotes/origin/main")
-        .unwrap();
+        .find_reference("refs/remotes/origin/main")?;
     assert_eq!(
         marker.target(),
         remote_main.target(),
@@ -72,16 +71,15 @@ fn quick_changes_since_last_fetch() {
         .set_target_id(
             index
                 .repository()
-                .rev_parse(format!("{}~2", index.seen_ref_name).as_str())
-                .unwrap()
+                .rev_parse(format!("{}~2", index.seen_ref_name).as_str())?
                 .single()
                 .unwrap(),
             "resetting to previous commit",
         )
         .expect("reset success");
-    let num_seen_after_reset = index.fetch_changes().unwrap().len();
+    let num_seen_after_reset = index.fetch_changes()?.len();
     assert_eq!(
-        index.last_seen_reference().unwrap().target(),
+        index.last_seen_reference()?.target(),
         remote_main.target(),
         "seen branch was updated again"
     );
@@ -91,10 +89,11 @@ fn quick_changes_since_last_fetch() {
     );
 
     assert_eq!(
-        index.fetch_changes().unwrap().len(),
+        index.fetch_changes()?.len(),
         0,
         "nothing if there was no change"
     );
+    Ok(())
 }
 
 fn index_ro() -> crate::Result<Index> {

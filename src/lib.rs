@@ -2,13 +2,11 @@
 //!
 //! Have a look at the real-world usage to learn more about it:
 //! [crates-io-cli](https://github.com/Byron/crates-io-cli-rs/blob/b7a39ad8ef68adb81b2d8a7e552cb0a2a73f7d5b/src/main.rs#L62)
-#![forbid(missing_docs)]
-#![deny(rust_2018_idioms)]
+#![deny(missing_docs, rust_2018_idioms)]
 
-mod index;
-mod version;
-
-pub use index::*;
-pub use version::*;
+///
+pub mod index;
+mod types;
 
 pub use git2;
+pub use types::{Change, CrateVersion, Dependency, Index};

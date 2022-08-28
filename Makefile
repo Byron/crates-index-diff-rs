@@ -3,18 +3,12 @@ help:  ## Display this help
 
 	
 CARGO = $(shell command -v cargo)
-bare_index_path = tests/fixtures/index-bare
-
-$(bare_index_path):
-	mkdir -p $(dir $@)
-	git clone --bare https://github.com/rust-lang/crates.io-index $@
-
 
 ##@ Development
 
-test: $(bare_index_path) ## run all tests with cargo
-	RUST_BACKTRACE=1 CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=$(bare_index_path) cargo test --jobs 1
+test: ## run all tests with cargo
+	RUST_BACKTRACE=1 cargo test --jobs 1
 	
-quick-test: $(bare_index_path) ## run all fast tests with cargo (those which dont clone themselves
-	CRATES_INDEX_DIFF_TEST_EXISTING_INDEX=$(bare_index_path) cargo test --jobs 1 quick
+quick-test: ## run all fast tests with cargo (those which dont clone themselves
+	cargo test --jobs 1 quick
 	

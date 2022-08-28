@@ -1,0 +1,7 @@
+diff --git a/gi/ti/gitignored-cli b/gi/ti/gitignored-cli
+new file mode 100644
+index 0000000000..2868a41059
+--- /dev/null
++++ b/gi/ti/gitignored-cli
+@@ -0,0 +1 @@
++{"name":"gitignored-cli","vers":"0.0.0","deps":[{"name":"chrono","req":"^0.4","features":["serde"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"clap","req":"^3.2.15","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"colored","req":"^2.0.0","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"prettytable-rs","req":"^0.8.0","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"reqwest","req":"^0.11","features":["blocking","json"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"serde","req":"^1.0","features":["derive"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"serde_json","req":"^1.0","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"strsim","req":"^0.10.0","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"d6772d29676ecf4ca725f180ac05f547103d8fc2423461075f12dc08f6464f3c","features":{},"yanked":false,"links":null}

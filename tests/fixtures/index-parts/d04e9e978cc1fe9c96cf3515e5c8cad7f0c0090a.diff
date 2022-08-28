@@ -1,0 +1,7 @@
+diff --git a/gi/rl/girl b/gi/rl/girl
+deleted file mode 100644
+index 7ea19050f1..0000000000
+--- a/gi/rl/girl
++++ /dev/null
+@@ -1 +0,0 @@
+-{"name":"girl","vers":"0.1.0","deps":[],"cksum":"ffbe4c3b8c3ef607d7651c1c031a310c0f3051da85ee4eef0a347e543bce53a8","features":{},"yanked":false,"links":null}

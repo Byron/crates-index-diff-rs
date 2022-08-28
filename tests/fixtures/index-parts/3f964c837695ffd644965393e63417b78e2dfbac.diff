@@ -1,0 +1,7 @@
+diff --git a/gi/t-/git-refspec b/gi/t-/git-refspec
+index 5885a64817..b339339af1 100644
+--- a/gi/t-/git-refspec
++++ b/gi/t-/git-refspec
+@@ -1 +1,2 @@
+ {"name":"git-refspec","vers":"0.0.0","deps":[{"name":"bstr","req":"^0.2.13","features":["std"],"optional":false,"default_features":false,"target":null,"kind":"normal"},{"name":"thiserror","req":"^1.0.26","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"98cd6c82ae276924594c0feccd482581f7c15e22a66fa69be1742bfb6dd85fcb","features":{},"yanked":false,"links":null}
++{"name":"git-refspec","vers":"0.1.0","deps":[{"name":"bstr","req":"^0.2.13","features":["std"],"optional":false,"default_features":false,"target":null,"kind":"normal"},{"name":"git-hash","req":"^0.9.8","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"git-revision","req":"^0.4.2","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"git-validate","req":"^0.5.5","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"smallvec","req":"^1.9.0","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"thiserror","req":"^1.0.26","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"32886438939729151852fb2379007a3f17695232cdc65a81c7e757ae4b587b71","features":{},"yanked":false,"links":null}

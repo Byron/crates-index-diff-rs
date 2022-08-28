@@ -1,5 +1,8 @@
 use crate::{Change, CrateVersion, Index};
 use git_repository as git;
+use git_repository::bstr::BStr;
+use git_repository::diff::tree::visit::Action;
+use git_repository::prelude::{FindExt, ObjectIdExt, TreeIterExt};
 use git_repository::refs::transaction::PreviousValue;
 use std::convert::TryFrom;
 
@@ -15,6 +18,12 @@ pub enum Error {
     ReferenceEdit(#[from] git::reference::edit::Error),
     #[error(transparent)]
     RevParse(#[from] git::revision::spec::parse::Error),
+    #[error(transparent)]
+    FindObject(#[from] git::object::find::existing::Error),
+    #[error(transparent)]
+    PeelToTree(#[from] git::object::peel::to_kind::Error),
+    #[error(transparent)]
+    Diff(#[from] git::diff::tree::changes::Error),
 }
 
 /// Find changes without modifying the underling repository
@@ -141,6 +150,56 @@ impl Index {
         )?;
 
         changes.extend(deletes.iter().map(|krate| Change::Deleted(krate.clone())));
+        Ok(changes)
+    }
+
+    /// Similar to `changes()`, but requires `from` and `to` objects to be provided. They may point
+    /// to either `Commit`s or `Tree`s.
+    pub fn changes_between_commits2(
+        &mut self,
+        from: impl Into<git::hash::ObjectId>,
+        to: impl Into<git::hash::ObjectId>,
+    ) -> Result<Vec<Change>, Error> {
+        let changes = Vec::new();
+        self.repo.object_cache_size_if_unset(4 * 1024 * 1024);
+        let into_tree = |id: git::hash::ObjectId| -> Result<git::Tree<'_>, Error> {
+            Ok(id
+                .attach(&self.repo)
+                .object()?
+                .peel_to_kind(git::object::Kind::Tree)?
+                .into_tree())
+        };
+        let from = into_tree(from.into())?;
+        let to = into_tree(to.into())?;
+        struct Delegate;
+        impl git::diff::tree::Visit for Delegate {
+            fn pop_front_tracked_path_and_set_current(&mut self) {
+                todo!()
+            }
+
+            fn push_back_tracked_path_component(&mut self, _component: &BStr) {
+                todo!()
+            }
+
+            fn push_path_component(&mut self, _component: &BStr) {
+                todo!()
+            }
+
+            fn pop_path_component(&mut self) {
+                todo!()
+            }
+
+            fn visit(&mut self, _change: git::diff::tree::visit::Change) -> Action {
+                todo!()
+            }
+        }
+        git::objs::TreeRefIter::from_bytes(&from.data).changes_needed(
+            git::objs::TreeRefIter::from_bytes(&to.data),
+            git::diff::tree::State::default(),
+            |id, buf| self.repo.objects.find_tree_iter(id, buf).ok(),
+            &mut Delegate,
+        )?;
+
         Ok(changes)
     }
 }

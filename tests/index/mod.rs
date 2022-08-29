@@ -46,8 +46,8 @@ fn clone_if_needed() {
 }
 
 #[test]
-fn quick_changes_since_last_fetch() -> crate::Result {
-    let (index, _tmp) = index_rw()?;
+fn changes_since_last_fetch() -> crate::Result {
+    let (mut index, _tmp) = index_rw()?;
     assert!(index.last_seen_reference().is_err(), "no marker exists");
     let num_changes_since_first_commit = index.fetch_changes()?.len();
     assert_eq!(
@@ -92,6 +92,18 @@ fn quick_changes_since_last_fetch() -> crate::Result {
         index.fetch_changes()?.len(),
         0,
         "nothing if there was no change"
+    );
+
+    // now the remote has squashed their history, we should still be able to get the correct changes.
+    index.branch_name = "squashed";
+    let changes = index.fetch_changes()?;
+    assert_eq!(changes.len(), 1);
+    assert_eq!(
+        changes
+            .first()
+            .and_then(|c| c.added().map(|v| (v.name.as_str(), v.version.as_str()))),
+        Some(("git-repository", "1.0.0")),
+        "there was just one actual changes compared to the previous state"
     );
     Ok(())
 }

@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 11.1.0 (2022-08-30)
+
+### New Features
+
+ - <csr-id-09489ab888124954119c70a5828f0e1011198253/> make the name of the remote configurable.
+   This is primarily used in testing and we try even harder to make it fail
+   to deal with squashed remote references, but it seems to work fine.
+   
+   For good measure, now using `+` in the refspec to assure it forces
+   an update.
+
+### Bug Fixes
+
+ - <csr-id-cdcac4127490713de60e19d007ebcac0a2459c0d/> assure refs can be reet when fetching to support squashing.
+   Previously tests didn't replicate this, now they do.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 4 commits contributed to the release over the course of 1 calendar day.
+ - 1 day passed between releases.
+ - 2 commits where understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#16](https://github.com/Byron/crates-index-diff-rs/issues/16)
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#16](https://github.com/Byron/crates-index-diff-rs/issues/16)**
+    - fix assertion message ([`51559b8`](https://github.com/Byron/crates-index-diff-rs/commit/51559b87a7c6b28b626e74b64445335d9a9f813a))
+ * **Uncategorized**
+    - make the name of the remote configurable. ([`09489ab`](https://github.com/Byron/crates-index-diff-rs/commit/09489ab888124954119c70a5828f0e1011198253))
+    - assure refs can be reet when fetching to support squashing. ([`cdcac41`](https://github.com/Byron/crates-index-diff-rs/commit/cdcac4127490713de60e19d007ebcac0a2459c0d))
+    - Add test to validate we can deal with squashed indices ([`ed4ba38`](https://github.com/Byron/crates-index-diff-rs/commit/ed4ba38ce3875372c35cbd9476b1e922065f2f78))
+</details>
+
 ## 11.0.0 (2022-08-28)
 
 ### Changed (BREAKING)
@@ -25,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 38 commits contributed to the release over the course of 1 calendar day.
+ - 39 commits contributed to the release over the course of 1 calendar day.
  - 97 days passed between releases.
  - 2 commits where understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#16](https://github.com/Byron/crates-index-diff-rs/issues/16)
@@ -80,6 +119,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - refactor ([`ecd84eb`](https://github.com/Byron/crates-index-diff-rs/commit/ecd84eb489824abd7589526c864cbd8dfebb3a55))
     - a script to create an index fixture ([`9a5f312`](https://github.com/Byron/crates-index-diff-rs/commit/9a5f312b781e82a35d7ae9812e8d8095e371d656))
  * **Uncategorized**
+    - Release crates-index-diff v11.0.0 ([`898024f`](https://github.com/Byron/crates-index-diff-rs/commit/898024ffe563e9b776f928fa9e41065ac2dcdd06))
     - Merge branch 'semantic-stability' ([`b7574d8`](https://github.com/Byron/crates-index-diff-rs/commit/b7574d8e518390e00d5eb50579c8644ed2f85eb2))
     - thanks clippy ([`9e9b972`](https://github.com/Byron/crates-index-diff-rs/commit/9e9b9726c4ea59ead04f071928042e65bc2e0204))
 </details>

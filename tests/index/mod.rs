@@ -48,6 +48,7 @@ fn clone_if_needed() {
 #[test]
 fn changes_since_last_fetch() -> crate::Result {
     let (mut index, _tmp) = index_rw()?;
+    let repo = index.repository();
     assert!(index.last_seen_reference().is_err(), "no marker exists");
     let num_changes_since_first_commit = index.fetch_changes()?.len();
     assert_eq!(
@@ -57,9 +58,7 @@ fn changes_since_last_fetch() -> crate::Result {
     let mut marker = index
         .last_seen_reference()
         .expect("must be created/update now");
-    let remote_main = index
-        .repository()
-        .find_reference("refs/remotes/origin/main")?;
+    let remote_main = repo.find_reference("refs/remotes/origin/main")?;
     assert_eq!(
         marker.target(),
         remote_main.target(),
@@ -69,9 +68,7 @@ fn changes_since_last_fetch() -> crate::Result {
     // reset to previous one
     marker
         .set_target_id(
-            index
-                .repository()
-                .rev_parse(format!("{}~2", index.seen_ref_name).as_str())?
+            repo.rev_parse(format!("{}~2", index.seen_ref_name).as_str())?
                 .single()
                 .unwrap(),
             "resetting to previous commit",
@@ -95,7 +92,20 @@ fn changes_since_last_fetch() -> crate::Result {
     );
 
     // now the remote has squashed their history, we should still be able to get the correct changes.
-    index.branch_name = "squashed";
+    git2::Repository::open(repo.git_dir())?.remote("local", repo.git_dir().to_str().unwrap())?;
+    index.remote_name = "local";
+    index
+        .repository()
+        .find_reference("refs/heads/main")?
+        .set_target_id(
+            index
+                .repository()
+                .rev_parse("origin/squashed")?
+                .single()
+                .unwrap(),
+            "adjust to simulate remote with new squashed history",
+        )?;
+    dbg!(_tmp.into_path());
     let changes = index.fetch_changes()?;
     assert_eq!(changes.len(), 1);
     assert_eq!(

@@ -90,6 +90,7 @@ impl Index {
         repo.object_cache_size_if_unset(4 * 1024 * 1024);
         Ok(Index {
             repo,
+            remote_name: "origin",
             branch_name: "master",
             seen_ref_name: LAST_SEEN_REFNAME,
         })

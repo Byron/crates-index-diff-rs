@@ -61,19 +61,23 @@ impl Index {
             .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()));
         let to = {
             let repo = git2::Repository::open(repo.git_dir())?;
-            repo.find_remote("origin").and_then(|mut r| {
+            repo.find_remote(self.remote_name).and_then(|mut r| {
                 r.fetch(
                     &[format!(
-                        "+refs/heads/{branch}:refs/remotes/origin/{branch}",
-                        branch = self.branch_name
+                        "+refs/heads/{branch}:refs/remotes/{remote}/{branch}",
+                        remote = self.remote_name,
+                        branch = self.branch_name,
                     )],
                     options,
                     None,
                 )
             })?;
             git::hash::ObjectId::try_from(
-                repo.refname_to_id(&format!("refs/remotes/origin/{}", self.branch_name))?
-                    .as_bytes(),
+                repo.refname_to_id(&format!(
+                    "refs/remotes/{}/{}",
+                    self.remote_name, self.branch_name
+                ))?
+                .as_bytes(),
             )
             .expect("valid oid")
         };

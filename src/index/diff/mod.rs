@@ -64,7 +64,7 @@ impl Index {
             repo.find_remote("origin").and_then(|mut r| {
                 r.fetch(
                     &[format!(
-                        "refs/heads/{branch}:refs/remotes/origin/{branch}",
+                        "+refs/heads/{branch}:refs/remotes/origin/{branch}",
                         branch = self.branch_name
                     )],
                     options,

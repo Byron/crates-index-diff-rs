@@ -24,7 +24,8 @@ mkdir -p "$out"
     git log --format=%B -n1 "$commit" > "$out/$commit.msg"
   done < "$commit_list"
 
-base="$out/reproduce-#19"
+base_name='reproduce-#19'
+base="$out/$base_name"
 cat <<EOF > "$base.diff"
 diff --git a/al/lo/allowed b/al/lo/allowed
 new file mode 100644
@@ -34,7 +35,7 @@ index 0000000..b30662b
 @@ -0,0 +1 @@
 +{"name":"allowed","vers":"1.0.0","deps":[],"features":{},"cksum":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","yanked":true}
 EOF
-  echo 'reproduce-#19' >> "$commit_list"
+  echo "$base_name" >> "$commit_list"
   echo 'reproduce issue #19' >> "$base.msg"
 
 )

@@ -21,7 +21,7 @@ fn addition() -> crate::Result {
 
 #[test]
 fn deletion() -> crate::Result {
-    let changes = changes(index_ro()?, "@~326")?;
+    let changes = changes(index_ro()?, "@~327")?;
     assert_eq!(changes.len(), 1);
     assert_eq!(changes.first().and_then(|c| c.deleted()), Some("girl"));
     Ok(())
@@ -49,6 +49,20 @@ fn yanked() -> crate::Result {
             .first()
             .and_then(|c| c.yanked().map(|v| v.name.as_str())),
         Some("github_release_rs")
+    );
+    Ok(())
+}
+
+#[test]
+#[ignore]
+fn yanked_in_new_file() -> crate::Result {
+    let changes = changes(index_ro()?, ":/reproduce issue #19")?;
+    assert_eq!(changes.len(), 1);
+    assert_eq!(
+        changes
+            .first()
+            .and_then(|c| c.yanked().map(|v| v.name.as_str())),
+        Some("allowed")
     );
     Ok(())
 }

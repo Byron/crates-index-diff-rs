@@ -54,7 +54,6 @@ fn yanked() -> crate::Result {
 }
 
 #[test]
-#[ignore]
 fn yanked_in_new_file() -> crate::Result {
     let changes = changes(index_ro()?, ":/reproduce issue #19")?;
     assert_eq!(changes.len(), 1);

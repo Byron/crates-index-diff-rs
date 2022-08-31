@@ -41,8 +41,12 @@ impl<'repo> Delegate<'repo> {
             Addition { entry_mode, oid } => {
                 if let Some(obj) = entry_data(self.repo, entry_mode, oid)? {
                     for line in (&obj.data).lines() {
-                        self.changes
-                            .push(Change::Added(serde_json::from_slice(line)?));
+                        let version: CrateVersion = serde_json::from_slice(line)?;
+                        self.changes.push(if version.yanked {
+                            Change::Yanked(version)
+                        } else {
+                            Change::Added(version)
+                        });
                     }
                 }
             }

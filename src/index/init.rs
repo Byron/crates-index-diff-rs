@@ -72,10 +72,8 @@ impl Index {
             fetch_options,
         }: CloneOptions<'_>,
     ) -> Result<Index, Error> {
-        let mut repo_did_exist = true;
         let repo = git2::Repository::open(path.as_ref()).or_else(|err| {
             if err.class() == git2::ErrorClass::Repository {
-                repo_did_exist = false;
                 let mut builder = git2::build::RepoBuilder::new();
                 if let Some(fo) = fetch_options {
                     builder.fetch_options(fo);

@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 11.1.3 (2022-09-01)
+
+### Bug Fixes
+
+ - <csr-id-a430c03d950d073084e3555cb264fa5c416b8ded/> switch git2 back to v0.14 - v0.15 is a breaking change…
+   …for everyone who uses git2 as direct dependency as well due to
+   libgit2-sys.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - switch git2 back to v0.14 - v0.15 is a breaking change… ([`a430c03`](https://github.com/Byron/crates-index-diff-rs/commit/a430c03d950d073084e3555cb264fa5c416b8ded))
+</details>
+
 ## 11.1.2 (2022-09-01)
 
 ### Bug Fixes
@@ -25,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release.
+ - 7 commits contributed to the release.
  - 1 day passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
@@ -37,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v11.1.2 ([`5b2e3ce`](https://github.com/Byron/crates-index-diff-rs/commit/5b2e3ce028c043d8cc8c0e100f225626d5f11654))
     - Merge branch 'fix-zlib-stream-error' ([`ac83e7a`](https://github.com/Byron/crates-index-diff-rs/commit/ac83e7a5afaa7ae238f441dccfdbcb97edc5edc3))
     - make fetches work again by using safe-performance mode of `git-repository`. ([`23a66b9`](https://github.com/Byron/crates-index-diff-rs/commit/23a66b9da25ef40d4e545bed028788f83836a584))
     - refactor ([`e93f1c6`](https://github.com/Byron/crates-index-diff-rs/commit/e93f1c66fd4c18de60f6fe75f913e8a1d7968a29))

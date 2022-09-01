@@ -21,7 +21,7 @@ fn addition() -> crate::Result {
 
 #[test]
 fn deletion() -> crate::Result {
-    let changes = changes(index_ro()?, "@~^{/Updating crate `git-shell#0.3.0`}~1")?;
+    let changes = changes(index_ro()?, "@^{/Updating crate `git-shell#0.3.0`}~1")?;
     assert_eq!(changes.len(), 1);
     assert_eq!(changes.first().and_then(|c| c.deleted()), Some("girl"));
     Ok(())

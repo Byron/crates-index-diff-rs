@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 11.1.2 (2022-09-01)
+
+### Bug Fixes
+
+ - <csr-id-23a66b9da25ef40d4e545bed028788f83836a584/> make fetches work again by using safe-performance mode of `git-repository`.
+   This fixes the 'zlib stream broken' issue when fetching crates.io
+   changes which was caused by `git-repository` configuring for
+   max-performance by default, which affects a crate used by `git2` as
+   well. For some reason, changing to `zlib-ng` as backend wasn't taken
+   kindly by `libgit2` causing it to fail after a short while of receiving
+   a pack from the remote.
+   
+   The fix avoids making such modifications to the zlib crate, allowing
+   both crates, `git-repository` and `git2` to co-exist in the same
+   dependency tree.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 6 commits contributed to the release.
+ - 1 day passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge branch 'fix-zlib-stream-error' ([`ac83e7a`](https://github.com/Byron/crates-index-diff-rs/commit/ac83e7a5afaa7ae238f441dccfdbcb97edc5edc3))
+    - make fetches work again by using safe-performance mode of `git-repository`. ([`23a66b9`](https://github.com/Byron/crates-index-diff-rs/commit/23a66b9da25ef40d4e545bed028788f83836a584))
+    - refactor ([`e93f1c6`](https://github.com/Byron/crates-index-diff-rs/commit/e93f1c66fd4c18de60f6fe75f913e8a1d7968a29))
+    - Upgrade to latest git2 version ([`7616db2`](https://github.com/Byron/crates-index-diff-rs/commit/7616db2a4022fdf97cab00ed298242de46291f23))
+    - properly parameterize script so it's obvious what is what ([`02f715e`](https://github.com/Byron/crates-index-diff-rs/commit/02f715e0b6b74559b8702234798c36eae510f6de))
+    - Make test-lookup independent of prior commits ([`4b7fc6e`](https://github.com/Byron/crates-index-diff-rs/commit/4b7fc6e54336b642f0739b8d7845a9dba2346209))
+</details>
+
 ## 11.1.1 (2022-08-31)
 
 ### Bug Fixes
@@ -26,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 1 day passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#19](https://github.com/Byron/crates-index-diff-rs/issues/19)
@@ -40,6 +80,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * **[#19](https://github.com/Byron/crates-index-diff-rs/issues/19)**
     - Consider all crates yanked if 'yanked = true'. ([`28de9d4`](https://github.com/Byron/crates-index-diff-rs/commit/28de9d4a6385bd495dbf93ef0d2b58e00e993104))
     - Add failing test ([`89378e1`](https://github.com/Byron/crates-index-diff-rs/commit/89378e10b395cb1c0d963557d46568fda7b49f7b))
+ * **Uncategorized**
+    - Release crates-index-diff v11.1.1 ([`708288f`](https://github.com/Byron/crates-index-diff-rs/commit/708288f52f26ecff03ddc89ea792be1a765b8b85))
 </details>
 
 ## 11.1.0 (2022-08-30)

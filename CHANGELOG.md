@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 11.1.5 (2022-09-02)
+
+### Bug Fixes
+
+ - <csr-id-8af61f2a20eee72b0e53ae3b6ce22a3a9d52546c/> Ignore all changed files with an extension.
+   There are non-crate files that as far as we know all have file
+   extensions, as opposed to the crate files we are interested in, which do
+   not.
+   
+   Thus skipping all files with extension helps us to get past the initial
+   commit which includes such files, like `.github/*.yml`.
+   
+   Related to https://github.com/rust-lang/docs.rs/pull/1807#issuecomment-1235158502
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Ignore all changed files with an extension. ([`8af61f2`](https://github.com/Byron/crates-index-diff-rs/commit/8af61f2a20eee72b0e53ae3b6ce22a3a9d52546c))
+</details>
+
 ## 11.1.4 (2022-09-02)
 
 ### Bug Fixes
@@ -19,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
 
@@ -30,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v11.1.4 ([`9d41b20`](https://github.com/Byron/crates-index-diff-rs/commit/9d41b200f5bec12953d62fc4ca892f38b6d28ac1))
     - improve error descriptions and provide details when decoding of crate versions fails. ([`ab6e46c`](https://github.com/Byron/crates-index-diff-rs/commit/ab6e46ced56d1aaed22b5619cfbc5c131a93ba32))
     - fix rev-spec ([`83e91f5`](https://github.com/Byron/crates-index-diff-rs/commit/83e91f56e4f93b6de5210e6a5f6d80afaeba4e6d))
 </details>

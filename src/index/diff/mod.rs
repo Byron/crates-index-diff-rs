@@ -23,9 +23,10 @@ pub enum Error {
     PeelToTree(#[from] git::object::peel::to_kind::Error),
     #[error("Failed to diff two trees to find changed crates")]
     Diff(#[from] git::diff::tree::changes::Error),
-    #[error("Failed to decode {line:?} as crate version")]
+    #[error("Failed to decode {line:?} in file {file_name:?} as crate version")]
     VersionDecode {
         source: serde_json::Error,
+        file_name: bstr::BString,
         line: bstr::BString,
     },
 }

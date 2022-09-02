@@ -1,5 +1,6 @@
 use crate::index::diff::Error;
 use crate::{Change, CrateVersion};
+use bstr::BStr;
 use git_repository as git;
 use git_repository::diff::tree::visit::Action;
 use similar::ChangeTag;
@@ -24,6 +25,7 @@ impl<'repo> Delegate<'repo> {
         }
     }
     fn handle(&mut self, change: git::diff::tree::visit::Change) -> Result<(), Error> {
+        use git::bstr::ByteSlice;
         use git::diff::tree::visit::Change::*;
         use git::objs::tree::EntryMode::*;
         fn entry_data(
@@ -36,12 +38,14 @@ impl<'repo> Delegate<'repo> {
                 .transpose()
                 .map_err(Into::into)
         }
-        use git::bstr::ByteSlice;
+        if self.file_name.contains(&b'.') {
+            return Ok(());
+        }
         match change {
             Addition { entry_mode, oid } => {
                 if let Some(obj) = entry_data(self.repo, entry_mode, oid)? {
                     for line in (&obj.data).lines() {
-                        let version = version_from_json_line(line)?;
+                        let version = version_from_json_line(line, self.file_name.as_ref())?;
                         self.changes.push(if version.yanked {
                             Change::Yanked(version)
                         } else {
@@ -70,7 +74,10 @@ impl<'repo> Delegate<'repo> {
                     for change in diff.iter_all_changes() {
                         match change.tag() {
                             ChangeTag::Delete | ChangeTag::Insert => {
-                                let version = version_from_json_line(change.value())?;
+                                let version = version_from_json_line(
+                                    change.value(),
+                                    self.file_name.as_ref(),
+                                )?;
                                 if change.tag() == ChangeTag::Insert {
                                     self.changes.push(if version.yanked {
                                         Change::Yanked(version)
@@ -129,9 +136,10 @@ impl git::diff::tree::Visit for Delegate<'_> {
     }
 }
 
-fn version_from_json_line(line: &[u8]) -> Result<CrateVersion, Error> {
+fn version_from_json_line(line: &[u8], file_name: &BStr) -> Result<CrateVersion, Error> {
     serde_json::from_slice(line).map_err(|err| Error::VersionDecode {
         source: err,
+        file_name: file_name.into(),
         line: line.into(),
     })
 }

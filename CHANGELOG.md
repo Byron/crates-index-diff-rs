@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 11.1.4 (2022-09-02)
+
+### Bug Fixes
+
+ - <csr-id-ab6e46ced56d1aaed22b5619cfbc5c131a93ba32/> improve error descriptions and provide details when decoding of crate versions fails.
+   It was suggested in this comment:
+   https://github.com/rust-lang/docs.rs/pull/1807#issuecomment-1234825498 ,
+   and if marker references aren't as expected it's possible to diff lines
+   that are not actually crate versions.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - improve error descriptions and provide details when decoding of crate versions fails. ([`ab6e46c`](https://github.com/Byron/crates-index-diff-rs/commit/ab6e46ced56d1aaed22b5619cfbc5c131a93ba32))
+    - fix rev-spec ([`83e91f5`](https://github.com/Byron/crates-index-diff-rs/commit/83e91f56e4f93b6de5210e6a5f6d80afaeba4e6d))
+</details>
+
 ## 11.1.3 (2022-09-01)
 
 ### Bug Fixes
@@ -17,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
 
@@ -28,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v11.1.3 ([`d46402a`](https://github.com/Byron/crates-index-diff-rs/commit/d46402ab2ed4e65c7b1c03635ed39ea68d31ffe7))
     - switch git2 back to v0.14 - v0.15 is a breaking change… ([`a430c03`](https://github.com/Byron/crates-index-diff-rs/commit/a430c03d950d073084e3555cb264fa5c416b8ded))
 </details>
 

@@ -41,7 +41,7 @@ impl<'repo> Delegate<'repo> {
             Addition { entry_mode, oid } => {
                 if let Some(obj) = entry_data(self.repo, entry_mode, oid)? {
                     for line in (&obj.data).lines() {
-                        let version: CrateVersion = serde_json::from_slice(line)?;
+                        let version = version_from_json_line(line)?;
                         self.changes.push(if version.yanked {
                             Change::Yanked(version)
                         } else {
@@ -70,8 +70,7 @@ impl<'repo> Delegate<'repo> {
                     for change in diff.iter_all_changes() {
                         match change.tag() {
                             ChangeTag::Delete | ChangeTag::Insert => {
-                                let version =
-                                    serde_json::from_slice::<CrateVersion>(change.value())?;
+                                let version = version_from_json_line(change.value())?;
                                 if change.tag() == ChangeTag::Insert {
                                     self.changes.push(if version.yanked {
                                         Change::Yanked(version)
@@ -128,4 +127,11 @@ impl git::diff::tree::Visit for Delegate<'_> {
             }
         }
     }
+}
+
+fn version_from_json_line(line: &[u8]) -> Result<CrateVersion, Error> {
+    serde_json::from_slice(line).map_err(|err| Error::VersionDecode {
+        source: err,
+        line: line.into(),
+    })
 }

@@ -11,20 +11,23 @@ use delegate::Delegate;
 #[derive(Debug, thiserror::Error)]
 #[allow(missing_docs)]
 pub enum Error {
-    #[error(transparent)]
+    #[error("Failed to fetch crates.io index repository")]
     Fetch(#[from] git2::Error),
-    #[error(transparent)]
+    #[error("Couldn't update marker reference")]
     ReferenceEdit(#[from] git::reference::edit::Error),
-    #[error(transparent)]
+    #[error("Failed to parse rev-spec to determine which revisions to diff")]
     RevParse(#[from] git::revision::spec::parse::Error),
-    #[error(transparent)]
+    #[error("Couldn't find blob that showed up when diffing trees")]
     FindObject(#[from] git::object::find::existing::Error),
-    #[error(transparent)]
+    #[error("Couldn't get the tree of a commit for diffing purposes")]
     PeelToTree(#[from] git::object::peel::to_kind::Error),
-    #[error(transparent)]
+    #[error("Failed to diff two trees to find changed crates")]
     Diff(#[from] git::diff::tree::changes::Error),
-    #[error(transparent)]
-    VersionDecode(#[from] serde_json::Error),
+    #[error("Failed to decode {line:?} as crate version")]
+    VersionDecode {
+        source: serde_json::Error,
+        line: bstr::BString,
+    },
 }
 
 /// Find changes without modifying the underling repository

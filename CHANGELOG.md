@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 11.1.6 (2022-09-14)
+
+### Bug Fixes
+
+ - <csr-id-4ce0021433ba2f4636ff97156ce323c1d8c6042e/> Ignore directory deletions.
+   Previously deleted directories would be picked up as crate deletions,
+   with the crate name being the deleted directory.
+   
+   Now only file deletions will be assumed to be crate deletions.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 11 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#20](https://github.com/Byron/crates-index-diff-rs/issues/20)
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#20](https://github.com/Byron/crates-index-diff-rs/issues/20)**
+    - Ignore directory deletions. ([`4ce0021`](https://github.com/Byron/crates-index-diff-rs/commit/4ce0021433ba2f4636ff97156ce323c1d8c6042e))
+</details>
+
 ## 11.1.5 (2022-09-02)
 
 ### Bug Fixes
@@ -23,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
 
@@ -34,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v11.1.5 ([`516a779`](https://github.com/Byron/crates-index-diff-rs/commit/516a779f861abeb3972ec721512fe424ab70d8e6))
     - Ignore all changed files with an extension. ([`8af61f2`](https://github.com/Byron/crates-index-diff-rs/commit/8af61f2a20eee72b0e53ae3b6ce22a3a9d52546c))
 </details>
 

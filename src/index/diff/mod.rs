@@ -106,15 +106,14 @@ impl Index {
         let from = into_tree(from.into())?;
         let to = into_tree(to.into())?;
         let mut delegate = Delegate::from_repo(&self.repo);
-        let file_changes =
-            git::diff::tree::Changes::from(git::objs::TreeRefIter::from_bytes(&from.data))
-                .needed_to_obtain(
-                    git::objs::TreeRefIter::from_bytes(&to.data),
-                    git::diff::tree::State::default(),
-                    |id, buf| self.repo.objects.find_tree_iter(id, buf),
-                    &mut delegate,
-                );
-        match file_changes.err() {
+        let res = git::diff::tree::Changes::from(git::objs::TreeRefIter::from_bytes(&from.data))
+            .needed_to_obtain(
+                git::objs::TreeRefIter::from_bytes(&to.data),
+                git::diff::tree::State::default(),
+                |id, buf| self.repo.objects.find_tree_iter(id, buf),
+                &mut delegate,
+            );
+        match res.err() {
             None | Some(git::diff::tree::changes::Error::Cancelled) => { /*error in delegate*/ }
             Some(err) => return Err(err.into()),
         }

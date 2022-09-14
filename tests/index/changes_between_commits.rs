@@ -3,6 +3,14 @@ use crates_index_diff::{Change, CrateVersion, Index};
 use git_repository as git;
 
 #[test]
+fn directory_deletions_are_not_picked_up() -> crate::Result {
+    let changes = changes(index_ro()?, ":/reproduce issue #20")?;
+    assert_eq!(changes.len(), 1);
+    assert_eq!(changes.first().and_then(|c| c.deleted()), Some("allowed"));
+    Ok(())
+}
+
+#[test]
 fn addition() -> crate::Result {
     let changes = changes(index_ro()?, ":/initial commit")?;
     assert_eq!(changes.len(), 3228);

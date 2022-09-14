@@ -54,10 +54,12 @@ impl<'repo> Delegate<'repo> {
                     }
                 }
             }
-            Deletion { .. } => {
-                self.changes.push(Change::Deleted {
-                    name: self.file_name.to_string(),
-                });
+            Deletion { entry_mode, .. } => {
+                if entry_mode.is_no_tree() {
+                    self.changes.push(Change::Deleted {
+                        name: self.file_name.to_string(),
+                    });
+                }
             }
             Modification {
                 previous_entry_mode,

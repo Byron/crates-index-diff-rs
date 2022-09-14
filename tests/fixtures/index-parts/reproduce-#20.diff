@@ -1,0 +1,7 @@
+diff --git a/al/lo/allowed b/al/lo/allowed
+deleted file mode 100644
+index b30662b..0000000
+--- a/al/lo/allowed
++++ /dev/null
+@@ -1 +0,0 @@
+-{"name":"allowed","vers":"1.0.0","deps":[],"features":{},"cksum":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","yanked":true}

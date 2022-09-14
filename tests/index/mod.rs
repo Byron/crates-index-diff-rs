@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 mod changes_between_commits;
 
-const NUM_CHANGES_SINCE_EVER: usize = 3517;
+const NUM_CHANGES_SINCE_EVER: usize = 3516;
 
 #[test]
 fn peek_changes() -> crate::Result {
@@ -68,7 +68,7 @@ fn changes_since_last_fetch() -> crate::Result {
     // reset to previous one
     marker
         .set_target_id(
-            repo.rev_parse(format!("{}~2", index.seen_ref_name).as_str())?
+            repo.rev_parse(format!("{}~1", index.seen_ref_name).as_str())?
                 .single()
                 .unwrap(),
             "resetting to previous commit",
@@ -105,7 +105,6 @@ fn changes_since_last_fetch() -> crate::Result {
                 .unwrap(),
             "adjust to simulate remote with new squashed history",
         )?;
-    dbg!(_tmp.into_path());
     let changes = index.fetch_changes()?;
     assert_eq!(changes.len(), 1);
     assert_eq!(

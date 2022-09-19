@@ -1,6 +1,6 @@
 use crate::{Change, Index};
 use git_repository as git;
-use git_repository::prelude::{FindExt, ObjectIdExt};
+use git_repository::prelude::ObjectIdExt;
 use git_repository::refs::transaction::PreviousValue;
 use std::convert::TryFrom;
 
@@ -22,7 +22,7 @@ pub enum Error {
     #[error("Couldn't get the tree of a commit for diffing purposes")]
     PeelToTree(#[from] git::object::peel::to_kind::Error),
     #[error("Failed to diff two trees to find changed crates")]
-    Diff(#[from] git::diff::tree::changes::Error),
+    Diff(#[from] git::object::tree::diff::Error),
     #[error("Failed to decode {line:?} in file {file_name:?} as crate version")]
     VersionDecode {
         source: serde_json::Error,
@@ -105,18 +105,10 @@ impl Index {
         };
         let from = into_tree(from.into())?;
         let to = into_tree(to.into())?;
-        let mut delegate = Delegate::from_repo(&self.repo);
-        let res = git::diff::tree::Changes::from(git::objs::TreeRefIter::from_bytes(&from.data))
-            .needed_to_obtain(
-                git::objs::TreeRefIter::from_bytes(&to.data),
-                git::diff::tree::State::default(),
-                |id, buf| self.repo.objects.find_tree_iter(id, buf),
-                &mut delegate,
-            );
-        match res.err() {
-            None | Some(git::diff::tree::changes::Error::Cancelled) => { /*error in delegate*/ }
-            Some(err) => return Err(err.into()),
-        }
+        let mut delegate = Delegate::default();
+        from.changes()
+            .track_filename()
+            .for_each_to_obtain_tree(&to, |change| delegate.handle(change))?;
         delegate.into_result()
     }
 }

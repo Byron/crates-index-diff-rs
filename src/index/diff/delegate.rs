@@ -52,20 +52,13 @@ impl Delegate {
                     });
                 }
             }
-            Modification {
-                previous_entry_mode,
-                previous_id,
-                entry_mode,
-                id,
-            } => {
-                let pair =
-                    entry_data(previous_entry_mode, previous_id)?.zip(entry_data(entry_mode, id)?);
-                if let Some((old, new)) = pair {
-                    let diff = similar::TextDiffConfig::default()
-                        .algorithm(similar::Algorithm::Myers)
-                        .diff_lines(old.data.as_slice(), new.data.as_slice());
+            Modification { .. } => {
+                if let Some(diff) = change.event.diff().transpose()? {
                     let location = change.location;
-                    for change in diff.iter_all_changes() {
+                    for change in diff
+                        .text(git::diff::lines::Algorithm::Myers)
+                        .iter_all_changes()
+                    {
                         match change.tag() {
                             ChangeTag::Delete | ChangeTag::Insert => {
                                 let version = version_from_json_line(change.value(), location)?;

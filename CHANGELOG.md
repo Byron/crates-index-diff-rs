@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 11.2.0 (2022-09-20)
+
+### New Features
+
+ - <csr-id-91593970b6989b93a48138ca35a799808e99afd0/> upgrade to `git-repository` v0.24 to simplify diff implementation.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 3 commits contributed to the release over the course of 5 calendar days.
+ - 5 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Use the latest diff API to obtain line diffs. ([`300e966`](https://github.com/Byron/crates-index-diff-rs/commit/300e966f905feb75d8ecc721ae479f0a5e68e681))
+    - upgrade to `git-repository` v0.24 to simplify diff implementation. ([`9159397`](https://github.com/Byron/crates-index-diff-rs/commit/91593970b6989b93a48138ca35a799808e99afd0))
+    - remove accidentally added example ([`cd23a28`](https://github.com/Byron/crates-index-diff-rs/commit/cd23a28c45b4d3e6f6ac2fce1034a03eee0ac65f))
+</details>
+
 ## 11.1.6 (2022-09-14)
 
 ### Bug Fixes
@@ -19,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 11 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#20](https://github.com/Byron/crates-index-diff-rs/issues/20)
@@ -32,6 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * **[#20](https://github.com/Byron/crates-index-diff-rs/issues/20)**
     - Ignore directory deletions. ([`4ce0021`](https://github.com/Byron/crates-index-diff-rs/commit/4ce0021433ba2f4636ff97156ce323c1d8c6042e))
+ * **Uncategorized**
+    - Release crates-index-diff v11.1.6 ([`3a1ecd1`](https://github.com/Byron/crates-index-diff-rs/commit/3a1ecd183e695772a602d32b8e512eb501fa1201))
 </details>
 
 ## 11.1.5 (2022-09-02)

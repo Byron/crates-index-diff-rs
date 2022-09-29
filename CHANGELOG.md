@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 12.0.0 (2022-09-29)
 
 This release is v11.2, but correctly indicates the **breaking change** introduced by upgrading
 `git-repository` to v0.24, which fixes [#23](https://github.com/Byron/crates-index-diff-rs/issues/23).
@@ -14,7 +14,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 8 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#23](https://github.com/Byron/crates-index-diff-rs/issues/23)
@@ -26,6 +26,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 <details><summary>view details</summary>
 
  * **[#23](https://github.com/Byron/crates-index-diff-rs/issues/23)**
+    - update changelog prior to release ([`6017b3f`](https://github.com/Byron/crates-index-diff-rs/commit/6017b3fe3f46079e86181d1a7107cd77dd1ab797))
     - update version to 12.0 to indicate breaking change via git-repository ([`1fcac4b`](https://github.com/Byron/crates-index-diff-rs/commit/1fcac4b92ec7d2ef90206dabeebc7d07322b0723))
 </details>
 

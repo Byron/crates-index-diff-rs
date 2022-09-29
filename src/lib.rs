@@ -9,4 +9,5 @@ pub mod index;
 mod types;
 
 pub use git2;
+pub use git_repository as git;
 pub use types::{Change, CrateVersion, Dependency, Index};

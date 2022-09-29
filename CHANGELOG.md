@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 12.1.0 (2022-09-29)
+
+### New Features
+
+ - <csr-id-74866b44ada127894b63969818e64564a294c8d0/> re-export `git-repository` as `git`
+   This makes type conversions possible where needed.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - re-export `git-repository` as `git` ([`74866b4`](https://github.com/Byron/crates-index-diff-rs/commit/74866b44ada127894b63969818e64564a294c8d0))
+</details>
+
 ## 12.0.0 (2022-09-29)
 
 This release is v11.2, but correctly indicates the **breaking change** introduced by upgrading
@@ -14,7 +39,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 8 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#23](https://github.com/Byron/crates-index-diff-rs/issues/23)
@@ -28,6 +53,8 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  * **[#23](https://github.com/Byron/crates-index-diff-rs/issues/23)**
     - update changelog prior to release ([`6017b3f`](https://github.com/Byron/crates-index-diff-rs/commit/6017b3fe3f46079e86181d1a7107cd77dd1ab797))
     - update version to 12.0 to indicate breaking change via git-repository ([`1fcac4b`](https://github.com/Byron/crates-index-diff-rs/commit/1fcac4b92ec7d2ef90206dabeebc7d07322b0723))
+ * **Uncategorized**
+    - Release crates-index-diff v12.0.0 ([`ee27555`](https://github.com/Byron/crates-index-diff-rs/commit/ee275556b2bac9845b9dc71165df8caf51bad6a5))
 </details>
 
 ## 11.2.0 (2022-09-20)

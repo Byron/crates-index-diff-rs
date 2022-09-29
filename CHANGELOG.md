@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+This release is v11.2, but correctly indicates the **breaking change** introduced by upgrading
+`git-repository` to v0.24, which fixes [#23](https://github.com/Byron/crates-index-diff-rs/issues/23).
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 8 days passed between releases.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#23](https://github.com/Byron/crates-index-diff-rs/issues/23)
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#23](https://github.com/Byron/crates-index-diff-rs/issues/23)**
+    - update version to 12.0 to indicate breaking change via git-repository ([`1fcac4b`](https://github.com/Byron/crates-index-diff-rs/commit/1fcac4b92ec7d2ef90206dabeebc7d07322b0723))
+</details>
+
 ## 11.2.0 (2022-09-20)
 
 ### New Features
@@ -15,8 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release over the course of 5 calendar days.
- - 5 days passed between releases.
+ - 4 commits contributed to the release over the course of 6 calendar days.
+ - 6 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
 
@@ -27,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v11.2.0 ([`7e420d2`](https://github.com/Byron/crates-index-diff-rs/commit/7e420d284099f195f316429d0ac9ca2262cf881c))
     - Use the latest diff API to obtain line diffs. ([`300e966`](https://github.com/Byron/crates-index-diff-rs/commit/300e966f905feb75d8ecc721ae479f0a5e68e681))
     - upgrade to `git-repository` v0.24 to simplify diff implementation. ([`9159397`](https://github.com/Byron/crates-index-diff-rs/commit/91593970b6989b93a48138ca35a799808e99afd0))
     - remove accidentally added example ([`cd23a28`](https://github.com/Byron/crates-index-diff-rs/commit/cd23a28c45b4d3e6f6ac2fce1034a03eee0ac65f))

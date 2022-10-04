@@ -93,7 +93,7 @@ fn changes_since_last_fetch() -> crate::Result {
 
     // now the remote has squashed their history, we should still be able to get the correct changes.
     git2::Repository::open(repo.git_dir())?.remote("local", repo.git_dir().to_str().unwrap())?;
-    index.remote_name = "local";
+    index.remote_name = Some("local");
     index
         .repository()
         .find_reference("refs/heads/main")?

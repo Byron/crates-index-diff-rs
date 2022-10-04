@@ -1,6 +1,8 @@
 use crates_index_diff::Index;
+use git_repository as git;
 use git_testtools::tempfile::TempDir;
 use std::path::PathBuf;
+use std::sync::atomic::AtomicBool;
 
 mod changes_between_commits;
 
@@ -14,7 +16,8 @@ fn peek_changes() -> crate::Result {
         index.last_seen_reference().is_err(),
         "marker ref doesn't exist"
     );
-    let (changes, last_seen_revision) = index.peek_changes()?;
+    let (changes, last_seen_revision) =
+        index.peek_changes_with_options2(git::progress::Discard, &AtomicBool::default())?;
     assert_eq!(
         changes.len(),
         NUM_CHANGES_SINCE_EVER,

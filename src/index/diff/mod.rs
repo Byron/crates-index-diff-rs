@@ -139,7 +139,7 @@ impl Index {
             .and_then(|r| r.try_id().map(|id| id.detach()))
             .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()));
         let to = {
-            let remote = self
+            let mut remote = self
                 .remote_name
                 .and_then(|name| {
                     self.repo.find_remote(name).ok().or_else(|| {
@@ -171,20 +171,21 @@ impl Index {
                                 .map(|r| r.map_err(Error::from))
                         })
                         .unwrap_or_else(|| {
-                            let spec = format!(
-                                "+refs/heads/{branch}:refs/remotes/{remote}/{branch}",
-                                remote = self.remote_name.unwrap_or("origin"),
-                                branch = self.branch_name,
-                            );
                             self.repo
                                 .remote_at("https://github.com/rust-lang/crates.io-index")
                                 .map_err(Into::into)
-                                .map(|r| {
-                                    r.with_refspec(spec.as_str(), git::remote::Direction::Fetch)
-                                        .expect("valid refspec")
-                                })
                         })
                 })?;
+            if remote.refspecs(git::remote::Direction::Fetch).is_empty() {
+                let spec = format!(
+                    "+refs/heads/{branch}:refs/remotes/{remote}/{branch}",
+                    remote = self.remote_name.unwrap_or("origin"),
+                    branch = self.branch_name,
+                );
+                remote
+                    .replace_refspecs(Some(spec.as_str()), git::remote::Direction::Fetch)
+                    .expect("valid statically known refspec");
+            }
             let res: git::remote::fetch::Outcome<'_> = remote
                 .connect(git::remote::Direction::Fetch, progress)?
                 .prepare_fetch(Default::default())?

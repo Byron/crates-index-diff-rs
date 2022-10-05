@@ -268,6 +268,29 @@ impl Index {
         Ok(changes)
     }
 
+    /// Return all `Change`s that are observed between the last time this method was called
+    /// and the latest state of the `crates.io` index repository, which is obtained by fetching
+    /// the remote called `origin`.
+    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
+    /// state, which causes this method to have a different result each time it is called.
+    ///
+    /// # Resource Usage
+    ///
+    /// As this method fetches the git repository, loose objects or small packs may be created. Over time,
+    /// these will accumulate and either slow down subsequent operations, or cause them to fail due to exhaustion
+    /// of the maximum number of open file handles as configured with `ulimit`.
+    ///
+    /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
+    pub fn fetch_changes_with_options2(
+        &self,
+        progress: impl git::Progress,
+        should_interrupt: &AtomicBool,
+    ) -> Result<Vec<Change>, Error> {
+        let (changes, to) = self.peek_changes_with_options2(progress, should_interrupt)?;
+        self.set_last_seen_reference(to)?;
+        Ok(changes)
+    }
+
     /// Set the last seen reference to the given Oid. It will be created if it does not yet exists.
     pub fn set_last_seen_reference(&self, to: git::hash::ObjectId) -> Result<(), Error> {
         let repo = self.repository();

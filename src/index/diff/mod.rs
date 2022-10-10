@@ -83,6 +83,7 @@ impl Index {
             .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()));
         let remote_name = self
             .remote_name
+            .as_deref()
             .expect("always set for this old portion of the code");
         let to = {
             let repo = git2::Repository::open(repo.git_dir())?;
@@ -141,6 +142,7 @@ impl Index {
         let to = {
             let mut remote = self
                 .remote_name
+                .as_deref()
                 .and_then(|name| {
                     self.repo.find_remote(name).ok().or_else(|| {
                         self.repo
@@ -179,7 +181,7 @@ impl Index {
             if remote.refspecs(git::remote::Direction::Fetch).is_empty() {
                 let spec = format!(
                     "+refs/heads/{branch}:refs/remotes/{remote}/{branch}",
-                    remote = self.remote_name.unwrap_or("origin"),
+                    remote = self.remote_name.as_deref().unwrap_or("origin"),
                     branch = self.branch_name,
                 );
                 remote
@@ -241,6 +243,11 @@ impl Index {
 
 /// Find changes while changing the underlying repository in one way or another.
 impl Index {
+    /// As `fetch_changes_with_options`, but without the options.
+    pub fn fetch_changes2(&self) -> Result<Vec<Change>, Error> {
+        self.fetch_changes_with_options2(git::progress::Discard, &AtomicBool::default())
+    }
+
     /// As `fetch_changes_with_options`, but without the options.
     pub fn fetch_changes(&self) -> Result<Vec<Change>, Error> {
         self.fetch_changes_with_options(None)

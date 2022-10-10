@@ -101,7 +101,7 @@ impl Index {
         repo.object_cache_size_if_unset(4 * 1024 * 1024);
         Ok(Index {
             repo,
-            remote_name: Some("origin"),
+            remote_name: Some("origin".into()),
             branch_name: "master",
             seen_ref_name: LAST_SEEN_REFNAME,
         })
@@ -148,9 +148,14 @@ impl Index {
         .apply_environment();
 
         repo.object_cache_size_if_unset(4 * 1024 * 1024);
+        let remote_name = repo
+            .remote_names()
+            .into_iter()
+            .next()
+            .map(ToOwned::to_owned);
         Ok(Index {
             repo,
-            remote_name: Some("origin"),
+            remote_name,
             branch_name: "master",
             seen_ref_name: LAST_SEEN_REFNAME,
         })

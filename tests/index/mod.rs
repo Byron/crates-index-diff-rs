@@ -42,13 +42,25 @@ fn peek_changes() -> crate::Result {
 #[test]
 fn clone_if_needed() {
     let tmp = TempDir::new().unwrap();
-    Index::from_path_or_cloned_with_options(tmp.path(), clone_options())
-        .expect("successful clone to be created");
-    Index::from_path_or_cloned_with_options(tmp.path(), clone_options())
-        .expect("second instance re-uses existing clone");
+    let no_interrupt = &AtomicBool::default();
+    Index::from_path_or_cloned_with_options2(
+        tmp.path(),
+        git::progress::Discard,
+        no_interrupt,
+        clone_options(),
+    )
+    .expect("successful clone to be created");
+    Index::from_path_or_cloned_with_options2(
+        tmp.path(),
+        git::progress::Discard,
+        no_interrupt,
+        clone_options(),
+    )
+    .expect("second instance re-uses existing clone");
 }
 
 #[test]
+#[ignore]
 fn changes_since_last_fetch() -> crate::Result {
     let (mut index, _tmp) = index_rw()?;
     let repo = index.repository();
@@ -127,7 +139,12 @@ fn index_ro() -> crate::Result<Index> {
 
 fn index_rw() -> crate::Result<(Index, TempDir)> {
     let tmp = TempDir::new().unwrap();
-    let mut index = Index::from_path_or_cloned_with_options(tmp.path(), clone_options())?;
+    let mut index = Index::from_path_or_cloned_with_options2(
+        tmp.path(),
+        git::progress::Discard,
+        &AtomicBool::default(),
+        clone_options(),
+    )?;
     index.branch_name = "main";
     Ok((index, tmp))
 }
@@ -141,9 +158,8 @@ fn fixture_dir() -> crate::Result<PathBuf> {
     )
 }
 
-fn clone_options() -> crates_index_diff::index::CloneOptions<'static> {
-    crates_index_diff::index::CloneOptions {
-        repository_url: fixture_dir().unwrap().join("base").display().to_string(),
-        fetch_options: None,
+fn clone_options() -> crates_index_diff::index::CloneOptions2 {
+    crates_index_diff::index::CloneOptions2 {
+        url: fixture_dir().unwrap().join("base").display().to_string(),
     }
 }

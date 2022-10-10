@@ -186,7 +186,7 @@ impl Index {
                     .replace_refspecs(Some(spec.as_str()), git::remote::Direction::Fetch)
                     .expect("valid statically known refspec");
             }
-            let res: git::remote::fetch::Outcome<'_> = remote
+            let res: git::remote::fetch::Outcome = remote
                 .connect(git::remote::Direction::Fetch, progress)?
                 .prepare_fetch(Default::default())?
                 .receive(should_interrupt)?;

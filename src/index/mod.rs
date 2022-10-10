@@ -22,6 +22,20 @@ impl<'a> Default for CloneOptions<'a> {
     }
 }
 
+/// Options for cloning the crates-io index.
+pub struct CloneOptions2 {
+    /// The url to clone the crates-index repository from.
+    pub url: String,
+}
+
+impl Default for CloneOptions2 {
+    fn default() -> Self {
+        CloneOptions2 {
+            url: INDEX_GIT_URL.into(),
+        }
+    }
+}
+
 /// Access
 impl Index {
     /// Return the crates.io repository.

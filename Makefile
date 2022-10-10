@@ -7,8 +7,5 @@ CARGO = $(shell command -v cargo)
 ##@ Development
 
 test: ## run all tests with cargo
-	RUST_BACKTRACE=1 cargo test --jobs 1
-	
-quick-test: ## run all fast tests with cargo (those which dont clone themselves
-	cargo test --jobs 1 quick
+	RUST_BACKTRACE=1 cargo test 
 	

@@ -5,6 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+This release drops `git2` in favor of `gitoxide`.
+
+### Important note for users of ssh:// index urls
+
+Advanced `git2` based credential configuration isn't supported
+anymore until `gitoxide` catches up. It generally implements all
+configuration options that are relevant for `git` and fully implements
+HTTP based authentication, but is probably lacking in regard to 
+non-default ssh configuration.
+
+If that's a problem, prefer staying with the v12.X line.
+
+### Changed (BREAKING)
+
+ - <csr-id-4cedf27d510ff9031bf9f142ecbb3788a6337f8c/> remove `git2` in favor of `gitoxide`.
+   `gitoxide` is now used for cloning and fetching as well.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 10 commits contributed to the release over the course of 6 calendar days.
+ - 11 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge branch 'remove-git2' ([`ab529ad`](https://github.com/Byron/crates-index-diff-rs/commit/ab529adbcd85691958297cf451898cb1bece63cd))
+    - switch to released version of git-repository (v0.25) ([`533bfab`](https://github.com/Byron/crates-index-diff-rs/commit/533bfabc36d4c1d515c30f4d16733b62dbac02b9))
+    - fix makefile ([`7cede70`](https://github.com/Byron/crates-index-diff-rs/commit/7cede70cc829919ea4d3b40f61e2a7ee8f6057a6))
+    - remove `git2` in favor of `gitoxide`. ([`4cedf27`](https://github.com/Byron/crates-index-diff-rs/commit/4cedf27d510ff9031bf9f142ecbb3788a6337f8c))
+    - all tests pass, time to remove git2 ([`6975d67`](https://github.com/Byron/crates-index-diff-rs/commit/6975d671fa9f11f7f11f520705b4832a080bb3b7))
+    - use gitoxide based cloning on demand in tests, one failure ([`1774f94`](https://github.com/Byron/crates-index-diff-rs/commit/1774f94e8de0939ca66df8fc0240355967be5699))
+    - Add a way to clone using `gitoxide` without removing git2 just yet. ([`878abe9`](https://github.com/Byron/crates-index-diff-rs/commit/878abe9071b8d36df496206a0eda204aa133c274))
+    - Add `fetch_changes_with_options()` using gitoxide ([`900ae56`](https://github.com/Byron/crates-index-diff-rs/commit/900ae56286894ddcdb371bf3bea55a7ba4dfba72))
+    - Use gitoxide for fetching in test ([`00e6875`](https://github.com/Byron/crates-index-diff-rs/commit/00e6875209b059797fccb538dd97122e10803d20))
+    - sketch a new peek method that uses gitoxide to fetch things ([`759ff30`](https://github.com/Byron/crates-index-diff-rs/commit/759ff30ad771deefa3d226badea72796c74f3096))
+</details>
+
 ## 12.1.0 (2022-09-29)
 
 ### New Features
@@ -16,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
 
@@ -27,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v12.1.0 ([`ad2f6d9`](https://github.com/Byron/crates-index-diff-rs/commit/ad2f6d9f6e2bf3ac7f0a5db2a2bdcbdc92a0744a))
     - re-export `git-repository` as `git` ([`74866b4`](https://github.com/Byron/crates-index-diff-rs/commit/74866b44ada127894b63969818e64564a294c8d0))
 </details>
 

@@ -2,7 +2,7 @@ use crate::{Change, Index};
 use git_repository as git;
 use git_repository::prelude::ObjectIdExt;
 use git_repository::refs::transaction::PreviousValue;
-use std::convert::TryFrom;
+use std::sync::atomic::AtomicBool;
 
 mod delegate;
 use delegate::Delegate;
@@ -11,8 +11,6 @@ use delegate::Delegate;
 #[derive(Debug, thiserror::Error)]
 #[allow(missing_docs)]
 pub enum Error {
-    #[error("Failed to fetch crates.io index repository")]
-    Fetch(#[from] git2::Error),
     #[error("Couldn't update marker reference")]
     ReferenceEdit(#[from] git::reference::edit::Error),
     #[error("Failed to parse rev-spec to determine which revisions to diff")]
@@ -29,18 +27,36 @@ pub enum Error {
         file_name: bstr::BString,
         line: bstr::BString,
     },
+    #[error(transparent)]
+    FindRemote(#[from] git::remote::find::existing::Error),
+    #[error(transparent)]
+    FindReference(#[from] git::reference::find::existing::Error),
+    #[error(transparent)]
+    Connect(#[from] git::remote::connect::Error),
+    #[error(transparent)]
+    PrepareFetch(#[from] git::remote::fetch::prepare::Error),
+    #[error(transparent)]
+    Fetch(#[from] git::remote::fetch::Error),
+    #[error(transparent)]
+    InitAnonymousRemote(#[from] git::remote::init::Error),
+    #[error("Could not find local tracking branch for remote branch {name:?} in any of {} fetched refs", mappings.len())]
+    NoMatchingBranch {
+        name: String,
+        mappings: Vec<git::remote::fetch::Mapping>,
+    },
 }
 
 /// Find changes without modifying the underling repository
 impl Index {
     /// As `peek_changes_with_options`, but without the options.
     pub fn peek_changes(&self) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
-        self.peek_changes_with_options(None)
+        self.peek_changes_with_options(git::progress::Discard, &AtomicBool::default())
     }
 
-    /// Return all `Change`s that are observed between the last time `fetch_changes(…)` was called
+    /// Return all `Change`s that are observed between the last time `peek_changes*(…)` was called
     /// and the latest state of the `crates.io` index repository, which is obtained by fetching
-    /// the remote called `origin`.
+    /// the remote called `origin` or whatever is configured for the current `HEAD` branch and lastly
+    /// what it should be based on knowledge about he crates index.
     /// The `last_seen_reference()` will not be created or updated.
     /// The second field in the returned tuple is the commit object to which the changes were provided.
     /// If one would set the `last_seen_reference()` to that object, the effect is exactly the same
@@ -53,9 +69,11 @@ impl Index {
     /// of the maximum number of open file handles as configured with `ulimit`.
     ///
     /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
+    // TODO: update this once it's clear how auto-gc works in `gitoxide`.
     pub fn peek_changes_with_options(
         &self,
-        options: Option<&mut git2::FetchOptions<'_>>,
+        progress: impl git::Progress,
+        should_interrupt: &AtomicBool,
     ) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
         let repo = &self.repo;
         let from = repo
@@ -64,26 +82,78 @@ impl Index {
             .and_then(|r| r.try_id().map(|id| id.detach()))
             .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()));
         let to = {
-            let repo = git2::Repository::open(repo.git_dir())?;
-            repo.find_remote(self.remote_name).and_then(|mut r| {
-                r.fetch(
-                    &[format!(
-                        "+refs/heads/{branch}:refs/remotes/{remote}/{branch}",
-                        remote = self.remote_name,
-                        branch = self.branch_name,
-                    )],
-                    options,
-                    None,
-                )
-            })?;
-            git::hash::ObjectId::try_from(
-                repo.refname_to_id(&format!(
-                    "refs/remotes/{}/{}",
-                    self.remote_name, self.branch_name
-                ))?
-                .as_bytes(),
-            )
-            .expect("valid oid")
+            let mut remote = self
+                .remote_name
+                .as_deref()
+                .and_then(|name| {
+                    self.repo.find_remote(name).ok().or_else(|| {
+                        self.repo
+                            .head()
+                            .ok()
+                            .and_then(|head| {
+                                head.into_remote(git::remote::Direction::Fetch)
+                                    .map(|r| r.ok())
+                                    .flatten()
+                            })
+                            .or_else(|| {
+                                self.repo
+                                    .find_default_remote(git::remote::Direction::Fetch)
+                                    .map(|r| r.ok())
+                                    .flatten()
+                            })
+                    })
+                })
+                .map(Ok)
+                .unwrap_or_else(|| {
+                    self.repo
+                        .head()?
+                        .into_remote(git::remote::Direction::Fetch)
+                        .map(|r| r.map_err(Error::from))
+                        .or_else(|| {
+                            self.repo
+                                .find_default_remote(git::remote::Direction::Fetch)
+                                .map(|r| r.map_err(Error::from))
+                        })
+                        .unwrap_or_else(|| {
+                            self.repo
+                                .remote_at("https://github.com/rust-lang/crates.io-index")
+                                .map_err(Into::into)
+                        })
+                })?;
+            if remote.refspecs(git::remote::Direction::Fetch).is_empty() {
+                let spec = format!(
+                    "+refs/heads/{branch}:refs/remotes/{remote}/{branch}",
+                    remote = self.remote_name.as_deref().unwrap_or("origin"),
+                    branch = self.branch_name,
+                );
+                remote
+                    .replace_refspecs(Some(spec.as_str()), git::remote::Direction::Fetch)
+                    .expect("valid statically known refspec");
+            }
+            let res: git::remote::fetch::Outcome = remote
+                .connect(git::remote::Direction::Fetch, progress)?
+                .prepare_fetch(Default::default())?
+                .receive(should_interrupt)?;
+            let branch_name = format!("refs/heads/{}", self.branch_name);
+            let local_tracking = res
+                .ref_map
+                .mappings
+                .iter()
+                .find_map(|m| match &m.remote {
+                    git::remote::fetch::Source::Ref(r) => (r.unpack().0 == branch_name)
+                        .then(|| m.local.as_ref())
+                        .flatten(),
+                    _ => None,
+                })
+                .ok_or_else(|| Error::NoMatchingBranch {
+                    name: branch_name,
+                    mappings: res.ref_map.mappings.clone(),
+                })?;
+            self.repo
+                .find_reference(local_tracking)
+                .expect("local tracking branch exists if we see it here")
+                .id()
+                .detach()
         };
 
         Ok((self.changes_between_commits(from, to)?, to))
@@ -117,7 +187,7 @@ impl Index {
 impl Index {
     /// As `fetch_changes_with_options`, but without the options.
     pub fn fetch_changes(&self) -> Result<Vec<Change>, Error> {
-        self.fetch_changes_with_options(None)
+        self.fetch_changes_with_options(git::progress::Discard, &AtomicBool::default())
     }
 
     /// Return all `Change`s that are observed between the last time this method was called
@@ -135,9 +205,10 @@ impl Index {
     /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
     pub fn fetch_changes_with_options(
         &self,
-        options: Option<&mut git2::FetchOptions<'_>>,
+        progress: impl git::Progress,
+        should_interrupt: &AtomicBool,
     ) -> Result<Vec<Change>, Error> {
-        let (changes, to) = self.peek_changes_with_options(options)?;
+        let (changes, to) = self.peek_changes_with_options(progress, should_interrupt)?;
         self.set_last_seen_reference(to)?;
         Ok(changes)
     }

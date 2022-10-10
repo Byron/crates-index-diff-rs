@@ -2,21 +2,23 @@ use crate::index::{CloneOptions, LAST_SEEN_REFNAME};
 use crate::Index;
 use git_repository as git;
 use std::path::Path;
+use std::sync::atomic::AtomicBool;
 
 /// The error returned by various initialization methods.
 #[derive(Debug, thiserror::Error)]
 #[allow(missing_docs)]
-pub enum Error {
+pub enum Error2 {
     #[error(transparent)]
-    Clone(#[from] git2::Error),
+    PrepareClone(#[from] git::clone::prepare::Error),
+    #[error(transparent)]
+    Fetch(#[from] git::clone::fetch::Error),
     #[error(transparent)]
     Open(#[from] git::open::Error),
 }
 
 /// Initialization
 impl Index {
-    /// Return a new `Index` instance from the given `path`, which should contain a bare or non-bare
-    /// clone of the `crates.io` index.
+    /// Return a new `Index` instance from the given `path`, which should contain a bare clone of the `crates.io` index.
     /// If the directory does not contain the repository or does not exist, it will be cloned from
     /// the official location automatically (with complete history).
     ///
@@ -25,70 +27,46 @@ impl Index {
     /// # Examples
     ///
     /// ```no_run
-    /// use crates_index_diff::{Index, index};
+    /// use std::sync::atomic::AtomicBool;
+    /// use crates_index_diff::{Index, index, git};
     ///
     /// # let path = tempdir::TempDir::new("index").unwrap();
+    /// // Note that credentials are automatically picked up from the standard git configuration.
     /// let mut options = index::CloneOptions {
-    ///   repository_url: "https://github.com/rust-lang/staging.crates.io-index".into(),
-    ///   ..Default::default()
+    ///   url: "https://github.com/rust-lang/staging.crates.io-index".into(),
     /// };
     ///
     ///
-    /// let index = Index::from_path_or_cloned_with_options(path, options)?;
-    /// # Ok::<(), crates_index_diff::index::init::Error>(())
-    /// ```
-    /// Or to access a private repository, use fetch options.
-    ///
-    /// ```no_run
-    /// use crates_index_diff::{index, Index};
-    /// let fo = {
-    ///     let mut fo = git2::FetchOptions::new();
-    ///     fo.remote_callbacks({
-    ///         let mut callbacks = git2::RemoteCallbacks::new();
-    ///         callbacks.credentials(|_url, username_from_url, _allowed_types| {
-    ///             git2::Cred::ssh_key_from_memory(
-    ///                 username_from_url.unwrap(),
-    ///                 None,
-    ///                 &std::env::var("PRIVATE_KEY").unwrap(),
-    ///                 None,
-    ///             )
-    ///         });
-    ///         callbacks
-    ///     });
-    ///     fo
-    /// };
-    /// Index::from_path_or_cloned_with_options(
-    ///     "index",
-    ///     index::CloneOptions {
-    ///         repository_url: "git@github.com:private-index/goes-here.git".into(),
-    ///         fetch_options: Some(fo),
-    ///     },
-    /// ).unwrap();
+    /// let index = Index::from_path_or_cloned_with_options(path, git::progress::Discard, &AtomicBool::default(), options)?;
+    /// # Ok::<(), crates_index_diff::index::init::Error2>(())
     /// ```
     pub fn from_path_or_cloned_with_options(
         path: impl AsRef<Path>,
-        CloneOptions {
-            repository_url,
-            fetch_options,
-        }: CloneOptions<'_>,
-    ) -> Result<Index, Error> {
-        let repo = git2::Repository::open(path.as_ref()).or_else(|err| {
-            if err.class() == git2::ErrorClass::Repository {
-                let mut builder = git2::build::RepoBuilder::new();
-                if let Some(fo) = fetch_options {
-                    builder.fetch_options(fo);
-                }
-                builder.bare(true).clone(&repository_url, path.as_ref())
-            } else {
-                Err(err)
+        progress: impl git::Progress,
+        should_interrupt: &AtomicBool,
+        CloneOptions { url }: CloneOptions,
+    ) -> Result<Index, Error2> {
+        let path = path.as_ref();
+        let mut repo = match git::open(path) {
+            Ok(repo) => repo,
+            Err(git::open::Error::NotARepository(_)) => {
+                let (repo, _out) =
+                    git::prepare_clone_bare(url, path)?.fetch_only(progress, should_interrupt)?;
+                repo
             }
-        })?;
+            Err(err) => return Err(err.into()),
+        }
+        .apply_environment();
 
-        let mut repo = git::open(repo.path())?.apply_environment();
         repo.object_cache_size_if_unset(4 * 1024 * 1024);
+        let remote_name = repo
+            .remote_names()
+            .into_iter()
+            .next()
+            .map(ToOwned::to_owned);
         Ok(Index {
             repo,
-            remote_name: "origin",
+            remote_name,
             branch_name: "master",
             seen_ref_name: LAST_SEEN_REFNAME,
         })
@@ -98,7 +76,12 @@ impl Index {
     /// clone of the `crates.io` index.
     /// If the directory does not contain the repository or does not exist, it will be cloned from
     /// the official location automatically (with complete history).
-    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, Error> {
-        Index::from_path_or_cloned_with_options(path, CloneOptions::default())
+    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, Error2> {
+        Index::from_path_or_cloned_with_options(
+            path,
+            git::progress::Discard,
+            &AtomicBool::default(),
+            CloneOptions::default(),
+        )
     }
 }

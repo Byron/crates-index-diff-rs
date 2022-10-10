@@ -1,6 +1,9 @@
 use crates_index_diff::Index;
+use git_repository as git;
+use git_repository::refs::transaction::PreviousValue;
 use git_testtools::tempfile::TempDir;
 use std::path::PathBuf;
+use std::sync::atomic::AtomicBool;
 
 mod changes_between_commits;
 
@@ -14,7 +17,8 @@ fn peek_changes() -> crate::Result {
         index.last_seen_reference().is_err(),
         "marker ref doesn't exist"
     );
-    let (changes, last_seen_revision) = index.peek_changes()?;
+    let (changes, last_seen_revision) =
+        index.peek_changes_with_options(git::progress::Discard, &AtomicBool::default())?;
     assert_eq!(
         changes.len(),
         NUM_CHANGES_SINCE_EVER,
@@ -39,18 +43,29 @@ fn peek_changes() -> crate::Result {
 #[test]
 fn clone_if_needed() {
     let tmp = TempDir::new().unwrap();
-    Index::from_path_or_cloned_with_options(tmp.path(), clone_options())
-        .expect("successful clone to be created");
-    Index::from_path_or_cloned_with_options(tmp.path(), clone_options())
-        .expect("second instance re-uses existing clone");
+    let no_interrupt = &AtomicBool::default();
+    Index::from_path_or_cloned_with_options(
+        tmp.path(),
+        git::progress::Discard,
+        no_interrupt,
+        clone_options(),
+    )
+    .expect("successful clone to be created");
+    Index::from_path_or_cloned_with_options(
+        tmp.path(),
+        git::progress::Discard,
+        no_interrupt,
+        clone_options(),
+    )
+    .expect("second instance re-uses existing clone");
 }
 
 #[test]
-fn changes_since_last_fetch() -> crate::Result {
-    let (mut index, _tmp) = index_rw()?;
+fn changes_since_last_fetch() {
+    let (mut index, _tmp) = index_rw().unwrap();
     let repo = index.repository();
     assert!(index.last_seen_reference().is_err(), "no marker exists");
-    let num_changes_since_first_commit = index.fetch_changes()?.len();
+    let num_changes_since_first_commit = index.fetch_changes().unwrap().len();
     assert_eq!(
         num_changes_since_first_commit, NUM_CHANGES_SINCE_EVER,
         "all changes since ever"
@@ -58,7 +73,7 @@ fn changes_since_last_fetch() -> crate::Result {
     let mut marker = index
         .last_seen_reference()
         .expect("must be created/update now");
-    let remote_main = repo.find_reference("refs/remotes/origin/main")?;
+    let remote_main = repo.find_reference("refs/remotes/origin/main").unwrap();
     assert_eq!(
         marker.target(),
         remote_main.target(),
@@ -68,15 +83,16 @@ fn changes_since_last_fetch() -> crate::Result {
     // reset to previous one
     marker
         .set_target_id(
-            repo.rev_parse(format!("{}~1", index.seen_ref_name).as_str())?
+            repo.rev_parse(format!("{}~1", index.seen_ref_name).as_str())
+                .unwrap()
                 .single()
                 .unwrap(),
             "resetting to previous commit",
         )
         .expect("reset success");
-    let num_seen_after_reset = index.fetch_changes()?.len();
+    let num_seen_after_reset = index.fetch_changes().unwrap().len();
     assert_eq!(
-        index.last_seen_reference()?.target(),
+        index.last_seen_reference().unwrap().target(),
         remote_main.target(),
         "seen branch was updated again"
     );
@@ -86,26 +102,45 @@ fn changes_since_last_fetch() -> crate::Result {
     );
 
     assert_eq!(
-        index.fetch_changes()?.len(),
+        index.fetch_changes().unwrap().len(),
         0,
         "nothing if there was no change"
     );
 
     // now the remote has squashed their history, we should still be able to get the correct changes.
-    git2::Repository::open(repo.git_dir())?.remote("local", repo.git_dir().to_str().unwrap())?;
-    index.remote_name = "local";
+    let repo_name = "local";
+    {
+        let git_dir = repo.git_dir().to_owned();
+        let mut config = index.repository_mut().config_snapshot_mut();
+        // TODO: use `remote.save_as_to()` here, requires a way to get the mutable repo ref again.
+        config
+            .set_raw_value("remote", Some(repo_name), "url", git_dir.to_str().unwrap())
+            .unwrap();
+        config
+            .set_raw_value(
+                "remote",
+                Some(repo_name),
+                "fetch",
+                "+refs/heads/*:refs/remotes/local/*",
+            )
+            .unwrap();
+    }
+    index.remote_name = Some(repo_name.into());
     index
         .repository()
-        .find_reference("refs/heads/main")?
-        .set_target_id(
+        .reference(
+            "refs/heads/main",
             index
                 .repository()
-                .rev_parse("origin/squashed")?
+                .rev_parse("origin/squashed")
+                .unwrap()
                 .single()
                 .unwrap(),
+            PreviousValue::Any,
             "adjust to simulate remote with new squashed history",
-        )?;
-    let changes = index.fetch_changes()?;
+        )
+        .unwrap();
+    let changes = index.fetch_changes().unwrap();
     assert_eq!(changes.len(), 1);
     assert_eq!(
         changes
@@ -114,7 +149,6 @@ fn changes_since_last_fetch() -> crate::Result {
         Some(("git-repository", "1.0.0")),
         "there was just one actual changes compared to the previous state"
     );
-    Ok(())
 }
 
 fn index_ro() -> crate::Result<Index> {
@@ -124,7 +158,12 @@ fn index_ro() -> crate::Result<Index> {
 
 fn index_rw() -> crate::Result<(Index, TempDir)> {
     let tmp = TempDir::new().unwrap();
-    let mut index = Index::from_path_or_cloned_with_options(tmp.path(), clone_options())?;
+    let mut index = Index::from_path_or_cloned_with_options(
+        tmp.path(),
+        git::progress::Discard,
+        &AtomicBool::default(),
+        clone_options(),
+    )?;
     index.branch_name = "main";
     Ok((index, tmp))
 }
@@ -138,9 +177,8 @@ fn fixture_dir() -> crate::Result<PathBuf> {
     )
 }
 
-fn clone_options() -> crates_index_diff::index::CloneOptions<'static> {
+fn clone_options() -> crates_index_diff::index::CloneOptions {
     crates_index_diff::index::CloneOptions {
-        repository_url: fixture_dir().unwrap().join("base").display().to_string(),
-        fetch_options: None,
+        url: fixture_dir().unwrap().join("base").display().to_string(),
     }
 }

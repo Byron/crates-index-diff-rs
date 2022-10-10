@@ -12,7 +12,8 @@ pub struct Index {
     /// The name of the branch to fetch. This value also affects the tracking branch.
     pub branch_name: &'static str,
     /// The name of the symbolic name of the remote to fetch from.
-    pub remote_name: &'static str,
+    /// If `None`, obtain the remote name from the configuration of the currently checked-out branch.
+    pub remote_name: Option<String>,
     /// The git repository to use for diffing
     pub(crate) repo: git::Repository,
 }

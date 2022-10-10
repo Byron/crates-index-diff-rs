@@ -15,17 +15,12 @@ include = ["src/**/*", "LICENSE.md", "README.md", "CHANGELOG.md"]
 test = false
 
 [dependencies]
-git-repository = { version = "0.24.0", default-features = false, features = ["max-performance-safe"] }
+git-repository = { version = "0.25.0", default-features = false, features = ["max-performance-safe", "blocking-network-client", "blocking-http-transport"] }
 similar = { version = "2.2.0", features = ["bytes"] }
 serde = { version = "1", features = ["std", "derive"] }
 serde_json = "1"
 bstr = "1.0.1"
 thiserror = "1.0.32"
-
-[dependencies.git2]
-version = "0.14.0"
-default-features = false
-features = ["https"]
 
 [dev-dependencies]
 git-testtools = "0.8.0"

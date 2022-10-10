@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 13.0.0 (2022-10-10)
 
 This release drops `git2` in favor of `gitoxide`.
 
@@ -28,7 +28,7 @@ If that's a problem, prefer staying with the v12.X line.
 
 <csr-read-only-do-not-edit/>
 
- - 10 commits contributed to the release over the course of 6 calendar days.
+ - 11 commits contributed to the release over the course of 6 calendar days.
  - 11 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
@@ -40,6 +40,7 @@ If that's a problem, prefer staying with the v12.X line.
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - prepare changelog  prior to release ([`35b1ce7`](https://github.com/Byron/crates-index-diff-rs/commit/35b1ce77a4ee3ad5ebfd494926e5881c9c8ea473))
     - Merge branch 'remove-git2' ([`ab529ad`](https://github.com/Byron/crates-index-diff-rs/commit/ab529adbcd85691958297cf451898cb1bece63cd))
     - switch to released version of git-repository (v0.25) ([`533bfab`](https://github.com/Byron/crates-index-diff-rs/commit/533bfabc36d4c1d515c30f4d16733b62dbac02b9))
     - fix makefile ([`7cede70`](https://github.com/Byron/crates-index-diff-rs/commit/7cede70cc829919ea4d3b40f61e2a7ee8f6057a6))

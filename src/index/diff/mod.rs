@@ -2,7 +2,6 @@ use crate::{Change, Index};
 use git_repository as git;
 use git_repository::prelude::ObjectIdExt;
 use git_repository::refs::transaction::PreviousValue;
-use std::convert::TryFrom;
 use std::sync::atomic::AtomicBool;
 
 mod delegate;
@@ -12,8 +11,6 @@ use delegate::Delegate;
 #[derive(Debug, thiserror::Error)]
 #[allow(missing_docs)]
 pub enum Error {
-    #[error("Failed to fetch crates.io index repository")]
-    FetchGit2(#[from] git2::Error),
     #[error("Couldn't update marker reference")]
     ReferenceEdit(#[from] git::reference::edit::Error),
     #[error("Failed to parse rev-spec to determine which revisions to diff")]
@@ -53,62 +50,7 @@ pub enum Error {
 impl Index {
     /// As `peek_changes_with_options`, but without the options.
     pub fn peek_changes(&self) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
-        self.peek_changes_with_options(None)
-    }
-
-    /// Return all `Change`s that are observed between the last time `fetch_changes(…)` was called
-    /// and the latest state of the `crates.io` index repository, which is obtained by fetching
-    /// the remote called `origin`.
-    /// The `last_seen_reference()` will not be created or updated.
-    /// The second field in the returned tuple is the commit object to which the changes were provided.
-    /// If one would set the `last_seen_reference()` to that object, the effect is exactly the same
-    /// as if `fetch_changes(…)` had been called.
-    ///
-    /// # Resource Usage
-    ///
-    /// As this method fetches the git repository, loose objects or small packs may be created. Over time,
-    /// these will accumulate and either slow down subsequent operations, or cause them to fail due to exhaustion
-    /// of the maximum number of open file handles as configured with `ulimit`.
-    ///
-    /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
-    pub fn peek_changes_with_options(
-        &self,
-        options: Option<&mut git2::FetchOptions<'_>>,
-    ) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
-        let repo = &self.repo;
-        let from = repo
-            .find_reference(self.seen_ref_name)
-            .ok()
-            .and_then(|r| r.try_id().map(|id| id.detach()))
-            .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()));
-        let remote_name = self
-            .remote_name
-            .as_deref()
-            .expect("always set for this old portion of the code");
-        let to = {
-            let repo = git2::Repository::open(repo.git_dir())?;
-            repo.find_remote(remote_name).and_then(|mut r| {
-                r.fetch(
-                    &[format!(
-                        "+refs/heads/{branch}:refs/remotes/{remote}/{branch}",
-                        remote = remote_name,
-                        branch = self.branch_name,
-                    )],
-                    options,
-                    None,
-                )
-            })?;
-            git::hash::ObjectId::try_from(
-                repo.refname_to_id(&format!(
-                    "refs/remotes/{}/{}",
-                    remote_name, self.branch_name
-                ))?
-                .as_bytes(),
-            )
-            .expect("valid oid")
-        };
-
-        Ok((self.changes_between_commits(from, to)?, to))
+        self.peek_changes_with_options(git::progress::Discard, &AtomicBool::default())
     }
 
     /// Return all `Change`s that are observed between the last time `peek_changes*(…)` was called
@@ -128,7 +70,7 @@ impl Index {
     ///
     /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
     // TODO: update this once it's clear how auto-gc works in `gitoxide`.
-    pub fn peek_changes_with_options2(
+    pub fn peek_changes_with_options(
         &self,
         progress: impl git::Progress,
         should_interrupt: &AtomicBool,
@@ -244,13 +186,8 @@ impl Index {
 /// Find changes while changing the underlying repository in one way or another.
 impl Index {
     /// As `fetch_changes_with_options`, but without the options.
-    pub fn fetch_changes2(&self) -> Result<Vec<Change>, Error> {
-        self.fetch_changes_with_options2(git::progress::Discard, &AtomicBool::default())
-    }
-
-    /// As `fetch_changes_with_options`, but without the options.
     pub fn fetch_changes(&self) -> Result<Vec<Change>, Error> {
-        self.fetch_changes_with_options(None)
+        self.fetch_changes_with_options(git::progress::Discard, &AtomicBool::default())
     }
 
     /// Return all `Change`s that are observed between the last time this method was called
@@ -268,32 +205,10 @@ impl Index {
     /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
     pub fn fetch_changes_with_options(
         &self,
-        options: Option<&mut git2::FetchOptions<'_>>,
-    ) -> Result<Vec<Change>, Error> {
-        let (changes, to) = self.peek_changes_with_options(options)?;
-        self.set_last_seen_reference(to)?;
-        Ok(changes)
-    }
-
-    /// Return all `Change`s that are observed between the last time this method was called
-    /// and the latest state of the `crates.io` index repository, which is obtained by fetching
-    /// the remote called `origin`.
-    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
-    /// state, which causes this method to have a different result each time it is called.
-    ///
-    /// # Resource Usage
-    ///
-    /// As this method fetches the git repository, loose objects or small packs may be created. Over time,
-    /// these will accumulate and either slow down subsequent operations, or cause them to fail due to exhaustion
-    /// of the maximum number of open file handles as configured with `ulimit`.
-    ///
-    /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
-    pub fn fetch_changes_with_options2(
-        &self,
         progress: impl git::Progress,
         should_interrupt: &AtomicBool,
     ) -> Result<Vec<Change>, Error> {
-        let (changes, to) = self.peek_changes_with_options2(progress, should_interrupt)?;
+        let (changes, to) = self.peek_changes_with_options(progress, should_interrupt)?;
         self.set_last_seen_reference(to)?;
         Ok(changes)
     }

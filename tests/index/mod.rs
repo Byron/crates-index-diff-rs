@@ -18,7 +18,7 @@ fn peek_changes() -> crate::Result {
         "marker ref doesn't exist"
     );
     let (changes, last_seen_revision) =
-        index.peek_changes_with_options2(git::progress::Discard, &AtomicBool::default())?;
+        index.peek_changes_with_options(git::progress::Discard, &AtomicBool::default())?;
     assert_eq!(
         changes.len(),
         NUM_CHANGES_SINCE_EVER,
@@ -44,14 +44,14 @@ fn peek_changes() -> crate::Result {
 fn clone_if_needed() {
     let tmp = TempDir::new().unwrap();
     let no_interrupt = &AtomicBool::default();
-    Index::from_path_or_cloned_with_options2(
+    Index::from_path_or_cloned_with_options(
         tmp.path(),
         git::progress::Discard,
         no_interrupt,
         clone_options(),
     )
     .expect("successful clone to be created");
-    Index::from_path_or_cloned_with_options2(
+    Index::from_path_or_cloned_with_options(
         tmp.path(),
         git::progress::Discard,
         no_interrupt,
@@ -65,7 +65,7 @@ fn changes_since_last_fetch() {
     let (mut index, _tmp) = index_rw().unwrap();
     let repo = index.repository();
     assert!(index.last_seen_reference().is_err(), "no marker exists");
-    let num_changes_since_first_commit = index.fetch_changes2().unwrap().len();
+    let num_changes_since_first_commit = index.fetch_changes().unwrap().len();
     assert_eq!(
         num_changes_since_first_commit, NUM_CHANGES_SINCE_EVER,
         "all changes since ever"
@@ -90,7 +90,7 @@ fn changes_since_last_fetch() {
             "resetting to previous commit",
         )
         .expect("reset success");
-    let num_seen_after_reset = index.fetch_changes2().unwrap().len();
+    let num_seen_after_reset = index.fetch_changes().unwrap().len();
     assert_eq!(
         index.last_seen_reference().unwrap().target(),
         remote_main.target(),
@@ -102,7 +102,7 @@ fn changes_since_last_fetch() {
     );
 
     assert_eq!(
-        index.fetch_changes2().unwrap().len(),
+        index.fetch_changes().unwrap().len(),
         0,
         "nothing if there was no change"
     );
@@ -140,7 +140,7 @@ fn changes_since_last_fetch() {
             "adjust to simulate remote with new squashed history",
         )
         .unwrap();
-    let changes = index.fetch_changes2().unwrap();
+    let changes = index.fetch_changes().unwrap();
     assert_eq!(changes.len(), 1);
     assert_eq!(
         changes
@@ -158,7 +158,7 @@ fn index_ro() -> crate::Result<Index> {
 
 fn index_rw() -> crate::Result<(Index, TempDir)> {
     let tmp = TempDir::new().unwrap();
-    let mut index = Index::from_path_or_cloned_with_options2(
+    let mut index = Index::from_path_or_cloned_with_options(
         tmp.path(),
         git::progress::Discard,
         &AtomicBool::default(),
@@ -177,8 +177,8 @@ fn fixture_dir() -> crate::Result<PathBuf> {
     )
 }
 
-fn clone_options() -> crates_index_diff::index::CloneOptions2 {
-    crates_index_diff::index::CloneOptions2 {
+fn clone_options() -> crates_index_diff::index::CloneOptions {
+    crates_index_diff::index::CloneOptions {
         url: fixture_dir().unwrap().join("base").display().to_string(),
     }
 }

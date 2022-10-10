@@ -5,32 +5,15 @@ use std::str;
 static INDEX_GIT_URL: &str = "https://github.com/rust-lang/crates.io-index";
 static LAST_SEEN_REFNAME: &str = "refs/heads/crates-index-diff_last-seen";
 
-/// Options for use in `Index::from_path_or_cloned_with_options`
-pub struct CloneOptions<'a> {
-    /// The url from which the repository should be cloned.
-    pub repository_url: String,
-    /// Git2 fetch options to control exactly how to clone.
-    pub fetch_options: Option<git2::FetchOptions<'a>>,
-}
-
-impl<'a> Default for CloneOptions<'a> {
-    fn default() -> Self {
-        CloneOptions {
-            repository_url: INDEX_GIT_URL.into(),
-            fetch_options: None,
-        }
-    }
-}
-
 /// Options for cloning the crates-io index.
-pub struct CloneOptions2 {
+pub struct CloneOptions {
     /// The url to clone the crates-index repository from.
     pub url: String,
 }
 
-impl Default for CloneOptions2 {
+impl Default for CloneOptions {
     fn default() -> Self {
-        CloneOptions2 {
+        CloneOptions {
             url: INDEX_GIT_URL.into(),
         }
     }

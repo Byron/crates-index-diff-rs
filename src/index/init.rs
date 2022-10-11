@@ -7,7 +7,7 @@ use std::sync::atomic::AtomicBool;
 /// The error returned by various initialization methods.
 #[derive(Debug, thiserror::Error)]
 #[allow(missing_docs)]
-pub enum Error2 {
+pub enum Error {
     #[error(transparent)]
     PrepareClone(#[from] git::clone::prepare::Error),
     #[error(transparent)]
@@ -38,14 +38,14 @@ impl Index {
     ///
     ///
     /// let index = Index::from_path_or_cloned_with_options(path, git::progress::Discard, &AtomicBool::default(), options)?;
-    /// # Ok::<(), crates_index_diff::index::init::Error2>(())
+    /// # Ok::<(), crates_index_diff::index::init::Error>(())
     /// ```
     pub fn from_path_or_cloned_with_options(
         path: impl AsRef<Path>,
         progress: impl git::Progress,
         should_interrupt: &AtomicBool,
         CloneOptions { url }: CloneOptions,
-    ) -> Result<Index, Error2> {
+    ) -> Result<Index, Error> {
         let path = path.as_ref();
         let mut repo = match git::open(path) {
             Ok(repo) => repo,
@@ -76,7 +76,7 @@ impl Index {
     /// clone of the `crates.io` index.
     /// If the directory does not contain the repository or does not exist, it will be cloned from
     /// the official location automatically (with complete history).
-    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, Error2> {
+    pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, Error> {
         Index::from_path_or_cloned_with_options(
             path,
             git::progress::Discard,

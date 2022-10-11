@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 13.0.1 (2022-10-11)
+
+### Bug Fixes
+
+ - <csr-id-a6975ce303385cb124a2409d2900a1f2aa278225/> rename `init::Error2` to `init::Error`.
+   This name was left by mistake and shouldn't have made it into the
+   release.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' where seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - rename `init::Error2` to `init::Error`. ([`a6975ce`](https://github.com/Byron/crates-index-diff-rs/commit/a6975ce303385cb124a2409d2900a1f2aa278225))
+</details>
+
 ## 13.0.0 (2022-10-10)
 
 This release drops `git2` in favor of `gitoxide`.
@@ -28,7 +54,7 @@ If that's a problem, prefer staying with the v12.X line.
 
 <csr-read-only-do-not-edit/>
 
- - 11 commits contributed to the release over the course of 6 calendar days.
+ - 12 commits contributed to the release over the course of 6 calendar days.
  - 11 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' where seen in commit messages
@@ -40,6 +66,7 @@ If that's a problem, prefer staying with the v12.X line.
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v13.0.0 ([`2b08485`](https://github.com/Byron/crates-index-diff-rs/commit/2b08485ca4739aff0e3f6619f0ae92c9d032557f))
     - prepare changelog  prior to release ([`35b1ce7`](https://github.com/Byron/crates-index-diff-rs/commit/35b1ce77a4ee3ad5ebfd494926e5881c9c8ea473))
     - Merge branch 'remove-git2' ([`ab529ad`](https://github.com/Byron/crates-index-diff-rs/commit/ab529adbcd85691958297cf451898cb1bece63cd))
     - switch to released version of git-repository (v0.25) ([`533bfab`](https://github.com/Byron/crates-index-diff-rs/commit/533bfabc36d4c1d515c30f4d16733b62dbac02b9))

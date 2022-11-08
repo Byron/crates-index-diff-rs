@@ -9,7 +9,7 @@ use std::sync::atomic::AtomicBool;
 #[allow(missing_docs)]
 pub enum Error {
     #[error(transparent)]
-    PrepareClone(#[from] git::clone::prepare::Error),
+    PrepareClone(#[from] git::clone::Error),
     #[error(transparent)]
     Fetch(#[from] git::clone::fetch::Error),
     #[error(transparent)]
@@ -40,12 +40,16 @@ impl Index {
     /// let index = Index::from_path_or_cloned_with_options(path, git::progress::Discard, &AtomicBool::default(), options)?;
     /// # Ok::<(), crates_index_diff::index::init::Error>(())
     /// ```
-    pub fn from_path_or_cloned_with_options(
+    pub fn from_path_or_cloned_with_options<P>(
         path: impl AsRef<Path>,
-        progress: impl git::Progress,
+        progress: P,
         should_interrupt: &AtomicBool,
         CloneOptions { url }: CloneOptions,
-    ) -> Result<Index, Error> {
+    ) -> Result<Index, Error>
+    where
+        P: git::Progress,
+        P::SubProgress: 'static,
+    {
         let path = path.as_ref();
         let mut repo = match git::open(path) {
             Ok(repo) => repo,

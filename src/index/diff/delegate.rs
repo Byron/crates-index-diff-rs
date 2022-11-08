@@ -2,8 +2,8 @@ use crate::index::diff::Error;
 use crate::{Change, CrateVersion};
 use bstr::BStr;
 use git_repository as git;
-use similar::ChangeTag;
 use std::collections::BTreeSet;
+use std::ops::Range;
 
 #[derive(Default)]
 pub(crate) struct Delegate {
@@ -32,6 +32,7 @@ impl Delegate {
         if change.location.contains(&b'.') {
             return Ok(Default::default());
         }
+        let mut line_changes = Vec::new();
         match change.event {
             Addition { entry_mode, id } => {
                 if let Some(obj) = entry_data(entry_mode, id)? {
@@ -55,25 +56,74 @@ impl Delegate {
             Modification { .. } => {
                 if let Some(diff) = change.event.diff().transpose()? {
                     let location = change.location;
-                    for change in diff
-                        .text(git::diff::lines::Algorithm::Myers)
-                        .iter_all_changes()
-                    {
-                        match change.tag() {
-                            ChangeTag::Delete | ChangeTag::Insert => {
-                                let version = version_from_json_line(change.value(), location)?;
-                                if change.tag() == ChangeTag::Insert {
-                                    self.changes.push(if version.yanked {
-                                        Change::Yanked(version)
-                                    } else {
-                                        Change::Added(version)
-                                    });
-                                } else {
-                                    self.delete_version_ids.insert(version.id());
+
+                    enum Op {
+                        Delete,
+                        Add,
+                    }
+                    type SinkOutput = Vec<Result<(CrateVersion, Op), Error>>;
+                    struct Sink<'a, 'b, 'c> {
+                        out: &'a mut SinkOutput,
+                        input: &'b git::diff::text::imara::intern::InternedInput<&'b [u8]>,
+                        location: &'c BStr,
+                    }
+
+                    impl<'a, 'b, 'c> git::diff::text::imara::Sink for Sink<'a, 'b, 'c> {
+                        type Out = &'a mut SinkOutput;
+
+                        fn process_change(&mut self, before: Range<u32>, after: Range<u32>) {
+                            let mut line_before = self.input.before
+                                [before.start as usize..before.end as usize]
+                                .iter()
+                                .map(|&line| self.input.interner[line]);
+                            let mut line_after = self.input.after
+                                [after.start as usize..after.end as usize]
+                                .iter()
+                                .map(|&line| self.input.interner[line]);
+                            match (line_before.next(), line_after.next()) {
+                                (Some(removed), None) => {
+                                    self.out.push(
+                                        version_from_json_line(removed.as_bstr(), self.location)
+                                            .map(|v| (v, Op::Delete)),
+                                    );
+                                }
+                                (None, Some(inserted)) => {
+                                    self.out.push(
+                                        version_from_json_line(inserted.as_bstr(), self.location)
+                                            .map(|v| (v, Op::Add)),
+                                    );
+                                }
+                                (Some(_), Some(_)) | (None, None) => {
+                                    /* ignore modifications, shouldn't exist */
                                 }
                             }
-                            ChangeTag::Equal => {}
                         }
+
+                        fn finish(self) -> Self::Out {
+                            self.out
+                        }
+                    }
+
+                    let sink =
+                        |input: &git::diff::text::imara::intern::InternedInput<&[u8]>| Sink {
+                            out: &mut line_changes,
+                            input,
+                            location,
+                        };
+                    for op in diff.lines(sink).drain(..) {
+                        let (version, op) = op?;
+                        match op {
+                            Op::Add => {
+                                self.changes.push(if version.yanked {
+                                    Change::Yanked(version)
+                                } else {
+                                    Change::Added(version)
+                                });
+                            }
+                            Op::Delete => {
+                                self.delete_version_ids.insert(version.id());
+                            }
+                        };
                     }
                 }
             }

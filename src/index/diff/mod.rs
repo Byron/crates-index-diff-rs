@@ -1,7 +1,6 @@
 use crate::{Change, Index};
 use git_repository as git;
 use git_repository::prelude::ObjectIdExt;
-use git_repository::refs::transaction::PreviousValue;
 use std::sync::atomic::AtomicBool;
 
 mod delegate;
@@ -20,7 +19,9 @@ pub enum Error {
     #[error("Couldn't get the tree of a commit for diffing purposes")]
     PeelToTree(#[from] git::object::peel::to_kind::Error),
     #[error("Failed to diff two trees to find changed crates")]
-    Diff(#[from] git::object::tree::diff::Error),
+    Diff(#[from] git::object::tree::diff::change::event::diff::Error),
+    #[error(transparent)]
+    DiffForEach(#[from] git::object::tree::diff::for_each::Error),
     #[error("Failed to decode {line:?} in file {file_name:?} as crate version")]
     VersionDecode {
         source: serde_json::Error,
@@ -70,11 +71,15 @@ impl Index {
     ///
     /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
     // TODO: update this once it's clear how auto-gc works in `gitoxide`.
-    pub fn peek_changes_with_options(
+    pub fn peek_changes_with_options<P>(
         &self,
-        progress: impl git::Progress,
+        progress: P,
         should_interrupt: &AtomicBool,
-    ) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
+    ) -> Result<(Vec<Change>, git::hash::ObjectId), Error>
+    where
+        P: git::Progress,
+        P::SubProgress: 'static,
+    {
         let repo = &self.repo;
         let from = repo
             .find_reference(self.seen_ref_name)
@@ -203,11 +208,15 @@ impl Index {
     /// of the maximum number of open file handles as configured with `ulimit`.
     ///
     /// Thus it is advised for the caller to run `git gc` occasionally based on their own requirements and usage patterns.
-    pub fn fetch_changes_with_options(
+    pub fn fetch_changes_with_options<P>(
         &self,
-        progress: impl git::Progress,
+        progress: P,
         should_interrupt: &AtomicBool,
-    ) -> Result<Vec<Change>, Error> {
+    ) -> Result<Vec<Change>, Error>
+    where
+        P: git::Progress,
+        P::SubProgress: 'static,
+    {
         let (changes, to) = self.peek_changes_with_options(progress, should_interrupt)?;
         self.set_last_seen_reference(to)?;
         Ok(changes)
@@ -219,7 +228,7 @@ impl Index {
         repo.reference(
             self.seen_ref_name,
             to,
-            PreviousValue::Any,
+            git::refs::transaction::PreviousValue::Any,
             "updating seen-ref head to latest fetched commit",
         )?;
         Ok(())

@@ -68,17 +68,17 @@ impl Delegate {
                             let mut lines_before = input.before
                                 [before.start as usize..before.end as usize]
                                 .iter()
-                                .map(|&line| input.interner[line])
+                                .map(|&line| input.interner[line].as_bstr())
                                 .peekable();
                             let mut lines_after = input.after
                                 [after.start as usize..after.end as usize]
                                 .iter()
-                                .map(|&line| input.interner[line])
+                                .map(|&line| input.interner[line].as_bstr())
                                 .peekable();
                             match (lines_before.peek().is_some(), lines_after.peek().is_some()) {
                                 (true, false) => {
                                     for removed in lines_before {
-                                        match version_from_json_line(removed.as_bstr(), location) {
+                                        match version_from_json_line(removed, location) {
                                             Ok(version) => {
                                                 self.delete_version_ids.insert(version.id());
                                             }
@@ -91,7 +91,7 @@ impl Delegate {
                                 }
                                 (false, true) => {
                                     for inserted in lines_after {
-                                        match version_from_json_line(inserted.as_bstr(), location) {
+                                        match version_from_json_line(inserted, location) {
                                             Ok(version) => {
                                                 self.changes.push(if version.yanked {
                                                     Change::Yanked(version)
@@ -106,9 +106,25 @@ impl Delegate {
                                         }
                                     }
                                 }
-                                (true, true) | (false, false) => {
-                                    /* ignore modifications, shouldn't exist */
+                                (true, true) => {
+                                    // These should always be yanked, but we check it anyway.
+                                    for inserted in lines_after {
+                                        match version_from_json_line(inserted, location) {
+                                            Ok(version) => {
+                                                self.changes.push(if version.yanked {
+                                                    Change::Yanked(version)
+                                                } else {
+                                                    Change::Added(version)
+                                                });
+                                            }
+                                            Err(e) => {
+                                                err = Some(e);
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
+                                (false, false) => {}
                             }
                         },
                     );

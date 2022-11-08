@@ -61,56 +61,38 @@ impl Delegate {
                         Delete,
                         Add,
                     }
-                    type SinkOutput = Vec<Result<(CrateVersion, Op), Error>>;
-                    struct Sink<'a, 'b, 'c> {
-                        out: &'a mut SinkOutput,
-                        input: &'b git::diff::text::imara::intern::InternedInput<&'b [u8]>,
-                        location: &'c BStr,
-                    }
-
-                    impl<'a, 'b, 'c> git::diff::text::imara::Sink for Sink<'a, 'b, 'c> {
-                        type Out = &'a mut SinkOutput;
-
-                        fn process_change(&mut self, before: Range<u32>, after: Range<u32>) {
-                            let mut line_before = self.input.before
-                                [before.start as usize..before.end as usize]
-                                .iter()
-                                .map(|&line| self.input.interner[line]);
-                            let mut line_after = self.input.after
-                                [after.start as usize..after.end as usize]
-                                .iter()
-                                .map(|&line| self.input.interner[line]);
-                            match (line_before.next(), line_after.next()) {
-                                (Some(removed), None) => {
-                                    self.out.push(
-                                        version_from_json_line(removed.as_bstr(), self.location)
-                                            .map(|v| (v, Op::Delete)),
-                                    );
-                                }
-                                (None, Some(inserted)) => {
-                                    self.out.push(
-                                        version_from_json_line(inserted.as_bstr(), self.location)
-                                            .map(|v| (v, Op::Add)),
-                                    );
-                                }
-                                (Some(_), Some(_)) | (None, None) => {
-                                    /* ignore modifications, shouldn't exist */
+                    diff.lines(
+                        |input: &git::diff::text::imara::intern::InternedInput<&[u8]>| {
+                            |before: Range<u32>, after: Range<u32>| {
+                                let mut line_before = input.before
+                                    [before.start as usize..before.end as usize]
+                                    .iter()
+                                    .map(|&line| input.interner[line]);
+                                let mut line_after = input.after
+                                    [after.start as usize..after.end as usize]
+                                    .iter()
+                                    .map(|&line| input.interner[line]);
+                                match (line_before.next(), line_after.next()) {
+                                    (Some(removed), None) => {
+                                        line_changes.push(
+                                            version_from_json_line(removed.as_bstr(), location)
+                                                .map(|v| (v, Op::Delete)),
+                                        );
+                                    }
+                                    (None, Some(inserted)) => {
+                                        line_changes.push(
+                                            version_from_json_line(inserted.as_bstr(), location)
+                                                .map(|v| (v, Op::Add)),
+                                        );
+                                    }
+                                    (Some(_), Some(_)) | (None, None) => {
+                                        /* ignore modifications, shouldn't exist */
+                                    }
                                 }
                             }
-                        }
-
-                        fn finish(self) -> Self::Out {
-                            self.out
-                        }
-                    }
-
-                    let sink =
-                        |input: &git::diff::text::imara::intern::InternedInput<&[u8]>| Sink {
-                            out: &mut line_changes,
-                            input,
-                            location,
-                        };
-                    for op in diff.lines(sink).drain(..) {
+                        },
+                    );
+                    for op in line_changes.drain(..) {
                         let (version, op) = op?;
                         match op {
                             Op::Add => {

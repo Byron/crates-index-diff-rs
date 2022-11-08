@@ -2,8 +2,8 @@ use crate::index::diff::Error;
 use crate::{Change, CrateVersion};
 use bstr::BStr;
 use git_repository as git;
-use similar::ChangeTag;
 use std::collections::BTreeSet;
+use std::ops::Range;
 
 #[derive(Default)]
 pub(crate) struct Delegate {
@@ -55,25 +55,87 @@ impl Delegate {
             Modification { .. } => {
                 if let Some(diff) = change.event.diff().transpose()? {
                     let location = change.location;
-                    for change in diff
-                        .text(git::diff::lines::Algorithm::Myers)
-                        .iter_all_changes()
-                    {
-                        match change.tag() {
-                            ChangeTag::Delete | ChangeTag::Insert => {
-                                let version = version_from_json_line(change.value(), location)?;
-                                if change.tag() == ChangeTag::Insert {
-                                    self.changes.push(if version.yanked {
-                                        Change::Yanked(version)
-                                    } else {
-                                        Change::Added(version)
-                                    });
-                                } else {
-                                    self.delete_version_ids.insert(version.id());
-                                }
+
+                    let input = diff.line_tokens();
+                    let mut err = None;
+                    git::diff::blob::diff(
+                        diff.algo,
+                        &input,
+                        |before: Range<u32>, after: Range<u32>| {
+                            if err.is_some() {
+                                return;
                             }
-                            ChangeTag::Equal => {}
-                        }
+                            let mut lines_before = input.before
+                                [before.start as usize..before.end as usize]
+                                .iter()
+                                .map(|&line| input.interner[line].as_bstr())
+                                .peekable();
+                            let mut lines_after = input.after
+                                [after.start as usize..after.end as usize]
+                                .iter()
+                                .map(|&line| input.interner[line].as_bstr())
+                                .peekable();
+                            match (lines_before.peek().is_some(), lines_after.peek().is_some()) {
+                                (true, false) => {
+                                    for removed in lines_before {
+                                        match version_from_json_line(removed, location) {
+                                            Ok(version) => {
+                                                self.delete_version_ids.insert(version.id());
+                                            }
+                                            Err(e) => {
+                                                err = Some(e);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                (false, true) => {
+                                    for inserted in lines_after {
+                                        match version_from_json_line(inserted, location) {
+                                            Ok(version) => {
+                                                self.changes.push(if version.yanked {
+                                                    Change::Yanked(version)
+                                                } else {
+                                                    Change::Added(version)
+                                                });
+                                            }
+                                            Err(e) => {
+                                                err = Some(e);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                (true, true) => {
+                                    for (removed, inserted) in lines_before.zip(lines_after) {
+                                        match version_from_json_line(inserted, location).and_then(
+                                            |inserted| {
+                                                version_from_json_line(removed, location)
+                                                    .map(|removed| (removed, inserted))
+                                            },
+                                        ) {
+                                            Ok((removed, inserted)) => {
+                                                if removed.yanked != inserted.yanked {
+                                                    self.changes.push(if inserted.yanked {
+                                                        Change::Yanked(inserted)
+                                                    } else {
+                                                        Change::Added(inserted)
+                                                    });
+                                                }
+                                            }
+                                            Err(e) => {
+                                                err = Some(e);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                (false, false) => {}
+                            }
+                        },
+                    );
+                    if let Some(err) = err {
+                        return Err(err.into());
                     }
                 }
             }

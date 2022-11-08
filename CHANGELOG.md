@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 13.0.2 (2022-11-08)
 
 ### Features
 
@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 8 commits contributed to the release.
+ - 9 commits contributed to the release.
  - 28 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - prepare changelog prior to release ([`adecda5`](https://github.com/Byron/crates-index-diff-rs/commit/adecda5290674442baf4315772103200fdb7ad8b))
     - Merge branch 'git-repository-upgrade' ([`b28b7ca`](https://github.com/Byron/crates-index-diff-rs/commit/b28b7ca065bec9ff894ee9c0639ae441564f56fd))
     - upgrade to git-repository v0.27 ([`377065e`](https://github.com/Byron/crates-index-diff-rs/commit/377065ecbbbe8dfa0817873fd03b80f9e70bb7aa))
     - all tests are green ([`6b47427`](https://github.com/Byron/crates-index-diff-rs/commit/6b47427e6fa98b01bfda5cd7508179c95203647a))

@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Features
+
+- Switch diff implementation to [`imara-diff`](https://github.com/pascalkuthe/imara-diff) for performance, but also to get off the broken `git-repository` v0.25 release.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 8 commits contributed to the release.
+ - 28 days passed between releases.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge branch 'git-repository-upgrade' ([`b28b7ca`](https://github.com/Byron/crates-index-diff-rs/commit/b28b7ca065bec9ff894ee9c0639ae441564f56fd))
+    - upgrade to git-repository v0.27 ([`377065e`](https://github.com/Byron/crates-index-diff-rs/commit/377065ecbbbe8dfa0817873fd03b80f9e70bb7aa))
+    - all tests are green ([`6b47427`](https://github.com/Byron/crates-index-diff-rs/commit/6b47427e6fa98b01bfda5cd7508179c95203647a))
+    - one more test bytes the dust, but… ([`62cb6eb`](https://github.com/Byron/crates-index-diff-rs/commit/62cb6ebd66802d6500b9cb52e94cd1581ad8fe9b))
+    - fix most of the tests ([`276e726`](https://github.com/Byron/crates-index-diff-rs/commit/276e726221bab2bea2e0d06ff396f757df74d393))
+    - A first stab at getting the diff back to work with `imara-diff` ([`5573529`](https://github.com/Byron/crates-index-diff-rs/commit/5573529fa44c2c1e7e108c00c0784f301c599d61))
+    - try to rewrite explicit trait impl as closure, same lifeimte issues. ([`2809c75`](https://github.com/Byron/crates-index-diff-rs/commit/2809c75cff185190d6f1075e10c1d5f1668200ed))
+    - upgrade to `git-repoitory v0.26`, fail to make diff compile. ([`3f47ec3`](https://github.com/Byron/crates-index-diff-rs/commit/3f47ec38b4cfe1ed2b3ec2cb88d31e4598dafe67))
+</details>
+
 ## 13.0.1 (2022-10-11)
 
 ### Bug Fixes
@@ -17,9 +49,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -28,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v13.0.1 ([`acd06a1`](https://github.com/Byron/crates-index-diff-rs/commit/acd06a154e3a50e76a3a29c14fa64880a734e6f3))
     - rename `init::Error2` to `init::Error`. ([`a6975ce`](https://github.com/Byron/crates-index-diff-rs/commit/a6975ce303385cb124a2409d2900a1f2aa278225))
 </details>
 
@@ -57,7 +90,7 @@ If that's a problem, prefer staying with the v12.X line.
  - 12 commits contributed to the release over the course of 6 calendar days.
  - 11 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -93,7 +126,7 @@ If that's a problem, prefer staying with the v12.X line.
 
  - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -146,7 +179,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 4 commits contributed to the release over the course of 6 calendar days.
  - 6 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -212,7 +245,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
  - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -241,7 +274,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
  - 3 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -269,7 +302,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
  - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -305,7 +338,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 7 commits contributed to the release.
  - 1 day passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -505,7 +538,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 10 commits contributed to the release over the course of 84 calendar days.
  - 85 days passed between releases.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Thanks Clippy
 
@@ -543,7 +576,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 7 commits contributed to the release.
  - 12 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -572,7 +605,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 4 commits contributed to the release.
  - 197 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -627,7 +660,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 2 commits contributed to the release over the course of 1 calendar day.
  - 4 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -650,7 +683,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
  - 3 commits contributed to the release.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -675,7 +708,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 5 commits contributed to the release over the course of 43 calendar days.
  - 54 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -702,7 +735,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 2 commits contributed to the release.
  - 7 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -726,7 +759,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 1 commit contributed to the release.
  - 16 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -749,7 +782,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 1 commit contributed to the release.
  - 3 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -771,7 +804,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
  - 1 commit contributed to the release.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -795,7 +828,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 1 commit contributed to the release.
  - 1 day passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -820,7 +853,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 4 commits contributed to the release over the course of 10 calendar days.
  - 10 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -844,7 +877,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 2 commits contributed to the release over the course of 13 calendar days.
  - 13 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -866,7 +899,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 2 commits contributed to the release over the course of 2 calendar days.
  - 2 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -887,7 +920,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
  - 2 commits contributed to the release.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -910,7 +943,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
  - 2 commits contributed to the release.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -934,7 +967,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 4 commits contributed to the release over the course of 1 calendar day.
  - 1 day passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -961,7 +994,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 3 commits contributed to the release.
  - 163 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -986,7 +1019,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 2 commits contributed to the release.
  - 47 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1008,7 +1041,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 2 commits contributed to the release.
  - 474 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1037,7 +1070,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 6 commits contributed to the release over the course of 4 calendar days.
  - 441 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1074,7 +1107,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - 1 commit contributed to the release.
  - 3 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1102,7 +1135,7 @@ Add a tutorial to the documentation.
 
  - 1 commit contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1135,7 +1168,7 @@ Add a tutorial to the documentation.
 
  - 2 commits contributed to the release.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1175,7 +1208,7 @@ Add a tutorial to the documentation.
 
  - 4 commits contributed to the release.
  - 4 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1359,7 +1392,7 @@ Add a tutorial to the documentation.
 
  - 61 commits contributed to the release over the course of 1 calendar day.
  - 61 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' where seen in commit messages
+ - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 

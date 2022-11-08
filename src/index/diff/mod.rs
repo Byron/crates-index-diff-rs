@@ -19,7 +19,7 @@ pub enum Error {
     #[error("Couldn't get the tree of a commit for diffing purposes")]
     PeelToTree(#[from] git::object::peel::to_kind::Error),
     #[error("Failed to diff two trees to find changed crates")]
-    Diff(#[from] git::object::tree::diff::change::event::diff::Error),
+    Diff(#[from] git::object::blob::diff::init::Error),
     #[error(transparent)]
     DiffForEach(#[from] git::object::tree::diff::for_each::Error),
     #[error("Failed to decode {line:?} in file {file_name:?} as crate version")]

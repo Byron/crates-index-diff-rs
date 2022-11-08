@@ -32,7 +32,6 @@ impl Delegate {
         if change.location.contains(&b'.') {
             return Ok(Default::default());
         }
-        let mut line_changes = Vec::new();
         match change.event {
             Addition { entry_mode, id } => {
                 if let Some(obj) = entry_data(entry_mode, id)? {
@@ -57,55 +56,64 @@ impl Delegate {
                 if let Some(diff) = change.event.diff().transpose()? {
                     let location = change.location;
 
-                    enum Op {
-                        Delete,
-                        Add,
-                    }
-                    diff.lines(
-                        |input: &git::diff::text::imara::intern::InternedInput<&[u8]>| {
-                            |before: Range<u32>, after: Range<u32>| {
-                                let mut line_before = input.before
-                                    [before.start as usize..before.end as usize]
-                                    .iter()
-                                    .map(|&line| input.interner[line]);
-                                let mut line_after = input.after
-                                    [after.start as usize..after.end as usize]
-                                    .iter()
-                                    .map(|&line| input.interner[line]);
-                                match (line_before.next(), line_after.next()) {
-                                    (Some(removed), None) => {
-                                        line_changes.push(
-                                            version_from_json_line(removed.as_bstr(), location)
-                                                .map(|v| (v, Op::Delete)),
-                                        );
+                    let input = diff.line_tokens();
+                    let mut err = None;
+                    git::diff::blob::diff(
+                        diff.algo,
+                        &input,
+                        |before: Range<u32>, after: Range<u32>| {
+                            if err.is_some() {
+                                return;
+                            }
+                            let mut lines_before = input.before
+                                [before.start as usize..before.end as usize]
+                                .iter()
+                                .map(|&line| input.interner[line])
+                                .peekable();
+                            let mut lines_after = input.after
+                                [after.start as usize..after.end as usize]
+                                .iter()
+                                .map(|&line| input.interner[line])
+                                .peekable();
+                            match (lines_before.peek().is_some(), lines_after.next().is_some()) {
+                                (true, false) => {
+                                    for removed in lines_before {
+                                        match version_from_json_line(removed.as_bstr(), location) {
+                                            Ok(version) => {
+                                                self.delete_version_ids.insert(version.id());
+                                            }
+                                            Err(e) => {
+                                                err = Some(e);
+                                                break;
+                                            }
+                                        }
                                     }
-                                    (None, Some(inserted)) => {
-                                        line_changes.push(
-                                            version_from_json_line(inserted.as_bstr(), location)
-                                                .map(|v| (v, Op::Add)),
-                                        );
+                                }
+                                (false, true) => {
+                                    for inserted in lines_after {
+                                        match version_from_json_line(inserted.as_bstr(), location) {
+                                            Ok(version) => {
+                                                self.changes.push(if version.yanked {
+                                                    Change::Yanked(version)
+                                                } else {
+                                                    Change::Added(version)
+                                                });
+                                            }
+                                            Err(e) => {
+                                                err = Some(e);
+                                                break;
+                                            }
+                                        }
                                     }
-                                    (Some(_), Some(_)) | (None, None) => {
-                                        /* ignore modifications, shouldn't exist */
-                                    }
+                                }
+                                (true, true) | (false, false) => {
+                                    /* ignore modifications, shouldn't exist */
                                 }
                             }
                         },
                     );
-                    for op in line_changes.drain(..) {
-                        let (version, op) = op?;
-                        match op {
-                            Op::Add => {
-                                self.changes.push(if version.yanked {
-                                    Change::Yanked(version)
-                                } else {
-                                    Change::Added(version)
-                                });
-                            }
-                            Op::Delete => {
-                                self.delete_version_ids.insert(version.id());
-                            }
-                        };
+                    if let Some(err) = err {
+                        return Err(err.into());
                     }
                 }
             }

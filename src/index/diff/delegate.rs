@@ -75,7 +75,7 @@ impl Delegate {
                                 .iter()
                                 .map(|&line| input.interner[line])
                                 .peekable();
-                            match (lines_before.peek().is_some(), lines_after.next().is_some()) {
+                            match (lines_before.peek().is_some(), lines_after.peek().is_some()) {
                                 (true, false) => {
                                     for removed in lines_before {
                                         match version_from_json_line(removed.as_bstr(), location) {

@@ -107,15 +107,21 @@ impl Delegate {
                                     }
                                 }
                                 (true, true) => {
-                                    // These should always be yanked, but we check it anyway.
-                                    for inserted in lines_after {
-                                        match version_from_json_line(inserted, location) {
-                                            Ok(version) => {
-                                                self.changes.push(if version.yanked {
-                                                    Change::Yanked(version)
-                                                } else {
-                                                    Change::Added(version)
-                                                });
+                                    for (removed, inserted) in lines_before.zip(lines_after) {
+                                        match version_from_json_line(inserted, location).and_then(
+                                            |inserted| {
+                                                version_from_json_line(removed, location)
+                                                    .map(|removed| (removed, inserted))
+                                            },
+                                        ) {
+                                            Ok((removed, inserted)) => {
+                                                if removed.yanked != inserted.yanked {
+                                                    self.changes.push(if inserted.yanked {
+                                                        Change::Yanked(inserted)
+                                                    } else {
+                                                        Change::Added(inserted)
+                                                    });
+                                                }
                                             }
                                             Err(e) => {
                                                 err = Some(e);

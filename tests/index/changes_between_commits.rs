@@ -11,6 +11,23 @@ fn directory_deletions_are_not_picked_up() -> crate::Result {
 }
 
 #[test]
+#[ignore]
+fn updates_before_yanks_are_picked_up() -> crate::Result {
+    let index = index_ro()?;
+    let repo = index.repository();
+    let changes = index.changes_between_commits(
+        repo.rev_parse_single("@^{/updating ansi-color-codec 0.3.11}~1")?,
+        repo.rev_parse_single("@^{/yanking ansi-color-codec 0.3.5}")?,
+    )?;
+
+    assert_eq!(changes.len(), 3, "1 update and 2 yanks");
+    assert_eq!(changes[0].added().expect("first updated").version, "0.3.11");
+    assert_eq!(changes[1].yanked().expect("second yanked").version, "0.3.4");
+    assert_eq!(changes[2].yanked().expect("third yanked").version, "0.3.5");
+    Ok(())
+}
+
+#[test]
 fn addition() -> crate::Result {
     let changes = changes(index_ro()?, ":/initial commit")?;
     assert_eq!(changes.len(), 3228);

@@ -13,7 +13,7 @@ mkdir worktree
 
 
   while read -r commit; do
-      patch -p1 < "$parts/$commit.diff"
+      patch -p1 --remove-empty-files < "$parts/$commit.diff"
       git add .
       git commit -F "$parts/$commit.msg"
   done < "$commit_list"

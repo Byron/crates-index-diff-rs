@@ -11,6 +11,22 @@ fn directory_deletions_are_not_picked_up() -> crate::Result {
 }
 
 #[test]
+fn updates_before_yanks_are_picked_up() -> crate::Result {
+    let index = index_ro()?;
+    let repo = index.repository();
+    let changes = index.changes_between_commits(
+        repo.rev_parse_single("@^{/updating ansi-color-codec 0.3.11}~1")?,
+        repo.rev_parse_single("@^{/yanking ansi-color-codec 0.3.5}")?,
+    )?;
+
+    assert_eq!(changes.len(), 3, "1 update and 2 yanks");
+    assert_eq!(changes[0].yanked().expect("second yanked").version, "0.3.4");
+    assert_eq!(changes[1].yanked().expect("third yanked").version, "0.3.5");
+    assert_eq!(changes[2].added().expect("first updated").version, "0.3.11");
+    Ok(())
+}
+
+#[test]
 fn addition() -> crate::Result {
     let changes = changes(index_ro()?, ":/initial commit")?;
     assert_eq!(changes.len(), 3228);
@@ -29,7 +45,7 @@ fn addition() -> crate::Result {
 
 #[test]
 fn deletion() -> crate::Result {
-    let changes = changes(index_ro()?, "@^{/Updating crate `git-shell#0.3.0`}~1")?;
+    let changes = changes(index_ro()?, "@^{/Delete crates}")?;
     assert_eq!(changes.len(), 1);
     assert_eq!(changes.first().and_then(|c| c.deleted()), Some("girl"));
     Ok(())
@@ -102,7 +118,10 @@ fn changes(mut index: Index, revspec: &str) -> crate::Result<Vec<Change>> {
     let (prev, current) = {
         let repo = index.repository_mut();
         repo.object_cache_size_if_unset(4 * 1024 * 1024);
-        let commit = repo.rev_parse(revspec)?.single().unwrap();
+        let commit = repo
+            .rev_parse(revspec)?
+            .single()
+            .expect("well-known revspec always exists in test setup");
         let ancestor_tree = commit
             .object()?
             .into_commit()

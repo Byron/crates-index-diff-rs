@@ -35,7 +35,7 @@ impl Delegate {
         match change.event {
             Addition { entry_mode, id } => {
                 if let Some(obj) = entry_data(entry_mode, id)? {
-                    for line in (&obj.data).lines() {
+                    for line in obj.data.lines() {
                         let version = version_from_json_line(line, change.location)?;
                         self.changes.push(if version.yanked {
                             Change::Yanked(version)
@@ -75,67 +75,72 @@ impl Delegate {
                                 .iter()
                                 .map(|&line| input.interner[line].as_bstr())
                                 .peekable();
-                            match (lines_before.peek().is_some(), lines_after.peek().is_some()) {
-                                (true, false) => {
-                                    for removed in lines_before {
-                                        match version_from_json_line(removed, location) {
-                                            Ok(version) => {
-                                                self.delete_version_ids.insert(version.id());
-                                            }
-                                            Err(e) => {
-                                                err = Some(e);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                (false, true) => {
-                                    for inserted in lines_after {
-                                        match version_from_json_line(inserted, location) {
-                                            Ok(version) => {
-                                                self.changes.push(if version.yanked {
-                                                    Change::Yanked(version)
-                                                } else {
-                                                    Change::Added(version)
-                                                });
-                                            }
-                                            Err(e) => {
-                                                err = Some(e);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                (true, true) => {
-                                    for (removed, inserted) in lines_before.zip(lines_after) {
-                                        match version_from_json_line(inserted, location).and_then(
-                                            |inserted| {
-                                                version_from_json_line(removed, location)
-                                                    .map(|removed| (removed, inserted))
-                                            },
-                                        ) {
-                                            Ok((removed, inserted)) => {
-                                                if removed.yanked != inserted.yanked {
-                                                    self.changes.push(if inserted.yanked {
-                                                        Change::Yanked(inserted)
-                                                    } else {
-                                                        Change::Added(inserted)
-                                                    });
+                            let mut remember = |version: CrateVersion| {
+                                self.changes.push(if version.yanked {
+                                    Change::Yanked(version)
+                                } else {
+                                    Change::Added(version)
+                                });
+                            };
+                            'outer: loop {
+                                match (lines_before.peek().is_some(), lines_after.peek().is_some())
+                                {
+                                    (true, false) => {
+                                        for removed in lines_before {
+                                            match version_from_json_line(removed, location) {
+                                                Ok(version) => {
+                                                    self.delete_version_ids.insert(version.id());
+                                                }
+                                                Err(e) => {
+                                                    err = Some(e);
+                                                    break;
                                                 }
                                             }
-                                            Err(e) => {
-                                                err = Some(e);
-                                                break;
+                                        }
+                                        break 'outer;
+                                    }
+                                    (false, true) => {
+                                        for inserted in lines_after {
+                                            match version_from_json_line(inserted, location) {
+                                                Ok(version) => remember(version),
+                                                Err(e) => {
+                                                    err = Some(e);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        break 'outer;
+                                    }
+                                    (true, true) => {
+                                        for (removed, inserted) in
+                                            lines_before.by_ref().zip(lines_after.by_ref())
+                                        {
+                                            match version_from_json_line(inserted, location)
+                                                .and_then(|inserted| {
+                                                    version_from_json_line(removed, location)
+                                                        .map(|removed| (removed, inserted))
+                                                }) {
+                                                Ok((removed_version, inserted_version)) => {
+                                                    if removed_version.yanked
+                                                        != inserted_version.yanked
+                                                    {
+                                                        remember(inserted_version);
+                                                    }
+                                                }
+                                                Err(e) => {
+                                                    err = Some(e);
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
+                                    (false, false) => break 'outer,
                                 }
-                                (false, false) => {}
                             }
                         },
                     );
                     if let Some(err) = err {
-                        return Err(err.into());
+                        return Err(err);
                     }
                 }
             }

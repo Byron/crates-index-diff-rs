@@ -97,14 +97,12 @@ impl Index {
                             .ok()
                             .and_then(|head| {
                                 head.into_remote(git::remote::Direction::Fetch)
-                                    .map(|r| r.ok())
-                                    .flatten()
+                                    .and_then(|r| r.ok())
                             })
                             .or_else(|| {
                                 self.repo
                                     .find_default_remote(git::remote::Direction::Fetch)
-                                    .map(|r| r.ok())
-                                    .flatten()
+                                    .and_then(|r| r.ok())
                             })
                     })
                 })
@@ -146,7 +144,7 @@ impl Index {
                 .iter()
                 .find_map(|m| match &m.remote {
                     git::remote::fetch::Source::Ref(r) => (r.unpack().0 == branch_name)
-                        .then(|| m.local.as_ref())
+                        .then_some(m.local.as_ref())
                         .flatten(),
                     _ => None,
                 })

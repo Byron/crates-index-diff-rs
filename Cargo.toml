@@ -15,7 +15,7 @@ include = ["src/**/*", "LICENSE.md", "README.md", "CHANGELOG.md"]
 test = false
 
 [dependencies]
-git-repository = { version = "0.27.0", default-features = false, features = ["max-performance-safe", "blocking-network-client", "blocking-http-transport"] }
+git-repository = { version = "0.28.0", default-features = false, features = ["max-performance-safe", "blocking-network-client", "blocking-http-transport"] }
 serde = { version = "1", features = ["std", "derive"] }
 serde_json = "1"
 bstr = "1.0.1"

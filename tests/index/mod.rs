@@ -7,7 +7,7 @@ use std::sync::atomic::AtomicBool;
 
 mod changes_between_commits;
 
-const NUM_CHANGES_SINCE_EVER: usize = 3516;
+const NUM_CHANGES_SINCE_EVER: usize = 3523;
 
 #[test]
 fn peek_changes() -> crate::Result {

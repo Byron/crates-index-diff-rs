@@ -37,11 +37,7 @@ impl Delegate {
                 if let Some(obj) = entry_data(entry_mode, id)? {
                     for line in obj.data.lines() {
                         let version = version_from_json_line(line, change.location)?;
-                        self.changes.push(if version.yanked {
-                            Change::Yanked(version)
-                        } else {
-                            Change::Added(version)
-                        });
+                        self.changes.push(version.into());
                     }
                 }
             }
@@ -81,13 +77,6 @@ impl Delegate {
                                 .iter()
                                 .map(|&line| input.interner[line].as_bstr())
                                 .peekable();
-                            let mut remember = |version: CrateVersion| {
-                                self.changes.push(if version.yanked {
-                                    Change::Yanked(version)
-                                } else {
-                                    Change::Added(version)
-                                });
-                            };
                             'outer: loop {
                                 match (lines_before.peek().is_some(), lines_after.peek().is_some())
                                 {
@@ -108,7 +97,7 @@ impl Delegate {
                                     (false, true) => {
                                         for inserted in lines_after {
                                             match version_from_json_line(inserted, location) {
-                                                Ok(version) => remember(version),
+                                                Ok(version) => self.changes.push(version.into()),
                                                 Err(e) => {
                                                     err = Some(e);
                                                     break;
@@ -130,7 +119,7 @@ impl Delegate {
                                                     if removed_version.yanked
                                                         != inserted_version.yanked
                                                     {
-                                                        remember(inserted_version);
+                                                        self.changes.push(inserted_version.into());
                                                     }
                                                 }
                                                 Err(e) => {
@@ -159,13 +148,16 @@ impl Delegate {
             Some(err) => Err(err),
             None => {
                 if !self.deleted_version_ids.is_empty() {
-                    let deleted_version_ids = &self.deleted_version_ids;
+                    let deleted_version_ids = &mut self.deleted_version_ids;
                     self.changes.retain(|change| match change {
                         Change::Added(v) | Change::Yanked(v) => {
-                            !deleted_version_ids.contains(&v.id())
+                            !deleted_version_ids.remove(&v.id())
                         }
                         Change::Deleted { .. } => true,
-                    })
+                    });
+                    if !self.deleted_version_ids.is_empty() {
+                        dbg!(self.deleted_version_ids.len());
+                    }
                 }
                 Ok(self.changes)
             }

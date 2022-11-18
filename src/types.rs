@@ -120,6 +120,16 @@ impl CrateVersion {
     }
 }
 
+impl From<CrateVersion> for Change {
+    fn from(v: CrateVersion) -> Self {
+        if v.yanked {
+            Change::Yanked(v)
+        } else {
+            Change::Added(v)
+        }
+    }
+}
+
 /// A single dependency of a specific crate version
 #[derive(
     Clone, serde::Serialize, serde::Deserialize, Ord, PartialOrd, Eq, PartialEq, Debug, Hash,

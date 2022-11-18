@@ -25,7 +25,11 @@ fn all_aggregrated_diffs_equal_latest_version(
                 let index = crates_index_diff::Index::from_path_or_cloned(repo_path)?;
                 let changes = index.changes_between_commits(
                     git::hash::ObjectId::empty_tree(git::hash::Kind::Sha1),
-                    index.repository().head_id()?,
+                    index
+                        .repository()
+                        .find_reference("refs/remotes/origin/HEAD")?
+                        .target()
+                        .id(),
                 )?;
 
                 use crates_index_diff::Change::*;

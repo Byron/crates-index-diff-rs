@@ -2,13 +2,13 @@ use crate::index::diff::Error;
 use crate::{Change, CrateVersion};
 use bstr::BStr;
 use git_repository as git;
-use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::ops::Range;
 
 #[derive(Default)]
 pub(crate) struct Delegate {
-    map: BTreeMap<[u8; 32], CrateVersion>,
-    deletions: Vec<Change>,
+    changes: Vec<Change>,
+    deleted_version_ids: BTreeSet<u64>,
     err: Option<Error>,
 }
 
@@ -37,7 +37,11 @@ impl Delegate {
                 if let Some(obj) = entry_data(entry_mode, id)? {
                     for line in obj.data.lines() {
                         let version = version_from_json_line(line, change.location)?;
-                        self.map.insert(version.checksum, version.into());
+                        self.changes.push(if version.yanked {
+                            Change::Yanked(version)
+                        } else {
+                            Change::Added(version)
+                        });
                     }
                 }
             }
@@ -48,7 +52,7 @@ impl Delegate {
                     for line in obj.data.lines() {
                         deleted.push(version_from_json_line(line, change.location)?);
                     }
-                    self.deletions.push(Change::Deleted {
+                    self.changes.push(Change::Deleted {
                         name: change.location.to_string(),
                         versions: deleted,
                     });
@@ -77,6 +81,13 @@ impl Delegate {
                                 .iter()
                                 .map(|&line| input.interner[line].as_bstr())
                                 .peekable();
+                            let mut remember = |version: CrateVersion| {
+                                self.changes.push(if version.yanked {
+                                    Change::Yanked(version)
+                                } else {
+                                    Change::Added(version)
+                                });
+                            };
                             'outer: loop {
                                 match (lines_before.peek().is_some(), lines_after.peek().is_some())
                                 {
@@ -84,7 +95,7 @@ impl Delegate {
                                         for removed in lines_before {
                                             match version_from_json_line(removed, location) {
                                                 Ok(version) => {
-                                                    self.map.insert(version.checksum, version);
+                                                    self.deleted_version_ids.insert(version.id());
                                                 }
                                                 Err(e) => {
                                                     err = Some(e);
@@ -97,10 +108,7 @@ impl Delegate {
                                     (false, true) => {
                                         for inserted in lines_after {
                                             match version_from_json_line(inserted, location) {
-                                                Ok(version) => {
-                                                    self.map
-                                                        .insert(version.checksum, version.into());
-                                                }
+                                                Ok(version) => remember(version),
                                                 Err(e) => {
                                                     err = Some(e);
                                                     break;
@@ -119,14 +127,11 @@ impl Delegate {
                                                         .map(|removed| (removed, inserted))
                                                 }) {
                                                 Ok((removed_version, inserted_version)) => {
-                                                    self.map.insert(
-                                                        removed_version.checksum,
-                                                        removed_version,
-                                                    );
-                                                    self.map.insert(
-                                                        inserted_version.checksum,
-                                                        inserted_version,
-                                                    );
+                                                    if removed_version.yanked
+                                                        != inserted_version.yanked
+                                                    {
+                                                        remember(inserted_version);
+                                                    }
                                                 }
                                                 Err(e) => {
                                                     err = Some(e);
@@ -149,18 +154,20 @@ impl Delegate {
         Ok(Default::default())
     }
 
-    pub fn into_result(self) -> Result<Vec<Change>, Error> {
+    pub fn into_result(mut self) -> Result<Vec<Change>, Error> {
         match self.err {
             Some(err) => Err(err),
             None => {
-                let mut changes = self.map.into_values().map(Into::into).collect::<Vec<_>>();
-                changes.sort_by(|a: &Change, b: &Change| {
-                    let a = a.version();
-                    let b = b.version();
-                    a.name.cmp(&b.name).then_with(|| a.version.cmp(&b.version))
-                });
-                changes.extend(self.deletions);
-                Ok(changes)
+                if !self.deleted_version_ids.is_empty() {
+                    let deleted_version_ids = &self.deleted_version_ids;
+                    self.changes.retain(|change| match change {
+                        Change::Added(v) | Change::Yanked(v) => {
+                            !deleted_version_ids.contains(&v.id())
+                        }
+                        Change::Deleted { .. } => true,
+                    })
+                }
+                Ok(self.changes)
             }
         }
     }

@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 13.0.3 (2022-11-18)
 
 ### Bug Fixes
 
@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 7 commits contributed to the release.
+ - 8 commits contributed to the release.
  - 9 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#26](https://github.com/Byron/crates-index-diff-rs/issues/26)
@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **[#26](https://github.com/Byron/crates-index-diff-rs/issues/26)**
+    - prepare changelog prior to release ([`46d94b5`](https://github.com/Byron/crates-index-diff-rs/commit/46d94b5120364aa5a285492b8fce543e6487fe98))
     - refactor ([`87678db`](https://github.com/Byron/crates-index-diff-rs/commit/87678db79a798c17575678c233dc9d21f4e16d70))
     - thanks clippy ([`425fd57`](https://github.com/Byron/crates-index-diff-rs/commit/425fd57b8223d8fb35503b7aee06f16c403d1ea5))
     - refactor ([`d059360`](https://github.com/Byron/crates-index-diff-rs/commit/d0593607c76e7b31fd8ac91a0068de128e6bfaf4))

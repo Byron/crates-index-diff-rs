@@ -8,7 +8,7 @@ use std::ops::Range;
 #[derive(Default)]
 pub(crate) struct Delegate {
     changes: Vec<Change>,
-    delete_version_ids: BTreeSet<u64>,
+    deleted_version_ids: BTreeSet<u64>,
     err: Option<Error>,
 }
 
@@ -45,10 +45,16 @@ impl Delegate {
                     }
                 }
             }
-            Deletion { entry_mode, .. } => {
+            Deletion { entry_mode, id, .. } => {
                 if entry_mode.is_no_tree() {
+                    let obj = id.object()?;
+                    let mut deleted = Vec::with_capacity(obj.data.lines().count());
+                    for line in obj.data.lines() {
+                        deleted.push(version_from_json_line(line, change.location)?);
+                    }
                     self.changes.push(Change::Deleted {
                         name: change.location.to_string(),
+                        versions: deleted,
                     });
                 }
             }
@@ -89,7 +95,7 @@ impl Delegate {
                                         for removed in lines_before {
                                             match version_from_json_line(removed, location) {
                                                 Ok(version) => {
-                                                    self.delete_version_ids.insert(version.id());
+                                                    self.deleted_version_ids.insert(version.id());
                                                 }
                                                 Err(e) => {
                                                     err = Some(e);
@@ -152,8 +158,8 @@ impl Delegate {
         match self.err {
             Some(err) => Err(err),
             None => {
-                if !self.delete_version_ids.is_empty() {
-                    let deleted_version_ids = &self.delete_version_ids;
+                if !self.deleted_version_ids.is_empty() {
+                    let deleted_version_ids = &self.deleted_version_ids;
                     self.changes.retain(|change| match change {
                         Change::Added(v) | Change::Yanked(v) => {
                             !deleted_version_ids.contains(&v.id())

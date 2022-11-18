@@ -17,10 +17,13 @@ test = false
 [dependencies]
 git-repository = { version = "0.28.0", default-features = false, features = ["max-performance-safe", "blocking-network-client", "blocking-http-transport"] }
 serde = { version = "1", features = ["std", "derive"] }
+hex = "0.4.3"
+smartstring = "1.0.1"
 serde_json = "1"
 bstr = "1.0.1"
 thiserror = "1.0.32"
 
 [dev-dependencies]
-git-testtools = "0.8.0"
+git-testtools = "0.9.0"
+crates-index = "0.18.11"
 tempdir = "0.3.5"

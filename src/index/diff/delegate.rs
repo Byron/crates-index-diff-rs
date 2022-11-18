@@ -35,7 +35,7 @@ impl Delegate {
         match change.event {
             Addition { entry_mode, id } => {
                 if let Some(obj) = entry_data(entry_mode, id)? {
-                    for line in (&obj.data).lines() {
+                    for line in obj.data.lines() {
                         let version = version_from_json_line(line, change.location)?;
                         self.changes.push(if version.yanked {
                             Change::Yanked(version)
@@ -140,7 +140,7 @@ impl Delegate {
                         },
                     );
                     if let Some(err) = err {
-                        return Err(err.into());
+                        return Err(err);
                     }
                 }
             }

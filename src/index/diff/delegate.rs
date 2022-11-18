@@ -75,62 +75,68 @@ impl Delegate {
                                 .iter()
                                 .map(|&line| input.interner[line].as_bstr())
                                 .peekable();
-                            match (lines_before.peek().is_some(), lines_after.peek().is_some()) {
-                                (true, false) => {
-                                    for removed in lines_before {
-                                        match version_from_json_line(removed, location) {
-                                            Ok(version) => {
-                                                self.delete_version_ids.insert(version.id());
-                                            }
-                                            Err(e) => {
-                                                err = Some(e);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                (false, true) => {
-                                    for inserted in lines_after {
-                                        match version_from_json_line(inserted, location) {
-                                            Ok(version) => {
-                                                self.changes.push(if version.yanked {
-                                                    Change::Yanked(version)
-                                                } else {
-                                                    Change::Added(version)
-                                                });
-                                            }
-                                            Err(e) => {
-                                                err = Some(e);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                (true, true) => {
-                                    for (removed, inserted) in lines_before.zip(lines_after) {
-                                        match version_from_json_line(inserted, location).and_then(
-                                            |inserted| {
-                                                version_from_json_line(removed, location)
-                                                    .map(|removed| (removed, inserted))
-                                            },
-                                        ) {
-                                            Ok((removed, inserted)) => {
-                                                if removed.yanked != inserted.yanked {
-                                                    self.changes.push(if inserted.yanked {
-                                                        Change::Yanked(inserted)
-                                                    } else {
-                                                        Change::Added(inserted)
-                                                    });
+                            loop {
+                                match (lines_before.peek().is_some(), lines_after.peek().is_some())
+                                {
+                                    (true, false) => {
+                                        for removed in lines_before {
+                                            match version_from_json_line(removed, location) {
+                                                Ok(version) => {
+                                                    self.delete_version_ids.insert(version.id());
+                                                }
+                                                Err(e) => {
+                                                    err = Some(e);
+                                                    break;
                                                 }
                                             }
-                                            Err(e) => {
-                                                err = Some(e);
-                                                break;
+                                        }
+                                        break;
+                                    }
+                                    (false, true) => {
+                                        for inserted in lines_after {
+                                            match version_from_json_line(inserted, location) {
+                                                Ok(version) => {
+                                                    self.changes.push(if version.yanked {
+                                                        Change::Yanked(version)
+                                                    } else {
+                                                        Change::Added(version)
+                                                    });
+                                                }
+                                                Err(e) => {
+                                                    err = Some(e);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    }
+                                    (true, true) => {
+                                        for (removed, inserted) in
+                                            lines_before.by_ref().zip(lines_after.by_ref())
+                                        {
+                                            match version_from_json_line(inserted, location)
+                                                .and_then(|inserted| {
+                                                    version_from_json_line(removed, location)
+                                                        .map(|removed| (removed, inserted))
+                                                }) {
+                                                Ok((removed, inserted)) => {
+                                                    if removed.yanked != inserted.yanked {
+                                                        self.changes.push(if inserted.yanked {
+                                                            Change::Yanked(inserted)
+                                                        } else {
+                                                            Change::Added(inserted)
+                                                        });
+                                                    }
+                                                }
+                                                Err(e) => {
+                                                    err = Some(e);
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
+                                    (false, false) => break,
                                 }
-                                (false, false) => {}
                             }
                         },
                     );

@@ -11,7 +11,6 @@ fn directory_deletions_are_not_picked_up() -> crate::Result {
 }
 
 #[test]
-#[ignore]
 fn updates_before_yanks_are_picked_up() -> crate::Result {
     let index = index_ro()?;
     let repo = index.repository();
@@ -21,9 +20,9 @@ fn updates_before_yanks_are_picked_up() -> crate::Result {
     )?;
 
     assert_eq!(changes.len(), 3, "1 update and 2 yanks");
-    assert_eq!(changes[0].added().expect("first updated").version, "0.3.11");
-    assert_eq!(changes[1].yanked().expect("second yanked").version, "0.3.4");
-    assert_eq!(changes[2].yanked().expect("third yanked").version, "0.3.5");
+    assert_eq!(changes[0].yanked().expect("second yanked").version, "0.3.4");
+    assert_eq!(changes[1].yanked().expect("third yanked").version, "0.3.5");
+    assert_eq!(changes[2].added().expect("first updated").version, "0.3.11");
     Ok(())
 }
 

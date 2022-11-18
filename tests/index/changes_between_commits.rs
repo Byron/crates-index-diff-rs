@@ -29,7 +29,7 @@ fn addition() -> crate::Result {
 
 #[test]
 fn deletion() -> crate::Result {
-    let changes = changes(index_ro()?, "@^{/Updating crate `git-shell#0.3.0`}~1")?;
+    let changes = changes(index_ro()?, "@^{/Delete crates}")?;
     assert_eq!(changes.len(), 1);
     assert_eq!(changes.first().and_then(|c| c.deleted()), Some("girl"));
     Ok(())
@@ -102,7 +102,10 @@ fn changes(mut index: Index, revspec: &str) -> crate::Result<Vec<Change>> {
     let (prev, current) = {
         let repo = index.repository_mut();
         repo.object_cache_size_if_unset(4 * 1024 * 1024);
-        let commit = repo.rev_parse(revspec)?.single().unwrap();
+        let commit = repo
+            .rev_parse(revspec)?
+            .single()
+            .expect("well-known revspec always exists in test setup");
         let ancestor_tree = commit
             .object()?
             .into_commit()

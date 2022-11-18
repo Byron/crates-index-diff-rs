@@ -75,6 +75,13 @@ impl Delegate {
                                 .iter()
                                 .map(|&line| input.interner[line].as_bstr())
                                 .peekable();
+                            let mut remember = |version: CrateVersion| {
+                                self.changes.push(if version.yanked {
+                                    Change::Yanked(version)
+                                } else {
+                                    Change::Added(version)
+                                });
+                            };
                             loop {
                                 match (lines_before.peek().is_some(), lines_after.peek().is_some())
                                 {
@@ -95,13 +102,7 @@ impl Delegate {
                                     (false, true) => {
                                         for inserted in lines_after {
                                             match version_from_json_line(inserted, location) {
-                                                Ok(version) => {
-                                                    self.changes.push(if version.yanked {
-                                                        Change::Yanked(version)
-                                                    } else {
-                                                        Change::Added(version)
-                                                    });
-                                                }
+                                                Ok(version) => remember(version),
                                                 Err(e) => {
                                                     err = Some(e);
                                                     break;
@@ -119,13 +120,11 @@ impl Delegate {
                                                     version_from_json_line(removed, location)
                                                         .map(|removed| (removed, inserted))
                                                 }) {
-                                                Ok((removed, inserted)) => {
-                                                    if removed.yanked != inserted.yanked {
-                                                        self.changes.push(if inserted.yanked {
-                                                            Change::Yanked(inserted)
-                                                        } else {
-                                                            Change::Added(inserted)
-                                                        });
+                                                Ok((removed_version, inserted_version)) => {
+                                                    if removed_version.yanked
+                                                        != inserted_version.yanked
+                                                    {
+                                                        remember(inserted_version);
                                                     }
                                                 }
                                                 Err(e) => {

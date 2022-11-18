@@ -7,7 +7,7 @@ fn parse_crate_version() {
         r#"{
         "name": "test",
         "vers": "1.0.0",
-        "cksum": "cksum",
+        "cksum": "0000000000000000000000000000000000000000000000000000000000000000",
         "features" : {},
         "deps" : [],
         "yanked": true
@@ -17,12 +17,12 @@ fn parse_crate_version() {
     assert_eq!(
         c,
         CrateVersion {
-            name: "test".to_string(),
+            name: "test".into(),
             yanked: true,
-            version: "1.0.0".to_string(),
+            version: "1.0.0".into(),
             dependencies: Vec::new(),
             features: HashMap::new(),
-            checksum: "cksum".into()
+            checksum: Default::default()
         }
     );
 }

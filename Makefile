@@ -7,5 +7,6 @@ CARGO = $(shell command -v cargo)
 ##@ Development
 
 test: ## run all tests with cargo
-	RUST_BACKTRACE=1 cargo test 
-	
+	RUST_BACKTRACE=1 cargo test --test crates-index-diff
+	RUST_BACKTRACE=1 cargo test --test baseline --release
+

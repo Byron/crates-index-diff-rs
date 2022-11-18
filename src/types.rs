@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use git_repository as git;
+use smartstring::alias::String as SmolString;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 
@@ -72,19 +73,33 @@ impl fmt::Display for Change {
     }
 }
 
+/// Section in which a dependency was defined in.
+#[derive(
+    Debug, Copy, Clone, serde::Serialize, serde::Deserialize, Eq, PartialEq, Hash, Ord, PartialOrd,
+)]
+#[serde(rename_all = "lowercase")]
+pub enum DependencyKind {
+    /// Used for production builds.
+    Normal,
+    /// Used only for tests and examples.
+    Dev,
+    /// Used in build scripts.
+    Build,
+}
+
 /// Pack all information we know about a change made to a version of a crate.
 #[derive(Default, Clone, serde::Serialize, serde::Deserialize, Eq, PartialEq, Debug)]
 pub struct CrateVersion {
     /// The crate name, i.e. `clap`.
-    pub name: String,
+    pub name: SmolString,
     /// is the release yanked?
     pub yanked: bool,
     /// The semantic version of the crate.
     #[serde(rename = "vers")]
-    pub version: String,
+    pub version: SmolString,
     /// The checksum over the crate archive
-    #[serde(rename = "cksum")]
-    pub checksum: String,
+    #[serde(rename = "cksum", with = "hex")]
+    pub checksum: [u8; 32],
     /// All cargo features
     pub features: HashMap<String, Vec<String>>,
     /// All crate dependencies
@@ -109,10 +124,10 @@ impl CrateVersion {
 )]
 pub struct Dependency {
     /// The crate name
-    pub name: String,
+    pub name: SmolString,
     /// The version the parent crate requires of this dependency
     #[serde(rename = "req")]
-    pub required_version: String,
+    pub required_version: SmolString,
     /// All cargo features configured by the parent crate
     pub features: Vec<String>,
     /// True if this is an optional dependency
@@ -120,9 +135,12 @@ pub struct Dependency {
     /// True if default features are enabled
     pub default_features: bool,
     /// The name of the build target
-    pub target: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub target: Option<SmolString>,
     /// The kind of dependency, usually 'normal' or 'dev'
-    pub kind: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kind: Option<DependencyKind>,
     /// The package this crate is contained in
-    pub package: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub package: Option<SmolString>,
 }

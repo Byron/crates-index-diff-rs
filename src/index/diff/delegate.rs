@@ -2,13 +2,13 @@ use crate::index::diff::Error;
 use crate::{Change, CrateVersion};
 use bstr::BStr;
 use git_repository as git;
-use std::collections::BTreeSet;
+use std::collections::BTreeMap;
 use std::ops::Range;
 
 #[derive(Default)]
 pub(crate) struct Delegate {
     changes: Vec<Change>,
-    deleted_version_ids: BTreeSet<u64>,
+    deleted_version_ids: BTreeMap<u64, CrateVersion>,
     err: Option<Error>,
 }
 
@@ -84,7 +84,8 @@ impl Delegate {
                                         for removed in lines_before {
                                             match version_from_json_line(removed, location) {
                                                 Ok(version) => {
-                                                    self.deleted_version_ids.insert(version.id());
+                                                    self.deleted_version_ids
+                                                        .insert(version.id(), version);
                                                 }
                                                 Err(e) => {
                                                     err = Some(e);
@@ -151,13 +152,12 @@ impl Delegate {
                     let deleted_version_ids = &mut self.deleted_version_ids;
                     self.changes.retain(|change| match change {
                         Change::Added(v) | Change::Yanked(v) => {
-                            !deleted_version_ids.remove(&v.id())
+                            deleted_version_ids.remove(&v.id()).is_some()
                         }
                         Change::Deleted { .. } => true,
                     });
-                    if !self.deleted_version_ids.is_empty() {
-                        dbg!(self.deleted_version_ids.len());
-                    }
+                    self.changes
+                        .extend(self.deleted_version_ids.into_values().map(Into::into))
                 }
                 Ok(self.changes)
             }

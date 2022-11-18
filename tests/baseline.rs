@@ -61,11 +61,12 @@ fn all_aggregrated_diffs_equal_latest_version(
 
     dbg!(baseline_duration, expected.len());
     dbg!(diff_duration, actual.len());
-    // assert_eq!(
-    //     actual.len(),
-    //     expected.len(),
-    //     "aggregated of all changes produces the final result"
-    // );
+    assert_eq!(
+        actual.len(),
+        expected.len(),
+        "aggregated of all changes produces the final result"
+    );
+    assert!(actual.eq(&expected), "actual should be exactly the same");
 
     Ok(())
 }

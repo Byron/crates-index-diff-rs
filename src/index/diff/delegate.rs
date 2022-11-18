@@ -50,7 +50,7 @@ impl Delegate {
                     let obj = id.object()?;
                     let mut deleted = Vec::with_capacity(obj.data.lines().count());
                     for line in obj.data.lines() {
-                        deleted.push(version_from_json_line(line.into(), change.location)?);
+                        deleted.push(version_from_json_line(line, change.location)?);
                     }
                     self.changes.push(Change::Deleted {
                         name: change.location.to_string(),

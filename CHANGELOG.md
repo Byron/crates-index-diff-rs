@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Bug Fixes
+
+ - <csr-id-51c5109c30d42eabf0a4ee4c8272aaec3275b556/> assure differences are handled exhaustively.
+   Previously it was possible to have multiple diffs in one crate
+   distributed over multiple commits to rightfully show up as multiple
+   hunks of modified and added lines only register the modified lines,
+   not the new ones (or the deleted ones for that matter).
+   
+   This would cause updates or removals to be missed.
+   
+   Now hunks of changes are exhaused properly, fixing [the issue](https://github.com/Byron/crates-index-diff-rs/issues/26).
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 7 commits contributed to the release.
+ - 9 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#26](https://github.com/Byron/crates-index-diff-rs/issues/26)
+
+### Thanks Clippy
+
+<csr-read-only-do-not-edit/>
+
+[Clippy](https://github.com/rust-lang/rust-clippy) helped 1 time to make code idiomatic. 
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#26](https://github.com/Byron/crates-index-diff-rs/issues/26)**
+    - refactor ([`87678db`](https://github.com/Byron/crates-index-diff-rs/commit/87678db79a798c17575678c233dc9d21f4e16d70))
+    - thanks clippy ([`425fd57`](https://github.com/Byron/crates-index-diff-rs/commit/425fd57b8223d8fb35503b7aee06f16c403d1ea5))
+    - refactor ([`d059360`](https://github.com/Byron/crates-index-diff-rs/commit/d0593607c76e7b31fd8ac91a0068de128e6bfaf4))
+    - assure differences are handled exhaustively. ([`51c5109`](https://github.com/Byron/crates-index-diff-rs/commit/51c5109c30d42eabf0a4ee4c8272aaec3275b556))
+    - reproduce issue ([`69c8f43`](https://github.com/Byron/crates-index-diff-rs/commit/69c8f43829166949e7afeb8d42c8076480bc3c08))
+    - Add test fixtures for reproduction ([`462d44f`](https://github.com/Byron/crates-index-diff-rs/commit/462d44fd019ea2544c070163a2ec2839f9c57b4d))
+ * **Uncategorized**
+    - Merge branch 'fix-26' ([`7ea3d6e`](https://github.com/Byron/crates-index-diff-rs/commit/7ea3d6e89e4804ff1cdfa664c9454f433ca35dc8))
+</details>
+
 ## 13.0.2 (2022-11-08)
 
 ### Features
@@ -15,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 9 commits contributed to the release.
+ - 10 commits contributed to the release.
  - 28 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v13.0.2 ([`3708131`](https://github.com/Byron/crates-index-diff-rs/commit/3708131ce4eb40bb500ab430bd10c5142f423cf8))
     - prepare changelog prior to release ([`adecda5`](https://github.com/Byron/crates-index-diff-rs/commit/adecda5290674442baf4315772103200fdb7ad8b))
     - Merge branch 'git-repository-upgrade' ([`b28b7ca`](https://github.com/Byron/crates-index-diff-rs/commit/b28b7ca065bec9ff894ee9c0639ae441564f56fd))
     - upgrade to git-repository v0.27 ([`377065e`](https://github.com/Byron/crates-index-diff-rs/commit/377065ecbbbe8dfa0817873fd03b80f9e70bb7aa))

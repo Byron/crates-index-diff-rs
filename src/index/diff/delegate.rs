@@ -82,7 +82,7 @@ impl Delegate {
                                     Change::Added(version)
                                 });
                             };
-                            loop {
+                            'outer: loop {
                                 match (lines_before.peek().is_some(), lines_after.peek().is_some())
                                 {
                                     (true, false) => {
@@ -97,7 +97,7 @@ impl Delegate {
                                                 }
                                             }
                                         }
-                                        break;
+                                        break 'outer;
                                     }
                                     (false, true) => {
                                         for inserted in lines_after {
@@ -109,7 +109,7 @@ impl Delegate {
                                                 }
                                             }
                                         }
-                                        break;
+                                        break 'outer;
                                     }
                                     (true, true) => {
                                         for (removed, inserted) in
@@ -134,7 +134,7 @@ impl Delegate {
                                             }
                                         }
                                     }
-                                    (false, false) => break,
+                                    (false, false) => break 'outer,
                                 }
                             }
                         },

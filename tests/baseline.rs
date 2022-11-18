@@ -35,7 +35,7 @@ fn all_aggregrated_diffs_equal_latest_version(
                     .collect::<Result<Vec<_>, _>>()?;
 
                 // This could be more complex, like jumping to landmarks like 'Delete crate(s)' and so forth.
-                let partitions = 3;
+                let partitions = 4;
                 let chunk_size = (commits.len() / partitions).max(1);
                 let mut steps = (0..commits.len()).step_by(chunk_size).collect::<Vec<_>>();
                 if *steps.last().expect("at least 1") != commits.len() - 1 {

@@ -59,6 +59,13 @@ impl Change {
             _ => None,
         }
     }
+
+    pub(crate) fn version(&self) -> &CrateVersion {
+        match self {
+            Change::Added(v) | Change::Yanked(v) => v,
+            Change::Deleted { .. } => unreachable!("BUG: must not call this on deletion"),
+        }
+    }
 }
 
 impl fmt::Display for Change {
@@ -107,17 +114,6 @@ pub struct CrateVersion {
     /// All crate dependencies
     #[serde(rename = "deps")]
     pub dependencies: Vec<Dependency>,
-}
-
-impl CrateVersion {
-    pub(crate) fn id(&self) -> u64 {
-        let mut s = std::collections::hash_map::DefaultHasher::new();
-        self.name.hash(&mut s);
-        self.yanked.hash(&mut s);
-        self.version.hash(&mut s);
-        self.checksum.hash(&mut s);
-        s.finish()
-    }
 }
 
 impl From<CrateVersion> for Change {

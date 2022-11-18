@@ -7,8 +7,8 @@ use std::ops::Range;
 
 #[derive(Default)]
 pub(crate) struct Delegate {
-    changes: Vec<Change>,
-    deleted_version_ids: BTreeMap<u64, CrateVersion>,
+    map: BTreeMap<[u8; 32], CrateVersion>,
+    deletions: Vec<Change>,
     err: Option<Error>,
 }
 
@@ -37,7 +37,7 @@ impl Delegate {
                 if let Some(obj) = entry_data(entry_mode, id)? {
                     for line in obj.data.lines() {
                         let version = version_from_json_line(line, change.location)?;
-                        self.changes.push(version.into());
+                        self.map.insert(version.checksum, version.into());
                     }
                 }
             }
@@ -48,7 +48,7 @@ impl Delegate {
                     for line in obj.data.lines() {
                         deleted.push(version_from_json_line(line, change.location)?);
                     }
-                    self.changes.push(Change::Deleted {
+                    self.deletions.push(Change::Deleted {
                         name: change.location.to_string(),
                         versions: deleted,
                     });
@@ -84,8 +84,7 @@ impl Delegate {
                                         for removed in lines_before {
                                             match version_from_json_line(removed, location) {
                                                 Ok(version) => {
-                                                    self.deleted_version_ids
-                                                        .insert(version.id(), version);
+                                                    self.map.insert(version.checksum, version);
                                                 }
                                                 Err(e) => {
                                                     err = Some(e);
@@ -98,7 +97,10 @@ impl Delegate {
                                     (false, true) => {
                                         for inserted in lines_after {
                                             match version_from_json_line(inserted, location) {
-                                                Ok(version) => self.changes.push(version.into()),
+                                                Ok(version) => {
+                                                    self.map
+                                                        .insert(version.checksum, version.into());
+                                                }
                                                 Err(e) => {
                                                     err = Some(e);
                                                     break;
@@ -117,11 +119,14 @@ impl Delegate {
                                                         .map(|removed| (removed, inserted))
                                                 }) {
                                                 Ok((removed_version, inserted_version)) => {
-                                                    if removed_version.yanked
-                                                        != inserted_version.yanked
-                                                    {
-                                                        self.changes.push(inserted_version.into());
-                                                    }
+                                                    self.map.insert(
+                                                        removed_version.checksum,
+                                                        removed_version,
+                                                    );
+                                                    self.map.insert(
+                                                        inserted_version.checksum,
+                                                        inserted_version,
+                                                    );
                                                 }
                                                 Err(e) => {
                                                     err = Some(e);
@@ -144,22 +149,18 @@ impl Delegate {
         Ok(Default::default())
     }
 
-    pub fn into_result(mut self) -> Result<Vec<Change>, Error> {
+    pub fn into_result(self) -> Result<Vec<Change>, Error> {
         match self.err {
             Some(err) => Err(err),
             None => {
-                if !self.deleted_version_ids.is_empty() {
-                    let deleted_version_ids = &mut self.deleted_version_ids;
-                    self.changes.retain(|change| match change {
-                        Change::Added(v) | Change::Yanked(v) => {
-                            deleted_version_ids.remove(&v.id()).is_some()
-                        }
-                        Change::Deleted { .. } => true,
-                    });
-                    self.changes
-                        .extend(self.deleted_version_ids.into_values().map(Into::into))
-                }
-                Ok(self.changes)
+                let mut changes = self.map.into_values().map(Into::into).collect::<Vec<_>>();
+                changes.sort_by(|a: &Change, b: &Change| {
+                    let a = a.version();
+                    let b = b.version();
+                    a.name.cmp(&b.name).then_with(|| a.version.cmp(&b.version))
+                });
+                changes.extend(self.deletions);
+                Ok(changes)
             }
         }
     }

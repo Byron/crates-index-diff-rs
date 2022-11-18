@@ -26,10 +26,12 @@ pub enum Change {
     Added(CrateVersion),
     /// A crate version was yanked.
     Yanked(CrateVersion),
-    /// The name of the deleted crate, which implies all versions were deleted as well.
+    /// The name of the crate whose file was deleted, which implies all versions were deleted as well.
     Deleted {
         /// The name of the deleted crate.
         name: String,
+        /// All of its versions that were deleted along with the file.
+        versions: Vec<CrateVersion>,
     },
 }
 
@@ -51,9 +53,9 @@ impl Change {
     }
 
     /// Return the deleted crate, if this is this kind of change.
-    pub fn deleted(&self) -> Option<&str> {
+    pub fn deleted(&self) -> Option<(&str, &[CrateVersion])> {
         match self {
-            Change::Deleted { name } => Some(name.as_str()),
+            Change::Deleted { name, versions } => Some((name.as_str(), versions)),
             _ => None,
         }
     }

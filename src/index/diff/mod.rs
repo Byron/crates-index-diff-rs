@@ -164,6 +164,16 @@ impl Index {
 
     /// Similar to `changes()`, but requires `from` and `to` objects to be provided. They may point
     /// to either `Commit`s or `Tree`s.
+    ///
+    /// # Returns
+    ///
+    /// A list of atomic chanes that were performed on the index
+    /// between the two revisions.
+    /// The changes are grouped by the crate they belong to.
+    /// The order of the changes for each crate are **non-deterministic**.
+    /// The order of crates is also **non-deterministic**.
+    ///
+    /// If a specific order is required, the changes must be sorted by the calle
     pub fn changes_between_commits(
         &self,
         from: impl Into<git::hash::ObjectId>,
@@ -237,6 +247,16 @@ impl Index {
     /// Learn more about specifying revisions
     /// in the
     /// [official documentation](https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html)
+    ///
+    /// # Returns
+    ///
+    /// A list of atomic chanes that were performed on the index
+    /// between the two revisions.
+    /// The changes are grouped by the crate they belong to.
+    /// The order of the changes for each crate are **non-deterministic**.
+    /// The order of crates is also **non-deterministic**.
+    ///
+    /// If a specific order is required, the changes must be sorted by the calle
     pub fn changes(
         &self,
         from: impl AsRef<str>,

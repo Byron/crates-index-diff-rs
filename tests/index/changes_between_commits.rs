@@ -17,15 +17,16 @@ fn directory_deletions_are_not_picked_up() -> crate::Result {
 fn updates_before_yanks_are_picked_up() -> crate::Result {
     let index = index_ro()?;
     let repo = index.repository();
-    let changes = index.changes_between_commits(
+    let mut changes = index.changes_between_commits(
         repo.rev_parse_single("@^{/updating ansi-color-codec 0.3.11}~1")?,
         repo.rev_parse_single("@^{/yanking ansi-color-codec 0.3.5}")?,
     )?;
 
     assert_eq!(changes.len(), 3, "1 update and 2 yanks");
-    assert_eq!(changes[0].yanked().expect("second yanked").version, "0.3.4");
-    assert_eq!(changes[1].yanked().expect("third yanked").version, "0.3.5");
-    assert_eq!(changes[2].added().expect("first updated").version, "0.3.11");
+    changes.sort_by_key(|change| change.versions()[0].version.clone());
+    assert_eq!(changes[1].yanked().expect("second yanked").version, "0.3.4");
+    assert_eq!(changes[2].yanked().expect("third yanked").version, "0.3.5");
+    assert_eq!(changes[0].added().expect("first updated").version, "0.3.11");
     Ok(())
 }
 
@@ -97,13 +98,13 @@ fn yanked_in_new_file() -> crate::Result {
 }
 
 #[test]
-fn unyanked_crates_recognized_as_added() -> crate::Result {
+fn unyanked_crates_recognized() -> crate::Result {
     let changes = changes(index_ro()?, ":/Unyanking crate `git2mail#0.3.2`")?;
     assert_eq!(changes.len(), 1);
     assert_eq!(
         changes
             .first()
-            .and_then(|c| c.added().map(|v| v.name.as_str())),
+            .and_then(|c| c.unyanked().map(|v| v.name.as_str())),
         Some("git2mail")
     );
     Ok(())

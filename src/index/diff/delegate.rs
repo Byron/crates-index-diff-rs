@@ -1,15 +1,38 @@
 use crate::index::diff::Error;
 use crate::{Change, CrateVersion};
+use ahash::AHashSet;
 use bstr::BStr;
 use git_repository as git;
-use std::collections::BTreeSet;
-use std::ops::Range;
+use std::hash::Hash;
+
+#[repr(transparent)]
+struct ChecksumWithVersion(CrateVersion);
+
+impl AsRef<ChecksumWithVersion> for CrateVersion {
+    fn as_ref(&self) -> &ChecksumWithVersion {
+        // Safety: this is safe because ChecksumWithVersion is just a repr[transparent] wrapper around CrateVersion
+        unsafe { &*(self as *const CrateVersion as *const ChecksumWithVersion) }
+    }
+}
+impl Hash for ChecksumWithVersion {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.checksum.hash(state)
+    }
+}
+
+impl PartialEq for ChecksumWithVersion {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.checksum == other.0.checksum
+    }
+}
+impl Eq for ChecksumWithVersion {}
 
 #[derive(Default)]
 pub(crate) struct Delegate {
     changes: Vec<Change>,
-    deleted_version_ids: BTreeSet<u64>,
     err: Option<Error>,
+    temporary_line_map: AHashSet<&'static [u8]>,
+    temporary_version_map: AHashSet<ChecksumWithVersion>,
 }
 
 impl Delegate {
@@ -32,16 +55,17 @@ impl Delegate {
         if change.location.contains(&b'.') {
             return Ok(Default::default());
         }
+
         match change.event {
             Addition { entry_mode, id } => {
                 if let Some(obj) = entry_data(entry_mode, id)? {
                     for line in obj.data.lines() {
                         let version = version_from_json_line(line, change.location)?;
-                        self.changes.push(if version.yanked {
-                            Change::Yanked(version)
+                        if version.yanked {
+                            self.changes.push(Change::AddedAndYanked(version));
                         } else {
-                            Change::Added(version)
-                        });
+                            self.changes.push(Change::Added(version));
+                        }
                     }
                 }
             }
@@ -61,92 +85,53 @@ impl Delegate {
             Modification { .. } => {
                 if let Some(diff) = change.event.diff().transpose()? {
                     let location = change.location;
+                    for line in diff.old.data.lines() {
+                        // Safety: We transfort an &'_ [u8] to and &'static [u8] here
+                        // this is safe because we always drain the hashmap at the end of the function
+                        // the reason the HashMap has a static is that we want to reuse
+                        // the allocation for modifications
+                        self.temporary_line_map
+                            .insert(unsafe { &*(line as *const [u8]) });
+                    }
 
-                    let input = diff.line_tokens();
-                    let mut err = None;
-                    git::diff::blob::diff(
-                        diff.algo,
-                        &input,
-                        |before: Range<u32>, after: Range<u32>| {
-                            if err.is_some() {
-                                return;
+                    for line in diff.new.data.lines() {
+                        // first quickly check if the exact same line is already present in this file in that case we don't need to do anything else
+                        if self.temporary_line_map.remove(line) {
+                            continue;
+                        }
+                        let new_version = version_from_json_line(line, location)?;
+                        self.temporary_version_map
+                            .insert(ChecksumWithVersion(new_version));
+                    }
+
+                    let mut deleted = Vec::new();
+                    for line in self.temporary_line_map.drain() {
+                        let old_version = version_from_json_line(line, location)?;
+                        let new_version = self.temporary_version_map.take(old_version.as_ref());
+                        match new_version {
+                            Some(ChecksumWithVersion(new_version)) => {
+                                let change = match (old_version.yanked, new_version.yanked) {
+                                    (true, false) => Change::Unyanked(new_version),
+                                    (false, true) => Change::Yanked(new_version),
+                                    _ => continue,
+                                };
+                                self.changes.push(change)
                             }
-                            let mut lines_before = input.before
-                                [before.start as usize..before.end as usize]
-                                .iter()
-                                .map(|&line| input.interner[line].as_bstr())
-                                .peekable();
-                            let mut lines_after = input.after
-                                [after.start as usize..after.end as usize]
-                                .iter()
-                                .map(|&line| input.interner[line].as_bstr())
-                                .peekable();
-                            let mut remember = |version: CrateVersion| {
-                                self.changes.push(if version.yanked {
-                                    Change::Yanked(version)
-                                } else {
-                                    Change::Added(version)
-                                });
-                            };
-                            'outer: loop {
-                                match (lines_before.peek().is_some(), lines_after.peek().is_some())
-                                {
-                                    (true, false) => {
-                                        for removed in lines_before {
-                                            match version_from_json_line(removed, location) {
-                                                Ok(version) => {
-                                                    self.deleted_version_ids.insert(version.id());
-                                                }
-                                                Err(e) => {
-                                                    err = Some(e);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        break 'outer;
-                                    }
-                                    (false, true) => {
-                                        for inserted in lines_after {
-                                            match version_from_json_line(inserted, location) {
-                                                Ok(version) => remember(version),
-                                                Err(e) => {
-                                                    err = Some(e);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        break 'outer;
-                                    }
-                                    (true, true) => {
-                                        for (removed, inserted) in
-                                            lines_before.by_ref().zip(lines_after.by_ref())
-                                        {
-                                            match version_from_json_line(inserted, location)
-                                                .and_then(|inserted| {
-                                                    version_from_json_line(removed, location)
-                                                        .map(|removed| (removed, inserted))
-                                                }) {
-                                                Ok((removed_version, inserted_version)) => {
-                                                    if removed_version.yanked
-                                                        != inserted_version.yanked
-                                                    {
-                                                        remember(inserted_version);
-                                                    }
-                                                }
-                                                Err(e) => {
-                                                    err = Some(e);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    (false, false) => break 'outer,
-                                }
-                            }
-                        },
-                    );
-                    if let Some(err) = err {
-                        return Err(err);
+                            None => deleted.push(old_version),
+                        }
+                    }
+                    if !deleted.is_empty() {
+                        self.changes.push(Change::Deleted {
+                            name: deleted[0].name.to_string(),
+                            versions: deleted,
+                        })
+                    }
+                    for ChecksumWithVersion(version) in self.temporary_version_map.drain() {
+                        if version.yanked {
+                            self.changes.push(Change::AddedAndYanked(version))
+                        } else {
+                            self.changes.push(Change::Added(version))
+                        }
                     }
                 }
             }
@@ -154,21 +139,10 @@ impl Delegate {
         Ok(Default::default())
     }
 
-    pub fn into_result(mut self) -> Result<Vec<Change>, Error> {
+    pub fn into_result(self) -> Result<Vec<Change>, Error> {
         match self.err {
             Some(err) => Err(err),
-            None => {
-                if !self.deleted_version_ids.is_empty() {
-                    let deleted_version_ids = &self.deleted_version_ids;
-                    self.changes.retain(|change| match change {
-                        Change::Added(v) | Change::Yanked(v) => {
-                            !deleted_version_ids.contains(&v.id())
-                        }
-                        Change::Deleted { .. } => true,
-                    })
-                }
-                Ok(self.changes)
-            }
+            None => Ok(self.changes),
         }
     }
 }

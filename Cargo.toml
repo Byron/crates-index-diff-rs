@@ -22,6 +22,7 @@ smartstring = "1.0.1"
 serde_json = "1"
 bstr = "1.0.1"
 thiserror = "1.0.32"
+ahash = "0.8.0"
 
 [dev-dependencies]
 git-testtools = "0.9.0"

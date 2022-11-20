@@ -22,11 +22,14 @@ pub struct Index {
 /// Identify a kind of change that occurred to a crate
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub enum Change {
-    /// A crate version was added
+    /// A crate version was added.
     Added(CrateVersion),
     /// A crate version was unyanked.
     Unyanked(CrateVersion),
-    /// A crate version was unyanked.
+    /// A crate version was added in a yanked state.
+    ///
+    /// This can happen if we don't see the commit that added them, so it appears to pop into existence yanked.
+    /// Knowing this should help to trigger the correct action, as simply `Yanked` crates would be treated quite differently.
     AddedAndYanked(CrateVersion),
     /// A crate version was yanked.
     Yanked(CrateVersion),
@@ -72,10 +75,11 @@ impl Change {
         }
     }
 
-    /// Returns all versions affacted by this change
-    /// The returned slice usually has length 1
-    /// However if a crate was purged from the index by an admin,
-    /// all versions of the pruged crate are returned
+    /// Returns all versions affected by this change.
+    ///
+    /// The returned slice usually has length 1.
+    /// However, if a crate was purged from the index by an admin,
+    /// all versions of the purged crate are returned.
     pub fn versions(&self) -> &[CrateVersion] {
         match self {
             Change::Added(v)

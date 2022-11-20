@@ -173,7 +173,7 @@ impl Index {
     /// The order of the changes for each crate are **non-deterministic**.
     /// The order of crates is also **non-deterministic**.
     ///
-    /// If a specific order is required, the changes must be sorted by the calle
+    /// If a specific order is required, the changes must be sorted by the caller.
     pub fn changes_between_commits(
         &self,
         from: impl Into<git::hash::ObjectId>,
@@ -256,7 +256,7 @@ impl Index {
     /// The order of the changes for each crate are **non-deterministic**.
     /// The order of crates is also **non-deterministic**.
     ///
-    /// If a specific order is required, the changes must be sorted by the calle
+    /// If a specific order is required, the changes must be sorted by the caller.
     pub fn changes(
         &self,
         from: impl AsRef<str>,

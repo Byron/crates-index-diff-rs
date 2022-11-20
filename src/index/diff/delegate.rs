@@ -61,11 +61,12 @@ impl Delegate {
                 if let Some(obj) = entry_data(entry_mode, id)? {
                     for line in obj.data.lines() {
                         let version = version_from_json_line(line, change.location)?;
-                        if version.yanked {
-                            self.changes.push(Change::AddedAndYanked(version));
+                        let change = if version.yanked {
+                            Change::AddedAndYanked(version)
                         } else {
-                            self.changes.push(Change::Added(version));
-                        }
+                            Change::Added(version)
+                        };
+                        self.changes.push(change)
                     }
                 }
             }
@@ -86,7 +87,7 @@ impl Delegate {
                 if let Some(diff) = change.event.diff().transpose()? {
                     let location = change.location;
                     for line in diff.old.data.lines() {
-                        // Safety: We transfort an &'_ [u8] to and &'static [u8] here
+                        // Safety: We transform an &'_ [u8] to and &'static [u8] here
                         // this is safe because we always drain the hashmap at the end of the function
                         // the reason the HashMap has a static is that we want to reuse
                         // the allocation for modifications
@@ -127,11 +128,12 @@ impl Delegate {
                         })
                     }
                     for ChecksumWithVersion(version) in self.temporary_version_map.drain() {
-                        if version.yanked {
-                            self.changes.push(Change::AddedAndYanked(version))
+                        let change = if version.yanked {
+                            Change::AddedAndYanked(version)
                         } else {
-                            self.changes.push(Change::Added(version))
-                        }
+                            Change::Added(version)
+                        };
+                        self.changes.push(change);
                     }
                 }
             }

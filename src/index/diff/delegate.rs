@@ -1,38 +1,14 @@
 use crate::index::diff::Error;
 use crate::{Change, CrateVersion};
-use ahash::AHashSet;
+use ahash::{AHashSet, RandomState};
 use bstr::BStr;
 use git_repository as git;
-use std::hash::Hash;
-
-#[repr(transparent)]
-struct ChecksumWithVersion(CrateVersion);
-
-impl AsRef<ChecksumWithVersion> for CrateVersion {
-    fn as_ref(&self) -> &ChecksumWithVersion {
-        // Safety: this is safe because ChecksumWithVersion is just a repr[transparent] wrapper around CrateVersion
-        unsafe { &*(self as *const CrateVersion as *const ChecksumWithVersion) }
-    }
-}
-impl Hash for ChecksumWithVersion {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.0.checksum.hash(state)
-    }
-}
-
-impl PartialEq for ChecksumWithVersion {
-    fn eq(&self, other: &Self) -> bool {
-        self.0.checksum == other.0.checksum
-    }
-}
-impl Eq for ChecksumWithVersion {}
+use hashbrown::raw::RawTable;
 
 #[derive(Default)]
 pub(crate) struct Delegate {
     changes: Vec<Change>,
     err: Option<Error>,
-    temporary_line_map: AHashSet<&'static [u8]>,
-    temporary_version_map: AHashSet<ChecksumWithVersion>,
 }
 
 impl Delegate {
@@ -85,32 +61,46 @@ impl Delegate {
             }
             Modification { .. } => {
                 if let Some(diff) = change.event.diff().transpose()? {
+                    let mut old_lines = AHashSet::with_capacity(1024);
                     let location = change.location;
                     for line in diff.old.data.lines() {
                         // Safety: We transform an &'_ [u8] to and &'static [u8] here
                         // this is safe because we always drain the hashmap at the end of the function
                         // the reason the HashMap has a static is that we want to reuse
                         // the allocation for modifications
-                        self.temporary_line_map
-                            .insert(unsafe { &*(line as *const [u8]) });
+                        old_lines.insert(line);
                     }
+
+                    // A RawTable is used to represent a Checksum -> CrateVersion map
+                    // because the checksum is already stored in the CrateVersion
+                    // and we want to avoid storing the checksum twice for performance reasons
+                    let mut new_versions = RawTable::with_capacity(old_lines.len().min(1024));
+                    let hasher = RandomState::new();
 
                     for line in diff.new.data.lines() {
                         // first quickly check if the exact same line is already present in this file in that case we don't need to do anything else
-                        if self.temporary_line_map.remove(line) {
+                        if old_lines.remove(line) {
                             continue;
                         }
+                        // no need to check if the checksum already exists in the hashmap
+                        // as each checksum appear only once
                         let new_version = version_from_json_line(line, location)?;
-                        self.temporary_version_map
-                            .insert(ChecksumWithVersion(new_version));
+                        new_versions.insert(
+                            hasher.hash_one(new_version.checksum),
+                            new_version,
+                            |rehashed| hasher.hash_one(rehashed.checksum),
+                        );
                     }
 
                     let mut deleted = Vec::new();
-                    for line in self.temporary_line_map.drain() {
+                    for line in old_lines.drain() {
                         let old_version = version_from_json_line(line, location)?;
-                        let new_version = self.temporary_version_map.take(old_version.as_ref());
+                        let new_version = new_versions
+                            .remove_entry(hasher.hash_one(old_version.checksum), |version| {
+                                version.checksum == old_version.checksum
+                            });
                         match new_version {
-                            Some(ChecksumWithVersion(new_version)) => {
+                            Some(new_version) => {
                                 let change = match (old_version.yanked, new_version.yanked) {
                                     (true, false) => Change::Unyanked(new_version),
                                     (false, true) => Change::Yanked(new_version),
@@ -127,7 +117,7 @@ impl Delegate {
                             versions: deleted,
                         })
                     }
-                    for ChecksumWithVersion(version) in self.temporary_version_map.drain() {
+                    for version in new_versions.drain() {
                         let change = if version.yanked {
                             Change::AddedAndYanked(version)
                         } else {

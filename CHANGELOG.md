@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 14.0.0 (2022-11-21)
 
 A massive release that increases performance up to 10x for diffing repositories[^1] and correctness at the same time. This release
 wouldn't have been possible without the herculean efforts of [Pascal Kuthe](https://github.com/Byron/crates-index-diff-rs/pull/29) and I am grateful 
@@ -13,10 +13,22 @@ for his contribution. Thank you!
 
 [^1]: Needs to build with `git-repository/max-performance` and setup a pack cache, for example with `GITOXIDE_PACK_CACHE_MEMORY=1g <you-application>`
 
+### Other
+
+ - <csr-id-4d53b045ec3a006205b466ea051c7e1030ea981c/> try to rewrite delegate to be map based…
+   …but besides completely failing the normalization test which I don't
+   understand, it also doesn't manage to get the correct amount of
+   versions.
+ - <csr-id-c0c01bb5d63c6d469a298e157cd4063853ecc50e/> try to chunk up baseline, but changes do not line up.
+   When stepping through the changes in multiple steps, we end up with
+   more crates then there are even though we identify them by
+   checksum and consider deletions. Yanking doesn't remove them from
+   the iteration either.
+
 ### New Features
 
-<csr-id-4d53b045ec3a006205b466ea051c7e1030ea981c/> 
-<csr-id-c0c01bb5d63c6d469a298e157cd4063853ecc50e/> 
+<csr-id-4d53b045ec3a006205b466ea051c7e1030ea981c/>
+<csr-id-c0c01bb5d63c6d469a298e157cd4063853ecc50e/>
 
  - <csr-id-6f5b12a35d0ae6b2bcb05c4f42153ec8fa4f37a2/> a `max-performance` feature to tune `git-repository`.
    The performance difference is rather drastic at about 2.5x, and
@@ -46,7 +58,7 @@ for his contribution. Thank you!
 
 <csr-read-only-do-not-edit/>
 
- - 20 commits contributed to the release over the course of 3 calendar days.
+ - 21 commits contributed to the release over the course of 3 calendar days.
  - 3 days passed between releases.
  - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#26](https://github.com/Byron/crates-index-diff-rs/issues/26)
@@ -76,6 +88,7 @@ for his contribution. Thank you!
     - Reduce heap-allocations `CrateVersion` type and sub-types. ([`f9be536`](https://github.com/Byron/crates-index-diff-rs/commit/f9be536b089199460330cf0ad6d6a74d8813a9cf))
     - layout baseline for exhaustive test against the latest available index ([`7e9d3cd`](https://github.com/Byron/crates-index-diff-rs/commit/7e9d3cd25afa27bee80a382dfe61792a99ed0f35))
  * **Uncategorized**
+    - prepare changelog prior to release ([`a93ba40`](https://github.com/Byron/crates-index-diff-rs/commit/a93ba40269cec0f02c041b299952df22b3010736))
     - Merge branch 'fix-diff' ([`ec9842a`](https://github.com/Byron/crates-index-diff-rs/commit/ec9842ac8861a55cb51ed28caeeea5e0a18757f3))
     - refactor ([`bd3bc22`](https://github.com/Byron/crates-index-diff-rs/commit/bd3bc220ab28679cb4ce81376aeb4088b5053279))
     - remove unnecessary unsafe code ([`1b5684f`](https://github.com/Byron/crates-index-diff-rs/commit/1b5684fe702545d120877852e64ffdb800bbc2e4))

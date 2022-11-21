@@ -64,10 +64,6 @@ impl Delegate {
                     let mut old_lines = AHashSet::with_capacity(1024);
                     let location = change.location;
                     for line in diff.old.data.lines() {
-                        // Safety: We transform an &'_ [u8] to and &'static [u8] here
-                        // this is safe because we always drain the hashmap at the end of the function
-                        // the reason the HashMap has a static is that we want to reuse
-                        // the allocation for modifications
                         old_lines.insert(line);
                     }
 

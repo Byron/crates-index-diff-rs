@@ -14,6 +14,20 @@ include = ["src/**/*", "LICENSE.md", "README.md", "CHANGELOG.md"]
 [lib]
 test = false
 
+[[test]]
+name = "baseline"
+path = "tests/baseline.rs"
+required-features = ["max-performance"]
+
+[[test]]
+name = "baseline-atomic"
+path = "tests/baseline_atomic.rs.rs"
+required-features = ["max-performance"]
+
+[features]
+default = []
+max-performance = ["git-repository/max-performance"]
+
 [dependencies]
 git-repository = { version = "0.28.0", default-features = false, features = ["max-performance-safe", "blocking-network-client", "blocking-http-transport"] }
 serde = { version = "1", features = ["std", "derive"] }
@@ -22,6 +36,8 @@ smartstring = "1.0.1"
 serde_json = "1"
 bstr = "1.0.1"
 thiserror = "1.0.32"
+ahash = "0.8.0"
+hashbrown = { version = "0.13.1", features = ["raw"] }
 
 [dev-dependencies]
 git-testtools = "0.9.0"

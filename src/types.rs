@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use git_repository as git;
 use smartstring::alias::String as SmolString;
-use std::fmt;
-use std::hash::{Hash, Hasher};
+use std::hash::Hash;
+use std::{fmt, slice};
 
 /// A wrapper for a repository of the crates.io index.
 pub struct Index {
@@ -22,8 +22,15 @@ pub struct Index {
 /// Identify a kind of change that occurred to a crate
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub enum Change {
-    /// A crate version was added or it was unyanked.
+    /// A crate version was added.
     Added(CrateVersion),
+    /// A crate version was unyanked.
+    Unyanked(CrateVersion),
+    /// A crate version was added in a yanked state.
+    ///
+    /// This can happen if we don't see the commit that added them, so it appears to pop into existence yanked.
+    /// Knowing this should help to trigger the correct action, as simply `Yanked` crates would be treated quite differently.
+    AddedAndYanked(CrateVersion),
     /// A crate version was yanked.
     Yanked(CrateVersion),
     /// The name of the crate whose file was deleted, which implies all versions were deleted as well.
@@ -39,7 +46,7 @@ impl Change {
     /// Return the added crate, if this is this kind of change.
     pub fn added(&self) -> Option<&CrateVersion> {
         match self {
-            Change::Added(v) => Some(v),
+            Change::Added(v) | Change::AddedAndYanked(v) => Some(v),
             _ => None,
         }
     }
@@ -47,7 +54,15 @@ impl Change {
     /// Return the yanked crate, if this is this kind of change.
     pub fn yanked(&self) -> Option<&CrateVersion> {
         match self {
-            Change::Yanked(v) => Some(v),
+            Change::Yanked(v) | Change::AddedAndYanked(v) => Some(v),
+            _ => None,
+        }
+    }
+
+    /// Return the unyanked crate, if this is this kind of change.
+    pub fn unyanked(&self) -> Option<&CrateVersion> {
+        match self {
+            Change::Unyanked(v) => Some(v),
             _ => None,
         }
     }
@@ -57,6 +72,21 @@ impl Change {
         match self {
             Change::Deleted { name, versions } => Some((name.as_str(), versions)),
             _ => None,
+        }
+    }
+
+    /// Returns all versions affected by this change.
+    ///
+    /// The returned slice usually has length 1.
+    /// However, if a crate was purged from the index by an admin,
+    /// all versions of the purged crate are returned.
+    pub fn versions(&self) -> &[CrateVersion] {
+        match self {
+            Change::Added(v)
+            | Change::Unyanked(v)
+            | Change::AddedAndYanked(v)
+            | Change::Yanked(v) => slice::from_ref(v),
+            Change::Deleted { versions, .. } => versions,
         }
     }
 }
@@ -70,6 +100,8 @@ impl fmt::Display for Change {
                 Change::Added(_) => "added",
                 Change::Yanked(_) => "yanked",
                 Change::Deleted { .. } => "deleted",
+                Change::Unyanked(_) => "unyanked",
+                Change::AddedAndYanked(_) => "added and yanked",
             }
         )
     }
@@ -107,17 +139,6 @@ pub struct CrateVersion {
     /// All crate dependencies
     #[serde(rename = "deps")]
     pub dependencies: Vec<Dependency>,
-}
-
-impl CrateVersion {
-    pub(crate) fn id(&self) -> u64 {
-        let mut s = std::collections::hash_map::DefaultHasher::new();
-        self.name.hash(&mut s);
-        self.yanked.hash(&mut s);
-        self.version.hash(&mut s);
-        self.checksum.hash(&mut s);
-        s.finish()
-    }
 }
 
 /// A single dependency of a specific crate version

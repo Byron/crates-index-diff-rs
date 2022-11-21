@@ -5,6 +5,88 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+A massive release that increases performance up to 10x for diffing repositories[^1] and correctness at the same time. This release
+wouldn't have been possible without the herculean efforts of [Pascal Kuthe](https://github.com/Byron/crates-index-diff-rs/pull/29) and I am grateful 
+for his contribution. Thank you!
+
+[^1]: Needs to build with `git-repository/max-performance` and setup a pack cache, for example with `GITOXIDE_PACK_CACHE_MEMORY=1g <you-application>`
+
+### New Features
+
+<csr-id-4d53b045ec3a006205b466ea051c7e1030ea981c/> 
+<csr-id-c0c01bb5d63c6d469a298e157cd4063853ecc50e/> 
+
+ - <csr-id-6f5b12a35d0ae6b2bcb05c4f42153ec8fa4f37a2/> a `max-performance` feature to tune `git-repository`.
+   The performance difference is rather drastic at about 2.5x, and
+   definitely worth having if there is no compatibility issue
+   due to shared C dependencies in the same binary.
+   
+   Additionally we setup the makefile to use big object caches
+   to avoid having to decompress the same object too often, accelerating
+   the diffing process about 4x, for a total of 10x performance boost.
+
+### Changed (BREAKING)
+
+ - <csr-id-b538ad6ad9c6b11354583f32986b16907de7f4f4/> `Change::Deleted` variant now has `versions` field to include all deleted versions.
+   That way it doesn't degenerate any information, previously the exact
+   version information was lost.
+   
+   Not doing so helps to be able to reproduce the current state by
+   aggregating all changes.
+
+### New Features (BREAKING)
+
+ - <csr-id-f9be536b089199460330cf0ad6d6a74d8813a9cf/> Reduce heap-allocations `CrateVersion` type and sub-types.
+   This improves performance slightly when dealing with a lot of versions,
+   like when all versions are obtained from the beginning of time.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 20 commits contributed to the release over the course of 3 calendar days.
+ - 3 days passed between releases.
+ - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#26](https://github.com/Byron/crates-index-diff-rs/issues/26)
+
+### Thanks Clippy
+
+<csr-read-only-do-not-edit/>
+
+[Clippy](https://github.com/rust-lang/rust-clippy) helped 1 time to make code idiomatic. 
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#26](https://github.com/Byron/crates-index-diff-rs/issues/26)**
+    - refactor ([`b42ac1e`](https://github.com/Byron/crates-index-diff-rs/commit/b42ac1e055bb8264804c40a2fe436e45850e9422))
+    - revert previous to FAILed commits ([`3b52cfd`](https://github.com/Byron/crates-index-diff-rs/commit/3b52cfdf74fc1b38d604a79e83dc0b0de1f61843))
+    - try to rewrite delegate to be map based… ([`4d53b04`](https://github.com/Byron/crates-index-diff-rs/commit/4d53b045ec3a006205b466ea051c7e1030ea981c))
+    - try to chunk up baseline, but changes do not line up. ([`c0c01bb`](https://github.com/Byron/crates-index-diff-rs/commit/c0c01bb5d63c6d469a298e157cd4063853ecc50e))
+    - refactor ([`097209c`](https://github.com/Byron/crates-index-diff-rs/commit/097209c3fe54d56fd908907a54ab07268ba8804b))
+    - Now the baseline result is the same. ([`02cdb2e`](https://github.com/Byron/crates-index-diff-rs/commit/02cdb2ee5425e3f88d1ad8720c6ac2f3f247716d))
+    - make baseline work with CI ([`b9a1850`](https://github.com/Byron/crates-index-diff-rs/commit/b9a1850b6723c26d3af359cce9163747d30e8874))
+    - a baseline test which shows that we cannot reproduce the status quo with changes just yet. ([`3fcf96b`](https://github.com/Byron/crates-index-diff-rs/commit/3fcf96be95647bf9e66c85a33b52c7e74ccc9cce))
+    - `Change::Deleted` variant now as `versions` to include all deleted versions. ([`b538ad6`](https://github.com/Byron/crates-index-diff-rs/commit/b538ad6ad9c6b11354583f32986b16907de7f4f4))
+    - Reduce heap-allocations `CrateVersion` type and sub-types. ([`f9be536`](https://github.com/Byron/crates-index-diff-rs/commit/f9be536b089199460330cf0ad6d6a74d8813a9cf))
+    - layout baseline for exhaustive test against the latest available index ([`7e9d3cd`](https://github.com/Byron/crates-index-diff-rs/commit/7e9d3cd25afa27bee80a382dfe61792a99ed0f35))
+ * **Uncategorized**
+    - Merge branch 'fix-diff' ([`ec9842a`](https://github.com/Byron/crates-index-diff-rs/commit/ec9842ac8861a55cb51ed28caeeea5e0a18757f3))
+    - refactor ([`bd3bc22`](https://github.com/Byron/crates-index-diff-rs/commit/bd3bc220ab28679cb4ce81376aeb4088b5053279))
+    - remove unnecessary unsafe code ([`1b5684f`](https://github.com/Byron/crates-index-diff-rs/commit/1b5684fe702545d120877852e64ffdb800bbc2e4))
+    - a `max-performance` feature to tune `git-repository`. ([`6f5b12a`](https://github.com/Byron/crates-index-diff-rs/commit/6f5b12a35d0ae6b2bcb05c4f42153ec8fa4f37a2))
+    - improve baseline tests to be more practical ([`bae80b0`](https://github.com/Byron/crates-index-diff-rs/commit/bae80b04ecd97ac37c12f90f5cd60a480b9bea6a))
+    - add baseline tests that steps trough each commit individually ([`a377ca4`](https://github.com/Byron/crates-index-diff-rs/commit/a377ca47627e0c4449f0410d2887afed4d07d634))
+    - perform an unordered comparison instead of using a linear edit-sequence ([`8256cbb`](https://github.com/Byron/crates-index-diff-rs/commit/8256cbbd3651073394d6aa9de38c734618df9102))
+    - Merge branch 'complete-baseline' ([`61c6272`](https://github.com/Byron/crates-index-diff-rs/commit/61c62723520aa6257adf75cf4e3558187f986844))
+    - thanks clippy ([`249d141`](https://github.com/Byron/crates-index-diff-rs/commit/249d14118f8716ffd83adc6559edf41e89b9c4a8))
+</details>
+
 ## 13.0.3 (2022-11-18)
 
 ### Bug Fixes
@@ -23,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 8 commits contributed to the release.
+ - 9 commits contributed to the release.
  - 9 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#26](https://github.com/Byron/crates-index-diff-rs/issues/26)
@@ -49,6 +131,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - reproduce issue ([`69c8f43`](https://github.com/Byron/crates-index-diff-rs/commit/69c8f43829166949e7afeb8d42c8076480bc3c08))
     - Add test fixtures for reproduction ([`462d44f`](https://github.com/Byron/crates-index-diff-rs/commit/462d44fd019ea2544c070163a2ec2839f9c57b4d))
  * **Uncategorized**
+    - Release crates-index-diff v13.0.3 ([`1d06ee9`](https://github.com/Byron/crates-index-diff-rs/commit/1d06ee90b51d1147fc6cb21370744799ffd9a512))
     - Merge branch 'fix-26' ([`7ea3d6e`](https://github.com/Byron/crates-index-diff-rs/commit/7ea3d6e89e4804ff1cdfa664c9454f433ca35dc8))
 </details>
 

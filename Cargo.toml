@@ -25,11 +25,17 @@ path = "tests/baseline_atomic.rs.rs"
 required-features = ["max-performance"]
 
 [features]
-default = []
+default = ["http-curl"]
+## Configure `git-repository` to use maximum performance.
 max-performance = ["git-repository/max-performance"]
+## Use libcurl for all http/https interactions. Supports many git http settings, but needs a C toolchain to build.
+http-curl = ["git-repository/blocking-http-transport-curl"]
+## Use reqwest along with pure-rust TLS implementations. Needs no C toolchain, but might not be parity in features compared to curl.
+http-reqwest = ["git-repository/blocking-http-transport-reqwest-rust-tls"]
+
 
 [dependencies]
-git-repository = { version = "0.28.0", default-features = false, features = ["max-performance-safe", "blocking-network-client", "blocking-http-transport"] }
+git-repository = { version = "0.29.0", default-features = false, features = ["max-performance-safe", "blocking-network-client"] }
 serde = { version = "1", features = ["std", "derive"] }
 hex = "0.4.3"
 smartstring = "1.0.1"

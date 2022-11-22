@@ -7,8 +7,10 @@ pub enum Step {
         size: usize,
     },
     Realistic {
-        /// Like `Partitioned::size, and used to have big steps until the last partition which is then single-steped entirely.
-        partitions: usize,
+        /// Like `Partitioned::size, and used to have big steps until `ordered_partitions` are executed.
+        unordered_partitions: usize,
+        /// The amount of partitions to use for obtaining ordered changes
+        ordered_partitions: usize,
     },
 }
 
@@ -41,29 +43,44 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                     .map(|id| id.map(|id| id.detach()))
                     .collect::<Result<Vec<_>, _>>()?;
 
-                // This could be more complex, like jumping to landmarks like 'Delete crate(s)' and so forth.
-                let (partitions, last_partition_is_single_step) = match mode {
-                    Step::Partitioned { size } => (size, false),
-                    Step::Realistic { partitions } => (partitions, true),
+                enum Kind {
+                    Unordered,
+                    Ordered,
+                }
+                let (mut unordered_partitions, mut ordered_partitions) = match mode {
+                    Step::Partitioned { size } => (size, 0),
+                    Step::Realistic {
+                        unordered_partitions,
+                        ordered_partitions,
+                    } => (unordered_partitions, ordered_partitions),
                 };
-                let chunk_size = (commits.len() / partitions).max(1);
-                let mut steps = if last_partition_is_single_step && chunk_size > 1 {
-                    let mut steps: Vec<_> = (0..chunk_size).collect();
-                    steps.extend((chunk_size..commits.len()).step_by(chunk_size));
-                    steps
-                } else {
-                    (0..commits.len()).step_by(chunk_size).collect::<Vec<_>>()
+                let chunk_size =
+                    (commits.len() / (unordered_partitions + ordered_partitions)).max(1);
+                let mut new_kind = || {
+                    if unordered_partitions > 0 {
+                        unordered_partitions -= 1;
+                        Kind::Unordered
+                    } else if ordered_partitions > 0 {
+                        ordered_partitions -= 1;
+                        Kind::Ordered
+                    } else {
+                        Kind::Unordered
+                    }
                 };
-                if *steps.last().expect("at least 1") != commits.len() - 1 {
-                    steps.push(commits.len() - 1);
+                let mut steps = (0..commits.len())
+                    .step_by(chunk_size)
+                    .map(|s| (s, new_kind()))
+                    .collect::<Vec<_>>();
+                if steps.last().expect("at least 1").0 != commits.len() - 1 {
+                    steps.push((commits.len() - 1, new_kind()));
                 }
                 let mut versions = HashMap::default();
                 let mut previous = None;
                 let num_steps = steps.len();
-                for (step, current) in steps
+                for (step, (current, kind)) in steps
                     .into_iter()
                     .rev()
-                    .map(|idx| commits[idx].to_owned())
+                    .map(|(idx, kind)| (commits[idx].to_owned(), kind))
                     .enumerate()
                 {
                     let old = previous
@@ -71,7 +88,19 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                     previous = Some(current);
 
                     let start = std::time::Instant::now();
-                    let changes = index.changes_between_commits(old, current)?;
+                    let changes = match kind {
+                        Kind::Unordered => index.changes_between_commits(old, current)?,
+                        Kind::Ordered => {
+                            let (changes, actual_order) =
+                                index.changes_between_ancestor_commits(old, current)?;
+                            assert_eq!(
+                                actual_order,
+                                crates_index_diff::index::diff::Order::AsInCratesIndex,
+                                "input is always correctly ordered and is commits"
+                            );
+                            changes
+                        }
+                    };
                     let num_changes = changes.len();
                     for change in changes {
                         match change {

@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 15.0.0 (2022-11-22)
+
+<csr-id-d91afc930e833f4eb90f64971200d691662f9b0d/>
 
 This release adds support for obtaining changes in the correct order by automatically looking at changes one commit at a time
 while handling squashed indices gracefully. It take about 20 seconds to catch up with all commits done in the crates index for
@@ -19,6 +21,17 @@ The API is mostly the same, but has a few breaking changes to deal with order se
 
 Last but not least, the user can now configure the HTTP backend to use, which allows for a pure-Rust
 build as well.
+
+### Bug Fixes
+
+ - <csr-id-c3cff8849c16c2fdcb150014ff4833f14ab0dcae/> allow to configure the http transport layer in `git-repository`.
+   This way the user of the library has a choice to activate any of these
+   features:
+   
+   * http-curl (default) - use curl and a lot of C dependencies for HTTP/HTTPS.
+     But also support advanced HTTP options.
+   * http-request - use reqwest for http and https, which currently doesn't
+     support any options.
 
 ### Chore
 
@@ -50,8 +63,8 @@ build as well.
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release.
- - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 8 commits contributed to the release.
+ - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#30](https://github.com/Byron/crates-index-diff-rs/issues/30)
 
 ### Commit Details
@@ -61,6 +74,8 @@ build as well.
 <details><summary>view details</summary>
 
  * **[#30](https://github.com/Byron/crates-index-diff-rs/issues/30)**
+    - allow to configure the http transport layer in `git-repository`. ([`c3cff88`](https://github.com/Byron/crates-index-diff-rs/commit/c3cff8849c16c2fdcb150014ff4833f14ab0dcae))
+    - prepare changelog ([`b887560`](https://github.com/Byron/crates-index-diff-rs/commit/b887560ed7d95abc4d8d9f5ad3b75cf6a696a2ac))
     - baseline validation now validates ordered and unordered mode. ([`87e49b5`](https://github.com/Byron/crates-index-diff-rs/commit/87e49b59c3a1542bee9c2965e062a8045748e821))
     - greatly improve performance and realism of `baseline-atomic` test. ([`81c6dd2`](https://github.com/Byron/crates-index-diff-rs/commit/81c6dd2a2413d2556284ef188c06059c1177bc42))
     - baseline also validates the `yanked` status. ([`4dd4a4c`](https://github.com/Byron/crates-index-diff-rs/commit/4dd4a4c86f710fad582e4cf82f799384e42921d9))

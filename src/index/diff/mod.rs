@@ -6,6 +6,24 @@ use std::sync::atomic::AtomicBool;
 mod delegate;
 use delegate::Delegate;
 
+/// The order we maintain for the produced changes.
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum Order {
+    /// Compare provided trees or commits without applying any other logic, with the order being influenced by
+    /// factors like hashmaps.
+    ///
+    /// The benefit is mode is the optimal performance as only one diff is created.
+    ImplementationDefined,
+    /// If the provided revisions are commits, single step through the history that connects them to maintain
+    /// the order in which changes were submitted to the crates-index for all user-defined changes.
+    ///
+    /// Admin changes are still implementation defined, but typically involve only deletions.
+    ///
+    /// The shortcomings of this approach is that each pair of commits has to be diffed individually, increasing
+    /// the amount of work linearly.
+    AsInCratesIndex,
+}
+
 /// The error returned by methods dealing with obtaining index changes.
 #[derive(Debug, thiserror::Error)]
 #[allow(missing_docs)]
@@ -49,9 +67,22 @@ pub enum Error {
 
 /// Find changes without modifying the underling repository
 impl Index {
-    /// As `peek_changes_with_options`, but without the options.
+    /// As `peek_changes_with_options()`, but without the options.
     pub fn peek_changes(&self) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
-        self.peek_changes_with_options(git::progress::Discard, &AtomicBool::default())
+        self.peek_changes_with_options(
+            git::progress::Discard,
+            &AtomicBool::default(),
+            Order::ImplementationDefined,
+        )
+    }
+
+    /// As `peek_changes()` but provides changes similar to those in the crates index.
+    pub fn peek_changes_ordered(&self) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
+        self.peek_changes_with_options(
+            git::progress::Discard,
+            &AtomicBool::default(),
+            Order::ImplementationDefined,
+        )
     }
 
     /// Return all `Change`s that are observed between the last time `peek_changes*(…)` was called
@@ -62,6 +93,9 @@ impl Index {
     /// The second field in the returned tuple is the commit object to which the changes were provided.
     /// If one would set the `last_seen_reference()` to that object, the effect is exactly the same
     /// as if `fetch_changes(…)` had been called.
+    ///
+    /// The `progress` and `should_interrupt` parameters are used to provide progress for fetches and allow
+    /// these operations to be interrupted gracefully.
     ///
     /// # Resource Usage
     ///
@@ -75,6 +109,7 @@ impl Index {
         &self,
         progress: P,
         should_interrupt: &AtomicBool,
+        order: Order,
     ) -> Result<(Vec<Change>, git::hash::ObjectId), Error>
     where
         P: git::Progress,
@@ -159,7 +194,13 @@ impl Index {
                 .detach()
         };
 
-        Ok((self.changes_between_commits(from, to)?, to))
+        Ok((
+            match order {
+                Order::ImplementationDefined => self.changes_between_commits(from, to)?,
+                Order::AsInCratesIndex => self.changes_between_ancestor_commits(from, to)?.0,
+            },
+            to,
+        ))
     }
 
     /// Similar to `changes()`, but requires `from` and `to` objects to be provided. They may point
@@ -167,7 +208,7 @@ impl Index {
     ///
     /// # Returns
     ///
-    /// A list of atomic chanes that were performed on the index
+    /// A list of atomic changes that were performed on the index
     /// between the two revisions.
     /// The changes are grouped by the crate they belong to.
     /// The order of the changes for each crate are **non-deterministic**.
@@ -194,13 +235,106 @@ impl Index {
             .for_each_to_obtain_tree(&to, |change| delegate.handle(change))?;
         delegate.into_result()
     }
+
+    /// Similar to `changes()`, but requires `ancestor_commit` and `current_commit` objects to be provided
+    /// with `ancestor_commit` being in the ancestry of `current_commit`.
+    ///
+    /// If the invariants regarding `ancestor_commit` and `current_commit` are not upheld, we fallback
+    /// to `changes_between_commits()` which doesn't have such restrictions.
+    /// This can happen if the crates-index was squashed for instance.
+    ///
+    /// # Returns
+    ///
+    /// A list of atomic changes that were performed on the index
+    /// between the two revisions, but looking at it one commit at a time, along with the `Order`
+    /// that the changes are actually in in case one of the invariants wasn't met.
+    pub fn changes_between_ancestor_commits(
+        &self,
+        ancestor_commit: impl Into<git::hash::ObjectId>,
+        current_commit: impl Into<git::hash::ObjectId>,
+    ) -> Result<(Vec<Change>, Order), Error> {
+        let from_commit = ancestor_commit.into();
+        let to_commit = current_commit.into();
+        match self.commit_ancestry(from_commit, to_commit) {
+            Some(commits) => {
+                let mut changes = Vec::new();
+                for from_to in commits.windows(2) {
+                    let from = from_to[0];
+                    let to = from_to[1];
+                    changes.extend(self.changes_between_commits(from, to)?);
+                }
+                Ok((changes, Order::AsInCratesIndex))
+            }
+            None => self
+                .changes_between_commits(from_commit, to_commit)
+                .map(|c| (c, Order::ImplementationDefined)),
+        }
+    }
+
+    /// Return a list of commits like `from_commit..=to_commits`.
+    fn commit_ancestry(
+        &self,
+        ancestor_commit: git::hash::ObjectId,
+        current_commit: git::hash::ObjectId,
+    ) -> Option<Vec<git::hash::ObjectId>> {
+        let time_in_seconds_since_epoch = ancestor_commit
+            .attach(&self.repo)
+            .object()
+            .ok()?
+            .try_into_commit()
+            .ok()?
+            .committer()
+            .ok()?
+            .time
+            .seconds_since_unix_epoch;
+        let mut commits = current_commit
+            .attach(&self.repo)
+            .ancestors()
+            .sorting(
+                git::traverse::commit::Sorting::ByCommitTimeNewestFirstCutoffOlderThan {
+                    time_in_seconds_since_epoch,
+                },
+            )
+            .first_parent_only()
+            .all()
+            .ok()?
+            .map(|c| c.map(|c| c.detach()))
+            .collect::<Result<Vec<_>, _>>()
+            .ok()?;
+
+        commits.reverse();
+        if *commits.first()? != ancestor_commit {
+            // try harder, commit resolution is just a second.
+            let pos = commits.iter().position(|c| *c == ancestor_commit)?;
+            commits = commits[pos..].into();
+        }
+        assert_eq!(
+            commits[commits.len() - 1],
+            current_commit,
+            "the iterator includes the tips"
+        );
+        Some(commits)
+    }
 }
 
 /// Find changes while changing the underlying repository in one way or another.
 impl Index {
-    /// As `fetch_changes_with_options`, but without the options.
+    /// As `fetch_changes_with_options()`, but without the options.
     pub fn fetch_changes(&self) -> Result<Vec<Change>, Error> {
-        self.fetch_changes_with_options(git::progress::Discard, &AtomicBool::default())
+        self.fetch_changes_with_options(
+            git::progress::Discard,
+            &AtomicBool::default(),
+            Order::ImplementationDefined,
+        )
+    }
+
+    /// As `fetch_changes()`, but returns an ordered result.
+    pub fn fetch_changes_ordered(&self) -> Result<Vec<Change>, Error> {
+        self.fetch_changes_with_options(
+            git::progress::Discard,
+            &AtomicBool::default(),
+            Order::AsInCratesIndex,
+        )
     }
 
     /// Return all `Change`s that are observed between the last time this method was called
@@ -208,6 +342,11 @@ impl Index {
     /// the remote called `origin`.
     /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
     /// state, which causes this method to have a different result each time it is called.
+    ///
+    /// The `progress` and `should_interrupt` parameters are used to provide progress for fetches and allow
+    /// these operations to be interrupted gracefully.
+    ///
+    /// `order` configures how changes should be ordered.
     ///
     /// # Resource Usage
     ///
@@ -220,12 +359,13 @@ impl Index {
         &self,
         progress: P,
         should_interrupt: &AtomicBool,
+        order: Order,
     ) -> Result<Vec<Change>, Error>
     where
         P: git::Progress,
         P::SubProgress: 'static,
     {
-        let (changes, to) = self.peek_changes_with_options(progress, should_interrupt)?;
+        let (changes, to) = self.peek_changes_with_options(progress, should_interrupt, order)?;
         self.set_last_seen_reference(to)?;
         Ok(changes)
     }

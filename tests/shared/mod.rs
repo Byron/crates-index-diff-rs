@@ -1,5 +1,5 @@
+use ahash::{HashMap, HashMapExt};
 use crates_index_diff::Change::*;
-use std::collections::HashSet;
 
 #[allow(dead_code)]
 pub enum Step {
@@ -13,10 +13,10 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
             let baseline = scope.spawn(|| -> Result<_, crates_index::Error> {
                 let index = crates_index::Index::new_cargo_default()?;
                 let start = std::time::Instant::now();
-                let mut versions = HashSet::new();
+                let mut versions = HashMap::new();
                 for krate in index.crates() {
                     for version in krate.versions() {
-                        versions.insert(version.checksum().to_owned());
+                        versions.insert(version.checksum().to_owned(), version.is_yanked());
                     }
                 }
                 Ok((versions, start.elapsed()))
@@ -47,7 +47,7 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                     steps.push(commits.len() - 1);
                 }
 
-                let mut versions = HashSet::default();
+                let mut versions = HashMap::default();
                 let mut previous = None;
                 let num_steps = steps.len();
                 for (step, current) in steps
@@ -67,11 +67,13 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                         match change {
                             Added(v) | AddedAndYanked(v) => {
                                 // found a new crate, add it to the index
-                                versions.insert(v.checksum.to_owned());
+                                versions.insert(v.checksum.to_owned(), v.yanked);
                             }
                             Unyanked(v) | Yanked(v) => {
-                                // yanked/unyanked crates must be part of the index
-                                assert!(versions.contains(&v.checksum))
+                                *versions
+                                    .get_mut(&v.checksum)
+                                    .expect("these events mean `Added*` events have been emitted") =
+                                    v.yanked
                             }
                             Deleted {
                                 versions: deleted, ..

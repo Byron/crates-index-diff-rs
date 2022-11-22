@@ -1,3 +1,4 @@
+use crates_index_diff::index::diff::Order;
 use crates_index_diff::Index;
 use git_repository as git;
 use git_repository::refs::transaction::PreviousValue;
@@ -13,30 +14,35 @@ const NUM_CHANGES_SINCE_EVER: usize = 3523;
 fn peek_changes() -> crate::Result {
     let mut index = index_ro()?;
     index.branch_name = "main";
-    assert!(
-        index.last_seen_reference().is_err(),
-        "marker ref doesn't exist"
-    );
-    let (changes, last_seen_revision) =
-        index.peek_changes_with_options(git::progress::Discard, &AtomicBool::default())?;
-    assert_eq!(
-        changes.len(),
-        NUM_CHANGES_SINCE_EVER,
-        "all changes since the beginning of history"
-    );
+    for order in [Order::ImplementationDefined, Order::AsInCratesIndex] {
+        assert!(
+            index.last_seen_reference().is_err(),
+            "marker ref doesn't exist"
+        );
+        let (changes, last_seen_revision) = index.peek_changes_with_options(
+            git::progress::Discard,
+            &AtomicBool::default(),
+            order,
+        )?;
+        assert_eq!(
+            changes.len(),
+            NUM_CHANGES_SINCE_EVER,
+            "all changes since the beginning of history"
+        );
 
-    let origin_main = index
-        .repository()
-        .find_reference("refs/remotes/origin/main")?;
-    assert_eq!(
-        last_seen_revision,
-        origin_main.id(),
-        "last seen reference should the latest state from the clone"
-    );
-    assert!(
-        index.last_seen_reference().is_err(),
-        "the last-seen reference has not been created"
-    );
+        let origin_main = index
+            .repository()
+            .find_reference("refs/remotes/origin/main")?;
+        assert_eq!(
+            last_seen_revision,
+            origin_main.id(),
+            "last seen reference should the latest state from the clone"
+        );
+        assert!(
+            index.last_seen_reference().is_err(),
+            "the last-seen reference has not been created"
+        );
+    }
     Ok(())
 }
 

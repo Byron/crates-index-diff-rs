@@ -1,4 +1,5 @@
 use crate::index::index_ro;
+use crates_index_diff::index::diff::Order;
 use crates_index_diff::{Change, CrateVersion, Index};
 use git_repository as git;
 
@@ -14,19 +15,56 @@ fn directory_deletions_are_not_picked_up() -> crate::Result {
 }
 
 #[test]
+fn ancestor_commits_retain_order() -> crate::Result {
+    let index = index_ro()?;
+    let repo = index.repository();
+    let from = repo.rev_parse_single("@^{/Yanking crate `gitten#0.3.1`}~1")?;
+    let to = repo.rev_parse_single(":/Yanking crate `gitten#0.3.0`")?;
+    let (changes, order) = index.changes_between_ancestor_commits(from, to)?;
+
+    assert_eq!(order, Order::AsInCratesIndex, "both commits are connected");
+    assert_eq!(
+        changes.len(),
+        2,
+        "we did specify one more than we needed as the `from` commit would otherwise not be included (hence `~1`)"
+    );
+
+    assert_eq!(
+        changes[0].yanked().expect("yanked").version,
+        "0.3.1",
+        "this goes against ascending order, but is what's recorded in the crates index"
+    );
+
+    assert_eq!(changes[1].yanked().expect("yanked").version, "0.3.0");
+    Ok(())
+}
+
+#[test]
 fn updates_before_yanks_are_picked_up() -> crate::Result {
     let index = index_ro()?;
     let repo = index.repository();
-    let mut changes = index.changes_between_commits(
-        repo.rev_parse_single("@^{/updating ansi-color-codec 0.3.11}~1")?,
-        repo.rev_parse_single("@^{/yanking ansi-color-codec 0.3.5}")?,
-    )?;
+    let from = repo.rev_parse_single("@^{/updating ansi-color-codec 0.3.11}~1")?;
+    let to = repo.rev_parse_single("@^{/yanking ansi-color-codec 0.3.5}")?;
+    let mut changes = index.changes_between_commits(from, to)?;
 
     assert_eq!(changes.len(), 3, "1 update and 2 yanks");
     changes.sort_by_key(|change| change.versions()[0].version.clone());
+    assert_eq!(changes[0].added().expect("first updated").version, "0.3.11");
     assert_eq!(changes[1].yanked().expect("second yanked").version, "0.3.4");
     assert_eq!(changes[2].yanked().expect("third yanked").version, "0.3.5");
+
+    let (mut changes, order) = index.changes_between_ancestor_commits(from, to)?;
+    assert_eq!(
+        order,
+        Order::AsInCratesIndex,
+        "we provided commits, so ancestry should pan out"
+    );
+
+    assert_eq!(changes.len(), 3, "1 update and 2 yanks");
+    changes.sort_by_key(|change| change.versions()[0].version.clone());
     assert_eq!(changes[0].added().expect("first updated").version, "0.3.11");
+    assert_eq!(changes[1].yanked().expect("second yanked").version, "0.3.4");
+    assert_eq!(changes[2].yanked().expect("third yanked").version, "0.3.5");
     Ok(())
 }
 

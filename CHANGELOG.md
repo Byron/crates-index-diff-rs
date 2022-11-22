@@ -5,7 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+This release adds support for obtaining changes in the correct order by automatically looking at changes one commit at a time
+while handling squashed indices gracefully. It take about 20 seconds to catch up with all commits done in the crates index for
+2 whole days and takes much longer than a similar unorderd acquisition of changes, but should be well worth it in situations
+where changes are fetched more often than that.
+
+The baseline validation to assure correctness was improved to also assert the `yanked` state of crates. Furthermore, it is 
+regularly run by CI, on the real crates-index, and in a more realistic manner mixing both unordered and ordered change requests.
+
+The API is mostly the same, but has a few breaking changes to deal with order selection.
+
+### Chore
+
+ - <csr-id-d91afc930e833f4eb90f64971200d691662f9b0d/> a pipeline to validate basic assumptions are stil fulfilled.
+   Running stress-test like baseline tests regularly should help us
+   assure that `crates-index-diff` operates as it should against a
+   real crates-index.
+
+### New Features
+
+ - <csr-id-87e49b59c3a1542bee9c2965e062a8045748e821/> baseline validation now validates ordered and unordered mode.
+ - <csr-id-81c6dd2a2413d2556284ef188c06059c1177bc42/> greatly improve performance and realism of `baseline-atomic` test.
+   We now set a fixed amount of 'big' steps along with one of those chunks
+   being a range where the step-size is one commit at a time, which
+   might be the way changes are obtained in the future.
+ - <csr-id-4dd4a4c86f710fad582e4cf82f799384e42921d9/> baseline also validates the `yanked` status.
+   That way we assure that the state we are interested in is indeed
+   communicated perfectly through the events we emit.
+
+### New Features (BREAKING)
+
+ - <csr-id-133f2f5db418470e6ab4537ebd9a123f33e5fe7b/> Support for in-order changes via `changes_between_ancestor_commits()`.
+   This improvement also makes available an enum to select `Order`
+   in higher-level methods like `peek_changes_with_options()`.
+   
+   We also add `peek_changes_ordered()` and `changes_ordered()` for convenience.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 6 commits contributed to the release.
+ - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#30](https://github.com/Byron/crates-index-diff-rs/issues/30)
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#30](https://github.com/Byron/crates-index-diff-rs/issues/30)**
+    - baseline validation now validates ordered and unordered mode. ([`87e49b5`](https://github.com/Byron/crates-index-diff-rs/commit/87e49b59c3a1542bee9c2965e062a8045748e821))
+    - greatly improve performance and realism of `baseline-atomic` test. ([`81c6dd2`](https://github.com/Byron/crates-index-diff-rs/commit/81c6dd2a2413d2556284ef188c06059c1177bc42))
+    - baseline also validates the `yanked` status. ([`4dd4a4c`](https://github.com/Byron/crates-index-diff-rs/commit/4dd4a4c86f710fad582e4cf82f799384e42921d9))
+ * **Uncategorized**
+    - Merge branch 'baseline-improvements' ([`a80c7fa`](https://github.com/Byron/crates-index-diff-rs/commit/a80c7faab2770dfc6b4593a02c5c897f055c5fe5))
+    - Support for in-order changes via `changes_between_ancestor_commits()`. ([`133f2f5`](https://github.com/Byron/crates-index-diff-rs/commit/133f2f5db418470e6ab4537ebd9a123f33e5fe7b))
+    - a pipeline to validate basic assumptions are stil fulfilled. ([`d91afc9`](https://github.com/Byron/crates-index-diff-rs/commit/d91afc930e833f4eb90f64971200d691662f9b0d))
+</details>
+
 ## 14.0.0 (2022-11-21)
+
+<csr-id-4d53b045ec3a006205b466ea051c7e1030ea981c/>
+<csr-id-c0c01bb5d63c6d469a298e157cd4063853ecc50e/>
 
 A massive release that increases performance up to 10x for diffing repositories[^1] and correctness at the same time. This release
 wouldn't have been possible without the herculean efforts of [Pascal Kuthe](https://github.com/Byron/crates-index-diff-rs/pull/29) and I am grateful 
@@ -58,7 +123,7 @@ for his contribution. Thank you!
 
 <csr-read-only-do-not-edit/>
 
- - 21 commits contributed to the release over the course of 3 calendar days.
+ - 22 commits contributed to the release over the course of 3 calendar days.
  - 3 days passed between releases.
  - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#26](https://github.com/Byron/crates-index-diff-rs/issues/26)
@@ -88,6 +153,7 @@ for his contribution. Thank you!
     - Reduce heap-allocations `CrateVersion` type and sub-types. ([`f9be536`](https://github.com/Byron/crates-index-diff-rs/commit/f9be536b089199460330cf0ad6d6a74d8813a9cf))
     - layout baseline for exhaustive test against the latest available index ([`7e9d3cd`](https://github.com/Byron/crates-index-diff-rs/commit/7e9d3cd25afa27bee80a382dfe61792a99ed0f35))
  * **Uncategorized**
+    - Release crates-index-diff v14.0.0 ([`dfaf1be`](https://github.com/Byron/crates-index-diff-rs/commit/dfaf1beb292dea55d40d5d8d6d5e0cba93f82a69))
     - prepare changelog prior to release ([`a93ba40`](https://github.com/Byron/crates-index-diff-rs/commit/a93ba40269cec0f02c041b299952df22b3010736))
     - Merge branch 'fix-diff' ([`ec9842a`](https://github.com/Byron/crates-index-diff-rs/commit/ec9842ac8861a55cb51ed28caeeea5e0a18757f3))
     - refactor ([`bd3bc22`](https://github.com/Byron/crates-index-diff-rs/commit/bd3bc220ab28679cb4ce81376aeb4088b5053279))

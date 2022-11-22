@@ -17,6 +17,9 @@ regularly run by CI, on the real crates-index, and in a more realistic manner mi
 
 The API is mostly the same, but has a few breaking changes to deal with order selection.
 
+Last but not least, the user can now configure the HTTP backend to use, which allows for a pure-Rust
+build as well.
+
 ### Chore
 
  - <csr-id-d91afc930e833f4eb90f64971200d691662f9b0d/> a pipeline to validate basic assumptions are stil fulfilled.

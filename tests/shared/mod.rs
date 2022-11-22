@@ -3,8 +3,13 @@ use crates_index_diff::Change::*;
 
 #[allow(dead_code)]
 pub enum Step {
-    Partitioned { size: usize },
-    OnePerCommit,
+    Partitioned {
+        size: usize,
+    },
+    Realistic {
+        /// Like `Partitioned::size, and used to have big steps until the last partition which is then single-steped entirely.
+        partitions: usize,
+    },
 }
 
 pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -37,16 +42,21 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                     .collect::<Result<Vec<_>, _>>()?;
 
                 // This could be more complex, like jumping to landmarks like 'Delete crate(s)' and so forth.
-                let partitions = match mode {
-                    Step::Partitioned { size } => size,
-                    Step::OnePerCommit => commits.len(),
+                let (partitions, last_partition_is_single_step) = match mode {
+                    Step::Partitioned { size } => (size, false),
+                    Step::Realistic { partitions } => (partitions, true),
                 };
                 let chunk_size = (commits.len() / partitions).max(1);
-                let mut steps = (0..commits.len()).step_by(chunk_size).collect::<Vec<_>>();
+                let mut steps = if last_partition_is_single_step && chunk_size > 1 {
+                    let mut steps: Vec<_> = (0..chunk_size).collect();
+                    steps.extend((chunk_size..commits.len()).step_by(chunk_size));
+                    steps
+                } else {
+                    (0..commits.len()).step_by(chunk_size).collect::<Vec<_>>()
+                };
                 if *steps.last().expect("at least 1") != commits.len() - 1 {
                     steps.push(commits.len() - 1);
                 }
-
                 let mut versions = HashMap::default();
                 let mut previous = None;
                 let num_steps = steps.len();

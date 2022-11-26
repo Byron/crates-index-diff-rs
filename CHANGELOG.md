@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 15.0.1 (2022-11-26)
+
+### Bug Fixes
+
+ - <csr-id-c91599244e974c3d6c4f443563a32f57858b1d0b/> correctly configure 'serde' features of dependencies.
+   Due to surprising an to me still quite unclear behaviour `cargo`
+   will turn on the `serde` features in the `hex` and `smartstring`
+   dependencies when building it locally from a repository clone,
+   but won't do it when building the crates-io version of the crate
+   after adding it as dependency.
+   
+   This fixes the issue by correctly configuring it the `serde`
+   feature.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 4 commits contributed to the release over the course of 3 calendar days.
+ - 3 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#33](https://github.com/Byron/crates-index-diff-rs/issues/33)
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#33](https://github.com/Byron/crates-index-diff-rs/issues/33)**
+    - correctly configure 'serde' features of dependencies. ([`c915992`](https://github.com/Byron/crates-index-diff-rs/commit/c91599244e974c3d6c4f443563a32f57858b1d0b))
+ * **Uncategorized**
+    - Merge branch 'fix-build' ([`57ca8f0`](https://github.com/Byron/crates-index-diff-rs/commit/57ca8f08341dd21d1a5a87daf366a44d65ebd3bc))
+    - a failing test to reproduce #33 ([`8bfd04d`](https://github.com/Byron/crates-index-diff-rs/commit/8bfd04da4a25be5d68446779e2a2669e6b880b02))
+    - fix stress test ([`9afe15b`](https://github.com/Byron/crates-index-diff-rs/commit/9afe15b9ad746ac253c82e11acb3e58d224832c0))
+</details>
+
 ## 15.0.0 (2022-11-22)
 
 <csr-id-d91afc930e833f4eb90f64971200d691662f9b0d/>
@@ -29,8 +66,8 @@ build as well.
    features:
    
    * http-curl (default) - use curl and a lot of C dependencies for HTTP/HTTPS.
-     But also support advanced HTTP options.
-   * http-request - use reqwest for http and https, which currently doesn't
+   But also support advanced HTTP options.
+* http-request - use reqwest for http and https, which currently doesn't
      support any options.
 
 ### Chore
@@ -63,7 +100,7 @@ build as well.
 
 <csr-read-only-do-not-edit/>
 
- - 8 commits contributed to the release.
+ - 9 commits contributed to the release.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#30](https://github.com/Byron/crates-index-diff-rs/issues/30)
 
@@ -80,6 +117,7 @@ build as well.
     - greatly improve performance and realism of `baseline-atomic` test. ([`81c6dd2`](https://github.com/Byron/crates-index-diff-rs/commit/81c6dd2a2413d2556284ef188c06059c1177bc42))
     - baseline also validates the `yanked` status. ([`4dd4a4c`](https://github.com/Byron/crates-index-diff-rs/commit/4dd4a4c86f710fad582e4cf82f799384e42921d9))
  * **Uncategorized**
+    - Release crates-index-diff v15.0.0 ([`50eed5b`](https://github.com/Byron/crates-index-diff-rs/commit/50eed5bf08e0be2d0cd972d5c3c8f5ebc692559a))
     - Merge branch 'baseline-improvements' ([`a80c7fa`](https://github.com/Byron/crates-index-diff-rs/commit/a80c7faab2770dfc6b4593a02c5c897f055c5fe5))
     - Support for in-order changes via `changes_between_ancestor_commits()`. ([`133f2f5`](https://github.com/Byron/crates-index-diff-rs/commit/133f2f5db418470e6ab4537ebd9a123f33e5fe7b))
     - a pipeline to validate basic assumptions are stil fulfilled. ([`d91afc9`](https://github.com/Byron/crates-index-diff-rs/commit/d91afc930e833f4eb90f64971200d691662f9b0d))

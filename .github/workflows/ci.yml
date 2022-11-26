@@ -17,4 +17,11 @@ jobs:
       run: make test
     - name: docs
       run: cargo doc
+    - name: usage as dependency
+      run: |
+          cargo init user
+          cd user
+          cargo add --path ..
+          cargo check
+           
 

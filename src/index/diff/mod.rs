@@ -81,7 +81,7 @@ impl Index {
         self.peek_changes_with_options(
             git::progress::Discard,
             &AtomicBool::default(),
-            Order::ImplementationDefined,
+            Order::AsInCratesIndex,
         )
     }
 

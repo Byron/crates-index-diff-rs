@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 15.0.2 (2022-12-05)
+
+### Bug Fixes
+
+ - <csr-id-44a5579feb424abcb2d6d75e0631577f1c71b33b/> `Index::peek_changes_ordered()` now actually provides ordered changes.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 day passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - `Index::peek_changes_ordered()` now actually provides ordered changes. ([`44a5579`](https://github.com/Byron/crates-index-diff-rs/commit/44a5579feb424abcb2d6d75e0631577f1c71b33b))
+</details>
+
 ## 15.0.1 (2022-11-26)
 
 ### Bug Fixes
@@ -23,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release over the course of 3 calendar days.
+ - 5 commits contributed to the release over the course of 3 calendar days.
  - 3 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#33](https://github.com/Byron/crates-index-diff-rs/issues/33)
@@ -37,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * **[#33](https://github.com/Byron/crates-index-diff-rs/issues/33)**
     - correctly configure 'serde' features of dependencies. ([`c915992`](https://github.com/Byron/crates-index-diff-rs/commit/c91599244e974c3d6c4f443563a32f57858b1d0b))
  * **Uncategorized**
+    - Release crates-index-diff v15.0.1 ([`a6b40e1`](https://github.com/Byron/crates-index-diff-rs/commit/a6b40e18c92daddcc8750e148b90abf00d5e7b7d))
     - Merge branch 'fix-build' ([`57ca8f0`](https://github.com/Byron/crates-index-diff-rs/commit/57ca8f08341dd21d1a5a87daf366a44d65ebd3bc))
     - a failing test to reproduce #33 ([`8bfd04d`](https://github.com/Byron/crates-index-diff-rs/commit/8bfd04da4a25be5d68446779e2a2669e6b880b02))
     - fix stress test ([`9afe15b`](https://github.com/Byron/crates-index-diff-rs/commit/9afe15b9ad746ac253c82e11acb3e58d224832c0))

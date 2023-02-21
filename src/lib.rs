@@ -10,4 +10,4 @@ mod types;
 /// Access to all `gitoxide` functionality.
 pub use gix;
 
-pub use types::{Change, CrateVersion, Dependency, Index};
+pub use types::{Change, CrateVersion, Dependency, DependencyKind, Index};

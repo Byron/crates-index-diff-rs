@@ -735,7 +735,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
  - <csr-id-2d3a182819077a1fe068cb16fdfeceed2f6882da/> Use `gitoxide` `Repository` instead of `git2::Repository`
    This comes with plenty of changes to the API of the
    `last_seen_reference()` and to the lower-level methods that take
-   object ids (now `git::hash::ObjectId`.
+   object ids (now `gix::hash::ObjectId`.
    
    Note that `git2` is still used internally for fetching and cloning.
    This change was made to assure that at no time there are two open

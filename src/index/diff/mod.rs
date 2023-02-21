@@ -1,6 +1,5 @@
 use crate::{Change, Index};
-use git_repository as git;
-use git_repository::prelude::ObjectIdExt;
+use gix::prelude::ObjectIdExt;
 use std::sync::atomic::AtomicBool;
 
 mod delegate;
@@ -29,17 +28,19 @@ pub enum Order {
 #[allow(missing_docs)]
 pub enum Error {
     #[error("Couldn't update marker reference")]
-    ReferenceEdit(#[from] git::reference::edit::Error),
+    ReferenceEdit(#[from] gix::reference::edit::Error),
     #[error("Failed to parse rev-spec to determine which revisions to diff")]
-    RevParse(#[from] git::revision::spec::parse::Error),
-    #[error("Couldn't find blob that showed up when diffing trees")]
-    FindObject(#[from] git::object::find::existing::Error),
-    #[error("Couldn't get the tree of a commit for diffing purposes")]
-    PeelToTree(#[from] git::object::peel::to_kind::Error),
-    #[error("Failed to diff two trees to find changed crates")]
-    Diff(#[from] git::object::blob::diff::init::Error),
+    RevParse(#[from] gix::revision::spec::parse::Error),
     #[error(transparent)]
-    DiffForEach(#[from] git::object::tree::diff::for_each::Error),
+    DiffRewrites(#[from] gix::object::tree::diff::rewrites::Error),
+    #[error("Couldn't find blob that showed up when diffing trees")]
+    FindObject(#[from] gix::object::find::existing::Error),
+    #[error("Couldn't get the tree of a commit for diffing purposes")]
+    PeelToTree(#[from] gix::object::peel::to_kind::Error),
+    #[error("Failed to diff two trees to find changed crates")]
+    Diff(#[from] gix::object::blob::diff::init::Error),
+    #[error(transparent)]
+    DiffForEach(#[from] gix::object::tree::diff::for_each::Error),
     #[error("Failed to decode {line:?} in file {file_name:?} as crate version")]
     VersionDecode {
         source: serde_json::Error,
@@ -47,39 +48,39 @@ pub enum Error {
         line: bstr::BString,
     },
     #[error(transparent)]
-    FindRemote(#[from] git::remote::find::existing::Error),
+    FindRemote(#[from] gix::remote::find::existing::Error),
     #[error(transparent)]
-    FindReference(#[from] git::reference::find::existing::Error),
+    FindReference(#[from] gix::reference::find::existing::Error),
     #[error(transparent)]
-    Connect(#[from] git::remote::connect::Error),
+    Connect(#[from] gix::remote::connect::Error),
     #[error(transparent)]
-    PrepareFetch(#[from] git::remote::fetch::prepare::Error),
+    PrepareFetch(#[from] gix::remote::fetch::prepare::Error),
     #[error(transparent)]
-    Fetch(#[from] git::remote::fetch::Error),
+    Fetch(#[from] gix::remote::fetch::Error),
     #[error(transparent)]
-    InitAnonymousRemote(#[from] git::remote::init::Error),
+    InitAnonymousRemote(#[from] gix::remote::init::Error),
     #[error("Could not find local tracking branch for remote branch {name:?} in any of {} fetched refs", mappings.len())]
     NoMatchingBranch {
         name: String,
-        mappings: Vec<git::remote::fetch::Mapping>,
+        mappings: Vec<gix::remote::fetch::Mapping>,
     },
 }
 
 /// Find changes without modifying the underling repository
 impl Index {
     /// As `peek_changes_with_options()`, but without the options.
-    pub fn peek_changes(&self) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
+    pub fn peek_changes(&self) -> Result<(Vec<Change>, gix::hash::ObjectId), Error> {
         self.peek_changes_with_options(
-            git::progress::Discard,
+            gix::progress::Discard,
             &AtomicBool::default(),
             Order::ImplementationDefined,
         )
     }
 
     /// As `peek_changes()` but provides changes similar to those in the crates index.
-    pub fn peek_changes_ordered(&self) -> Result<(Vec<Change>, git::hash::ObjectId), Error> {
+    pub fn peek_changes_ordered(&self) -> Result<(Vec<Change>, gix::hash::ObjectId), Error> {
         self.peek_changes_with_options(
-            git::progress::Discard,
+            gix::progress::Discard,
             &AtomicBool::default(),
             Order::AsInCratesIndex,
         )
@@ -110,9 +111,9 @@ impl Index {
         progress: P,
         should_interrupt: &AtomicBool,
         order: Order,
-    ) -> Result<(Vec<Change>, git::hash::ObjectId), Error>
+    ) -> Result<(Vec<Change>, gix::hash::ObjectId), Error>
     where
-        P: git::Progress,
+        P: gix::Progress,
         P::SubProgress: 'static,
     {
         let repo = &self.repo;
@@ -120,7 +121,7 @@ impl Index {
             .find_reference(self.seen_ref_name)
             .ok()
             .and_then(|r| r.try_id().map(|id| id.detach()))
-            .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()));
+            .unwrap_or_else(|| gix::hash::ObjectId::empty_tree(repo.object_hash()));
         let to = {
             let mut remote = self
                 .remote_name
@@ -131,12 +132,12 @@ impl Index {
                             .head()
                             .ok()
                             .and_then(|head| {
-                                head.into_remote(git::remote::Direction::Fetch)
+                                head.into_remote(gix::remote::Direction::Fetch)
                                     .and_then(|r| r.ok())
                             })
                             .or_else(|| {
                                 self.repo
-                                    .find_default_remote(git::remote::Direction::Fetch)
+                                    .find_default_remote(gix::remote::Direction::Fetch)
                                     .and_then(|r| r.ok())
                             })
                     })
@@ -145,11 +146,11 @@ impl Index {
                 .unwrap_or_else(|| {
                     self.repo
                         .head()?
-                        .into_remote(git::remote::Direction::Fetch)
+                        .into_remote(gix::remote::Direction::Fetch)
                         .map(|r| r.map_err(Error::from))
                         .or_else(|| {
                             self.repo
-                                .find_default_remote(git::remote::Direction::Fetch)
+                                .find_default_remote(gix::remote::Direction::Fetch)
                                 .map(|r| r.map_err(Error::from))
                         })
                         .unwrap_or_else(|| {
@@ -158,18 +159,18 @@ impl Index {
                                 .map_err(Into::into)
                         })
                 })?;
-            if remote.refspecs(git::remote::Direction::Fetch).is_empty() {
+            if remote.refspecs(gix::remote::Direction::Fetch).is_empty() {
                 let spec = format!(
                     "+refs/heads/{branch}:refs/remotes/{remote}/{branch}",
                     remote = self.remote_name.as_deref().unwrap_or("origin"),
                     branch = self.branch_name,
                 );
                 remote
-                    .replace_refspecs(Some(spec.as_str()), git::remote::Direction::Fetch)
+                    .replace_refspecs(Some(spec.as_str()), gix::remote::Direction::Fetch)
                     .expect("valid statically known refspec");
             }
-            let res: git::remote::fetch::Outcome = remote
-                .connect(git::remote::Direction::Fetch, progress)?
+            let res: gix::remote::fetch::Outcome = remote
+                .connect(gix::remote::Direction::Fetch, progress)?
                 .prepare_fetch(Default::default())?
                 .receive(should_interrupt)?;
             let branch_name = format!("refs/heads/{}", self.branch_name);
@@ -178,7 +179,7 @@ impl Index {
                 .mappings
                 .iter()
                 .find_map(|m| match &m.remote {
-                    git::remote::fetch::Source::Ref(r) => (r.unpack().0 == branch_name)
+                    gix::remote::fetch::Source::Ref(r) => (r.unpack().0 == branch_name)
                         .then_some(m.local.as_ref())
                         .flatten(),
                     _ => None,
@@ -217,21 +218,22 @@ impl Index {
     /// If a specific order is required, the changes must be sorted by the caller.
     pub fn changes_between_commits(
         &self,
-        from: impl Into<git::hash::ObjectId>,
-        to: impl Into<git::hash::ObjectId>,
+        from: impl Into<gix::hash::ObjectId>,
+        to: impl Into<gix::hash::ObjectId>,
     ) -> Result<Vec<Change>, Error> {
-        let into_tree = |id: git::hash::ObjectId| -> Result<git::Tree<'_>, Error> {
+        let into_tree = |id: gix::hash::ObjectId| -> Result<gix::Tree<'_>, Error> {
             Ok(id
                 .attach(&self.repo)
                 .object()?
-                .peel_to_kind(git::object::Kind::Tree)?
+                .peel_to_kind(gix::object::Kind::Tree)?
                 .into_tree())
         };
         let from = into_tree(from.into())?;
         let to = into_tree(to.into())?;
         let mut delegate = Delegate::default();
-        from.changes()
+        from.changes()?
             .track_filename()
+            .track_rewrites(None)
             .for_each_to_obtain_tree(&to, |change| delegate.handle(change))?;
         delegate.into_result()
     }
@@ -250,8 +252,8 @@ impl Index {
     /// that the changes are actually in in case one of the invariants wasn't met.
     pub fn changes_between_ancestor_commits(
         &self,
-        ancestor_commit: impl Into<git::hash::ObjectId>,
-        current_commit: impl Into<git::hash::ObjectId>,
+        ancestor_commit: impl Into<gix::hash::ObjectId>,
+        current_commit: impl Into<gix::hash::ObjectId>,
     ) -> Result<(Vec<Change>, Order), Error> {
         let from_commit = ancestor_commit.into();
         let to_commit = current_commit.into();
@@ -274,9 +276,9 @@ impl Index {
     /// Return a list of commits like `from_commit..=to_commits`.
     fn commit_ancestry(
         &self,
-        ancestor_commit: git::hash::ObjectId,
-        current_commit: git::hash::ObjectId,
-    ) -> Option<Vec<git::hash::ObjectId>> {
+        ancestor_commit: gix::hash::ObjectId,
+        current_commit: gix::hash::ObjectId,
+    ) -> Option<Vec<gix::hash::ObjectId>> {
         let time_in_seconds_since_epoch = ancestor_commit
             .attach(&self.repo)
             .object()
@@ -291,7 +293,7 @@ impl Index {
             .attach(&self.repo)
             .ancestors()
             .sorting(
-                git::traverse::commit::Sorting::ByCommitTimeNewestFirstCutoffOlderThan {
+                gix::traverse::commit::Sorting::ByCommitTimeNewestFirstCutoffOlderThan {
                     time_in_seconds_since_epoch,
                 },
             )
@@ -322,7 +324,7 @@ impl Index {
     /// As `fetch_changes_with_options()`, but without the options.
     pub fn fetch_changes(&self) -> Result<Vec<Change>, Error> {
         self.fetch_changes_with_options(
-            git::progress::Discard,
+            gix::progress::Discard,
             &AtomicBool::default(),
             Order::ImplementationDefined,
         )
@@ -331,7 +333,7 @@ impl Index {
     /// As `fetch_changes()`, but returns an ordered result.
     pub fn fetch_changes_ordered(&self) -> Result<Vec<Change>, Error> {
         self.fetch_changes_with_options(
-            git::progress::Discard,
+            gix::progress::Discard,
             &AtomicBool::default(),
             Order::AsInCratesIndex,
         )
@@ -362,7 +364,7 @@ impl Index {
         order: Order,
     ) -> Result<Vec<Change>, Error>
     where
-        P: git::Progress,
+        P: gix::Progress,
         P::SubProgress: 'static,
     {
         let (changes, to) = self.peek_changes_with_options(progress, should_interrupt, order)?;
@@ -371,12 +373,12 @@ impl Index {
     }
 
     /// Set the last seen reference to the given Oid. It will be created if it does not yet exists.
-    pub fn set_last_seen_reference(&self, to: git::hash::ObjectId) -> Result<(), Error> {
+    pub fn set_last_seen_reference(&self, to: gix::hash::ObjectId) -> Result<(), Error> {
         let repo = self.repository();
         repo.reference(
             self.seen_ref_name,
             to,
-            git::refs::transaction::PreviousValue::Any,
+            gix::refs::transaction::PreviousValue::Any,
             "updating seen-ref head to latest fetched commit",
         )?;
         Ok(())

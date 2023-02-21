@@ -1,5 +1,4 @@
 use crate::Index;
-use git_repository as git;
 use std::str;
 
 static INDEX_GIT_URL: &str = "https://github.com/rust-lang/crates.io-index";
@@ -22,19 +21,19 @@ impl Default for CloneOptions {
 /// Access
 impl Index {
     /// Return the crates.io repository.
-    pub fn repository(&self) -> &git::Repository {
+    pub fn repository(&self) -> &gix::Repository {
         &self.repo
     }
 
     /// Return the crates.io repository, mutably.
-    pub fn repository_mut(&mut self) -> &mut git::Repository {
+    pub fn repository_mut(&mut self) -> &mut gix::Repository {
         &mut self.repo
     }
 
     /// Return the reference pointing to the state we have seen after calling `fetch_changes()`.
     pub fn last_seen_reference(
         &self,
-    ) -> Result<git::Reference<'_>, git::reference::find::existing::Error> {
+    ) -> Result<gix::Reference<'_>, gix::reference::find::existing::Error> {
         self.repo.find_reference(self.seen_ref_name)
     }
 }

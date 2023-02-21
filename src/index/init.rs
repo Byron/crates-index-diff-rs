@@ -1,6 +1,5 @@
 use crate::index::{CloneOptions, LAST_SEEN_REFNAME};
 use crate::Index;
-use git_repository as git;
 use std::path::Path;
 use std::sync::atomic::AtomicBool;
 
@@ -9,11 +8,11 @@ use std::sync::atomic::AtomicBool;
 #[allow(missing_docs)]
 pub enum Error {
     #[error(transparent)]
-    PrepareClone(#[from] git::clone::Error),
+    PrepareClone(#[from] gix::clone::Error),
     #[error(transparent)]
-    Fetch(#[from] git::clone::fetch::Error),
+    Fetch(#[from] gix::clone::fetch::Error),
     #[error(transparent)]
-    Open(#[from] git::open::Error),
+    Open(#[from] gix::open::Error),
 }
 
 /// Initialization
@@ -37,7 +36,7 @@ impl Index {
     /// };
     ///
     ///
-    /// let index = Index::from_path_or_cloned_with_options(path, git::progress::Discard, &AtomicBool::default(), options)?;
+    /// let index = Index::from_path_or_cloned_with_options(path, gix::progress::Discard, &AtomicBool::default(), options)?;
     /// # Ok::<(), crates_index_diff::index::init::Error>(())
     /// ```
     pub fn from_path_or_cloned_with_options<P>(
@@ -47,20 +46,19 @@ impl Index {
         CloneOptions { url }: CloneOptions,
     ) -> Result<Index, Error>
     where
-        P: git::Progress,
+        P: gix::Progress,
         P::SubProgress: 'static,
     {
         let path = path.as_ref();
-        let mut repo = match git::open(path) {
+        let mut repo = match gix::open(path) {
             Ok(repo) => repo,
-            Err(git::open::Error::NotARepository(_)) => {
+            Err(gix::open::Error::NotARepository { .. }) => {
                 let (repo, _out) =
-                    git::prepare_clone_bare(url, path)?.fetch_only(progress, should_interrupt)?;
+                    gix::prepare_clone_bare(url, path)?.fetch_only(progress, should_interrupt)?;
                 repo
             }
             Err(err) => return Err(err.into()),
-        }
-        .apply_environment();
+        };
 
         repo.object_cache_size_if_unset(4 * 1024 * 1024);
         let remote_name = repo
@@ -83,7 +81,7 @@ impl Index {
     pub fn from_path_or_cloned(path: impl AsRef<Path>) -> Result<Index, Error> {
         Index::from_path_or_cloned_with_options(
             path,
-            git::progress::Discard,
+            gix::progress::Discard,
             &AtomicBool::default(),
             CloneOptions::default(),
         )

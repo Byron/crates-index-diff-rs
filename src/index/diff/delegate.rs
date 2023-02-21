@@ -2,7 +2,6 @@ use crate::index::diff::Error;
 use crate::{Change, CrateVersion};
 use ahash::{AHashSet, RandomState};
 use bstr::BStr;
-use git_repository as git;
 use hashbrown::raw::RawTable;
 
 #[derive(Default)]
@@ -14,15 +13,15 @@ pub(crate) struct Delegate {
 impl Delegate {
     pub fn handle(
         &mut self,
-        change: git::object::tree::diff::Change<'_, '_, '_>,
-    ) -> Result<git::object::tree::diff::Action, Error> {
-        use git::bstr::ByteSlice;
-        use git::object::tree::diff::change::Event::*;
-        use git::objs::tree::EntryMode::*;
+        change: gix::object::tree::diff::Change<'_, '_, '_>,
+    ) -> Result<gix::object::tree::diff::Action, Error> {
+        use gix::bstr::ByteSlice;
+        use gix::object::tree::diff::change::Event::*;
+        use gix::objs::tree::EntryMode::*;
         fn entry_data(
-            entry: git::objs::tree::EntryMode,
-            id: git::Id<'_>,
-        ) -> Result<Option<git::Object<'_>>, Error> {
+            entry: gix::objs::tree::EntryMode,
+            id: gix::Id<'_>,
+        ) -> Result<Option<gix::Object<'_>>, Error> {
             matches!(entry, Blob | BlobExecutable)
                 .then(|| id.object())
                 .transpose()
@@ -33,6 +32,9 @@ impl Delegate {
         }
 
         match change.event {
+            Rewrite { .. } => {
+                unreachable!("BUG: this is disabled so shouldn't happen")
+            }
             Addition { entry_mode, id } => {
                 if let Some(obj) = entry_data(entry_mode, id)? {
                     for line in obj.data.lines() {

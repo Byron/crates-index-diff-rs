@@ -5,18 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 15.0.2 (2022-12-05)
+## 16.0.0 (2023-02-21)
 
-### Bug Fixes
+### Bug Fixes (BREAKING)
 
- - <csr-id-44a5579feb424abcb2d6d75e0631577f1c71b33b/> `Index::peek_changes_ordered()` now actually provides ordered changes.
+ - <csr-id-80825885a819fc273ddd29e8598c145cda47852c/> upgrade from `git-repository` to `gix`
+   This change renames the public re-export from `git` to `gix` as well
+   for consistency.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
  - 1 commit contributed to the release.
- - 1 day passed between releases.
+ - 77 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -27,6 +29,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - upgrade from `git-repository` to `gix` ([`8082588`](https://github.com/Byron/crates-index-diff-rs/commit/80825885a819fc273ddd29e8598c145cda47852c))
+</details>
+
+## 15.0.2 (2022-12-05)
+
+### Bug Fixes
+
+ - <csr-id-44a5579feb424abcb2d6d75e0631577f1c71b33b/> `Index::peek_changes_ordered()` now actually provides ordered changes.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release over the course of 8 calendar days.
+ - 9 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release crates-index-diff v15.0.2 ([`7ea9dda`](https://github.com/Byron/crates-index-diff-rs/commit/7ea9dda2a9ca3702dbafbb2009c3c801bfb34669))
     - `Index::peek_changes_ordered()` now actually provides ordered changes. ([`44a5579`](https://github.com/Byron/crates-index-diff-rs/commit/44a5579feb424abcb2d6d75e0631577f1c71b33b))
 </details>
 

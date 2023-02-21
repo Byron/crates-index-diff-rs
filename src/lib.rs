@@ -7,6 +7,7 @@
 ///
 pub mod index;
 mod types;
+/// Access to all `gitoxide` functionality.
+pub use gix;
 
-pub use git_repository as git;
 pub use types::{Change, CrateVersion, Dependency, Index};

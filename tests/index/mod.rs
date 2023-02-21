@@ -1,8 +1,7 @@
 use crates_index_diff::index::diff::Order;
 use crates_index_diff::Index;
-use git_repository as git;
-use git_repository::refs::transaction::PreviousValue;
-use git_testtools::tempfile::TempDir;
+use gix::refs::transaction::PreviousValue;
+use gix_testtools::tempfile::TempDir;
 use std::path::PathBuf;
 use std::sync::atomic::AtomicBool;
 
@@ -20,7 +19,7 @@ fn peek_changes() -> crate::Result {
             "marker ref doesn't exist"
         );
         let (changes, last_seen_revision) = index.peek_changes_with_options(
-            git::progress::Discard,
+            gix::progress::Discard,
             &AtomicBool::default(),
             order,
         )?;
@@ -52,14 +51,14 @@ fn clone_if_needed() {
     let no_interrupt = &AtomicBool::default();
     Index::from_path_or_cloned_with_options(
         tmp.path(),
-        git::progress::Discard,
+        gix::progress::Discard,
         no_interrupt,
         clone_options(),
     )
     .expect("successful clone to be created");
     Index::from_path_or_cloned_with_options(
         tmp.path(),
-        git::progress::Discard,
+        gix::progress::Discard,
         no_interrupt,
         clone_options(),
     )
@@ -120,12 +119,17 @@ fn changes_since_last_fetch() {
         let mut config = index.repository_mut().config_snapshot_mut();
         // TODO: use `remote.save_as_to()` here, requires a way to get the mutable repo ref again.
         config
-            .set_raw_value("remote", Some(repo_name), "url", git_dir.to_str().unwrap())
+            .set_raw_value(
+                "remote",
+                Some(repo_name.into()),
+                "url",
+                git_dir.to_str().unwrap(),
+            )
             .unwrap();
         config
             .set_raw_value(
                 "remote",
-                Some(repo_name),
+                Some(repo_name.into()),
                 "fetch",
                 "+refs/heads/*:refs/remotes/local/*",
             )
@@ -166,7 +170,7 @@ fn index_rw() -> crate::Result<(Index, TempDir)> {
     let tmp = TempDir::new().unwrap();
     let mut index = Index::from_path_or_cloned_with_options(
         tmp.path(),
-        git::progress::Discard,
+        gix::progress::Discard,
         &AtomicBool::default(),
         clone_options(),
     )?;
@@ -175,7 +179,7 @@ fn index_rw() -> crate::Result<(Index, TempDir)> {
 }
 
 fn fixture_dir() -> crate::Result<PathBuf> {
-    git_testtools::scripted_fixture_repo_read_only_with_args(
+    gix_testtools::scripted_fixture_read_only_with_args(
         "make-index-from-parts.sh",
         std::env::current_dir()
             .ok()

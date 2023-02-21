@@ -1,7 +1,6 @@
 use crate::index::index_ro;
 use crates_index_diff::index::diff::Order;
 use crates_index_diff::{Change, CrateVersion, Index};
-use git_repository as git;
 
 #[test]
 fn directory_deletions_are_not_picked_up() -> crate::Result {
@@ -181,7 +180,7 @@ fn changes(mut index: Index, revspec: &str) -> crate::Result<Vec<Change>> {
                     .ok()
                     .map(|id| id.detach())
             })
-            .unwrap_or_else(|| git::hash::ObjectId::empty_tree(repo.object_hash()));
+            .unwrap_or_else(|| gix::hash::ObjectId::empty_tree(repo.object_hash()));
         (ancestor_tree, commit.detach())
     };
     Ok(index.changes_between_commits(prev, current)?)

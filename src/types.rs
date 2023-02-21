@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use git_repository as git;
 use smartstring::alias::String as SmolString;
 use std::hash::Hash;
 use std::{fmt, slice};
@@ -16,7 +15,7 @@ pub struct Index {
     /// If `None`, obtain the remote name from the configuration of the currently checked-out branch.
     pub remote_name: Option<String>,
     /// The git repository to use for diffing
-    pub(crate) repo: git::Repository,
+    pub(crate) repo: gix::Repository,
 }
 
 /// Identify a kind of change that occurred to a crate

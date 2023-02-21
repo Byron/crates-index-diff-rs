@@ -29,8 +29,6 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                 Ok((versions, start.elapsed()))
             });
             let actual = scope.spawn(|| -> Result<_, Box<dyn std::error::Error + Send + Sync>> {
-                use crates_index_diff::git;
-
                 let start = std::time::Instant::now();
                 let repo_path = crates_index::Index::new_cargo_default()?.path().to_owned();
                 let index = crates_index_diff::Index::from_path_or_cloned(repo_path)?;
@@ -84,7 +82,7 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                     .enumerate()
                 {
                     let old = previous
-                        .unwrap_or_else(|| git::hash::ObjectId::empty_tree(git::hash::Kind::Sha1));
+                        .unwrap_or_else(|| gix::hash::ObjectId::empty_tree(gix::hash::Kind::Sha1));
                     previous = Some(current);
 
                     let start = std::time::Instant::now();

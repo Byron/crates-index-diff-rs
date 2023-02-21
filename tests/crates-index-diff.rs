@@ -1,4 +1,4 @@
-use git_testtools::Result;
+use gix_testtools::Result;
 
 mod index;
 mod version;

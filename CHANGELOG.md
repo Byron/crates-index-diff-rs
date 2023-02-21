@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 16.0.1 (2023-02-21)
+
+### Bug Fixes
+
+ - <csr-id-8d7b7b680b415a57f6d6151317de1e076d6f52a6/> make `DependencyKind` publicly accessible
+   Previously it was used as field within an exported type, but it couldn't
+   be used directly.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - make `DependencyKind` publicly accessible ([`8d7b7b6`](https://github.com/Byron/crates-index-diff-rs/commit/8d7b7b680b415a57f6d6151317de1e076d6f52a6))
+</details>
+
 ## 16.0.0 (2023-02-21)
 
 ### Bug Fixes (BREAKING)
@@ -17,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 77 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -29,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v16.0.0 ([`9d17c5a`](https://github.com/Byron/crates-index-diff-rs/commit/9d17c5ac900a1d32d84b0e3a572e01d5c05355cd))
     - upgrade from `git-repository` to `gix` ([`8082588`](https://github.com/Byron/crates-index-diff-rs/commit/80825885a819fc273ddd29e8598c145cda47852c))
 </details>
 

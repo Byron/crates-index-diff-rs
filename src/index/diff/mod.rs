@@ -172,7 +172,7 @@ impl Index {
             let res: gix::remote::fetch::Outcome = remote
                 .connect(gix::remote::Direction::Fetch)?
                 .prepare_fetch(&mut progress, Default::default())?
-                .receive(progress, should_interrupt)?;
+                .receive(&mut progress, should_interrupt)?;
             let branch_name = format!("refs/heads/{}", self.branch_name);
             let local_tracking = res
                 .ref_map

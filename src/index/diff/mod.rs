@@ -108,7 +108,7 @@ impl Index {
     // TODO: update this once it's clear how auto-gc works in `gitoxide`.
     pub fn peek_changes_with_options<P>(
         &self,
-        progress: P,
+        mut progress: P,
         should_interrupt: &AtomicBool,
         order: Order,
     ) -> Result<(Vec<Change>, gix::hash::ObjectId), Error>
@@ -170,9 +170,9 @@ impl Index {
                     .expect("valid statically known refspec");
             }
             let res: gix::remote::fetch::Outcome = remote
-                .connect(gix::remote::Direction::Fetch, progress)?
-                .prepare_fetch(Default::default())?
-                .receive(should_interrupt)?;
+                .connect(gix::remote::Direction::Fetch)?
+                .prepare_fetch(&mut progress, Default::default())?
+                .receive(&mut progress, should_interrupt)?;
             let branch_name = format!("refs/heads/{}", self.branch_name);
             let local_tracking = res
                 .ref_map

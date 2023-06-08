@@ -17,6 +17,12 @@ pub enum Step {
 pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let ((expected, baseline_duration), (actual, diff_duration)) = std::thread::scope(
         |scope| -> Result<_, Box<dyn std::error::Error + Send + Sync>> {
+            // Be sure the standard crates index is available - we can't do this in multiple threads which would otherwise
+            // likely happen, causing `git2` to fail with a lock on the config file. It's curious that it has to lock it
+            // in the first place.
+            {
+                let _index = crates_index::Index::new_cargo_default()?;
+            }
             let baseline = scope.spawn(|| -> Result<_, crates_index::Error> {
                 let index = crates_index::Index::new_cargo_default()?;
                 let start = std::time::Instant::now();

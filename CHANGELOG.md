@@ -5,7 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 18.0.0 (2023-06-08)
+
+### Chore (BREAKING)
+
+ - <csr-id-74276037552fc037820854e2c28914d6ac451c22/> upgrade dependencies
+   * gix 0.44 -> 0.45
+   * hashbrown 0.13 -> 0.14
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 25 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Upgrade dependencies ([`7427603`](https://github.com/Byron/crates-index-diff-rs/commit/74276037552fc037820854e2c28914d6ac451c22))
+</details>
+
 ## 17.0.0 (2023-05-14)
+
+<csr-id-b00ca9946487d2de5124d0a27756c2021b4ba800/>
 
 ### Chore (BREAKING)
 
@@ -17,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
+ - 4 commits contributed to the release.
  - 82 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -29,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v17.0.0 ([`365e304`](https://github.com/Byron/crates-index-diff-rs/commit/365e304545ed5a8ed5979504f90a2d501799fe62))
     - Upgrade `gix` from v0.37 to v0.44. ([`b00ca99`](https://github.com/Byron/crates-index-diff-rs/commit/b00ca9946487d2de5124d0a27756c2021b4ba800))
     - Reduce code-size by reusing the same type for `Progress`. ([`c3d5518`](https://github.com/Byron/crates-index-diff-rs/commit/c3d551834763d235347f4d754585c587dc74f3ee))
     - Upgrade gix dependency to 0.44.1 ([`4489ef7`](https://github.com/Byron/crates-index-diff-rs/commit/4489ef79c9a96cb1a38377e32c7551c7ee61457b))

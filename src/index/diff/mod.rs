@@ -279,7 +279,7 @@ impl Index {
         ancestor_commit: gix::hash::ObjectId,
         current_commit: gix::hash::ObjectId,
     ) -> Option<Vec<gix::hash::ObjectId>> {
-        let time_in_seconds_since_epoch = ancestor_commit
+        let seconds = ancestor_commit
             .attach(&self.repo)
             .object()
             .ok()?
@@ -288,19 +288,17 @@ impl Index {
             .committer()
             .ok()?
             .time
-            .seconds_since_unix_epoch;
+            .seconds;
         let mut commits = current_commit
             .attach(&self.repo)
             .ancestors()
             .sorting(
-                gix::traverse::commit::Sorting::ByCommitTimeNewestFirstCutoffOlderThan {
-                    time_in_seconds_since_epoch,
-                },
+                gix::traverse::commit::Sorting::ByCommitTimeNewestFirstCutoffOlderThan { seconds },
             )
             .first_parent_only()
             .all()
             .ok()?
-            .map(|c| c.map(|c| c.detach()))
+            .map(|c| c.map(|c| c.id))
             .collect::<Result<Vec<_>, _>>()
             .ok()?;
 

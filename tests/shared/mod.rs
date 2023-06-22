@@ -84,7 +84,7 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                 for (step, (current, kind)) in steps
                     .into_iter()
                     .rev()
-                    .map(|(idx, kind)| (commits[idx].to_owned(), kind))
+                    .map(|(idx, kind)| (commits[idx].id, kind))
                     .enumerate()
                 {
                     let old = previous

@@ -5,7 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 19.0.0 (2023-06-22)
+
+### Chore (BREAKING)
+
+ - <csr-id-f726287f574093c1cbbe3c5a1b44f85695591d27/> upgrade to `gix v0.47` (from v0.45).
+   This includes integration with gix negotiation algorithms and support for
+   multi-round negotiation just like git does it.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release over the course of 13 calendar days.
+ - 13 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Upgrade to `gix v0.47` (from v0.45). ([`f726287`](https://github.com/Byron/crates-index-diff-rs/commit/f726287f574093c1cbbe3c5a1b44f85695591d27))
+    - Try to fix the baseline test which now starts failing on CI ([`892561a`](https://github.com/Byron/crates-index-diff-rs/commit/892561a0ef352a22880c76555c3de612a74b416f))
+</details>
+
 ## 18.0.0 (2023-06-08)
+
+<csr-id-74276037552fc037820854e2c28914d6ac451c22/>
 
 ### Chore (BREAKING)
 
@@ -17,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 25 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -29,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v18.0.0 ([`4a94ff8`](https://github.com/Byron/crates-index-diff-rs/commit/4a94ff8cd576b535ab042ea5cab3f1eeb4e40e39))
     - Upgrade dependencies ([`7427603`](https://github.com/Byron/crates-index-diff-rs/commit/74276037552fc037820854e2c28914d6ac451c22))
 </details>
 

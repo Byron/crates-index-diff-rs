@@ -7,7 +7,7 @@ CARGO = $(shell command -v cargo)
 ##@ Development
 
 baseline-atomic: ## run very slow tests that single-step through all commits
-	GITOXIDE_PACK_CACHE_MEMORY=1g GITOXIDE_OBJECT_CACHE_MEMORY=3g RUST_BACKTRACE=1 cargo test --test baseline_atomic --release --features max-performance -- --nocapture
+	GITOXIDE_PACK_CACHE_MEMORY=1g GITOXIDE_OBJECT_CACHE_MEMORY=3g RUST_BACKTRACE=1 cargo test --test baseline-atomic --release --features max-performance -- --nocapture
 
 test: ## run all tests with cargo
 	RUST_BACKTRACE=1 cargo test --test crates-index-diff

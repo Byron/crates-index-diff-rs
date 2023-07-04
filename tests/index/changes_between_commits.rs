@@ -85,13 +85,32 @@ fn addition() -> crate::Result {
 }
 
 #[test]
-fn deletion() -> crate::Result {
+fn crate_deletion_with_single_version() -> crate::Result {
     let changes = changes(index_ro()?, "@^{/Delete crates}")?;
     assert_eq!(changes.len(), 1);
+    let (name, versions) = changes
+        .first()
+        .and_then(|c| c.crate_deleted())
+        .expect("CrateDeleted event");
+    assert_eq!(name, "girl");
     assert_eq!(
-        changes.first().and_then(|c| c.crate_deleted().map(|t| t.0)),
-        Some("girl")
+        versions.len(),
+        1,
+        "there was only one version, it's still detected as crate deletion though"
     );
+    Ok(())
+}
+
+#[test]
+fn crate_deletion_with_multiple_versions() -> crate::Result {
+    let changes = changes(index_ro()?, "@^{/Delete crate\n}")?;
+    assert_eq!(changes.len(), 1);
+    let (name, versions) = changes
+        .first()
+        .and_then(|c| c.crate_deleted())
+        .expect("CrateDeleted event");
+    assert_eq!(name, "git-fuse");
+    assert_eq!(versions.len(), 4, "there were 4 versions in the file");
     Ok(())
 }
 

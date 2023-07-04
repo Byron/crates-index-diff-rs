@@ -9,7 +9,7 @@ root="$(cd "${0%/*}" && pwd)"
 out="$root/index-parts"
 mkdir -p "$out"
 (
-  cd "${1:?first argument is the clone of https://github.com/arlosi/crates.io-index}"
+  cd "${1:?first argument is the clone of https://github.com/arlosi/crates.io-index (use the 'regenerate' branch}"
   paths="gi/ .github"
   revlist="$root/.tmp.revs"
   { git log --format=format:%H $paths; echo; } | tail -r > "$revlist"
@@ -124,4 +124,23 @@ index 36a32366eb..f24049269d 100644
 EOF
   echo "$base_name" >> "$commit_list"
   echo 'reproduce issue #26: yanking ansi-color-codec 0.3.5 92c18bdf30' > "$base.msg"
+
+  base_name='single-version-deletion'
+  base="$out/$base_name"
+  cat <<EOF > "$base.diff"
+diff --git a/an/si/ansi-color-codec b/an/si/ansi-color-codec
+index f240492..7ca212b 100644
+--- a/an/si/ansi-color-codec
++++ b/an/si/ansi-color-codec
+@@ -1,7 +1,5 @@
+ {"name":"ansi-color-codec","vers":"0.2.9","deps":[{"name":"clap","req":"^4.0.23","features":["derive"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"ctrlc","req":"^3.2.3","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"a18b40315b9f13d98ae2ee8df35cdb810d696d197f859c15365fb6d34ecbba11","features":{},"yanked":true,"links":null}
+-{"name":"ansi-color-codec","vers":"0.3.1","deps":[{"name":"clap","req":"^4.0.23","features":["derive"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"ctrlc","req":"^3.2.3","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"b14431739f0b027eede3789fc83f1c13deae067f369e8456ef5d183ddbdf82c4","features":{},"yanked":true,"links":null}
+ {"name":"ansi-color-codec","vers":"0.3.2","deps":[{"name":"clap","req":"^4.0.23","features":["derive"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"ctrlc","req":"^3.2.3","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"fed46d46cba320856b6a9186d60129dfad6c142a5a6c00c922cfa6990140c26f","features":{},"yanked":true,"links":null}
+ {"name":"ansi-color-codec","vers":"0.3.3","deps":[{"name":"clap","req":"^4.0.23","features":["derive"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"ctrlc","req":"^3.2.3","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"ad5a24fc4e47f61b52b8b4c6544bb47db648666f5a742b8776cc90a98a4c2459","features":{},"yanked":true,"links":null}
+-{"name":"ansi-color-codec","vers":"0.3.4","deps":[{"name":"clap","req":"^4.0.23","features":["derive"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"ctrlc","req":"^3.2.3","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"1048f2e4c18e0a4ca910a8f78da2b31c8257f5ffe4922432c85ac1677933722b","features":{},"yanked":true,"links":null}
+ {"name":"ansi-color-codec","vers":"0.3.5","deps":[{"name":"clap","req":"^4.0.23","features":["derive"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"ctrlc","req":"^3.2.3","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"9b56ec379f35520cdb52f98d3269cd26d59088414fef86817d4f933c06b9374a","features":{},"yanked":true,"links":null}
+ {"name":"ansi-color-codec","vers":"0.3.11","deps":[{"name":"clap","req":"^4.0.23","features":["derive"],"optional":false,"default_features":true,"target":null,"kind":"normal"},{"name":"ctrlc","req":"^3.2.3","features":[],"optional":false,"default_features":true,"target":null,"kind":"normal"}],"cksum":"92d898f94a19fefba0f0b9906376ef7e1be7e542cd958fd0fd4de1c7c2c9818a","features":{},"yanked":false,"links":null}
+EOF
+  echo "$base_name" >> "$commit_list"
+  echo 'trigger a single-version deletion event created when deleting a line from a version file' > "$base.msg"
 )

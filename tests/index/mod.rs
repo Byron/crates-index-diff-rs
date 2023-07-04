@@ -7,7 +7,7 @@ use std::sync::atomic::AtomicBool;
 
 mod changes_between_commits;
 
-const NUM_CHANGES_SINCE_EVER: usize = 3523;
+const NUM_CHANGES_SINCE_EVER: usize = 3521;
 
 #[test]
 fn peek_changes() -> crate::Result {
@@ -102,8 +102,8 @@ fn changes_since_last_fetch() {
         "seen branch was updated again"
     );
     assert_eq!(
-        num_seen_after_reset, 1,
-        "normalization has no changes, but the commit before has one"
+        num_seen_after_reset, 2,
+        "normalization has no changes, but the commit before has one, and apparently the version-deleted commit also adds one here"
     );
 
     assert_eq!(

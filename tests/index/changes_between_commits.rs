@@ -7,7 +7,7 @@ fn directory_deletions_are_not_picked_up() -> crate::Result {
     let changes = changes(index_ro()?, ":/reproduce issue #20")?;
     assert_eq!(changes.len(), 1);
     assert_eq!(
-        changes.first().and_then(|c| c.deleted().map(|t| t.0)),
+        changes.first().and_then(|c| c.crate_deleted().map(|t| t.0)),
         Some("allowed")
     );
     Ok(())
@@ -89,7 +89,7 @@ fn deletion() -> crate::Result {
     let changes = changes(index_ro()?, "@^{/Delete crates}")?;
     assert_eq!(changes.len(), 1);
     assert_eq!(
-        changes.first().and_then(|c| c.deleted().map(|t| t.0)),
+        changes.first().and_then(|c| c.crate_deleted().map(|t| t.0)),
         Some("girl")
     );
     Ok(())

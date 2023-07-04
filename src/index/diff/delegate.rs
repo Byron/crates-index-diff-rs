@@ -55,7 +55,7 @@ impl Delegate {
                     for line in obj.data.lines() {
                         deleted.push(version_from_json_line(line, change.location)?);
                     }
-                    self.changes.push(Change::Deleted {
+                    self.changes.push(Change::CrateDeleted {
                         name: change.location.to_string(),
                         versions: deleted,
                     });
@@ -90,7 +90,6 @@ impl Delegate {
                         );
                     }
 
-                    let mut deleted = Vec::new();
                     for line in old_lines.drain() {
                         let old_version = version_from_json_line(line, location)?;
                         let new_version = new_versions
@@ -106,14 +105,8 @@ impl Delegate {
                                 };
                                 self.changes.push(change)
                             }
-                            None => deleted.push(old_version),
+                            None => self.changes.push(Change::VersionDeleted(old_version)),
                         }
-                    }
-                    if !deleted.is_empty() {
-                        self.changes.push(Change::Deleted {
-                            name: deleted[0].name.to_string(),
-                            versions: deleted,
-                        })
                     }
                     for version in new_versions.drain() {
                         let change = if version.yanked {

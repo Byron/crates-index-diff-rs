@@ -126,7 +126,9 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                                     versions.remove(&deleted_version.checksum);
                                 }
                             }
-                            VersionDeleted(v) => versions.remove(&v.checksum),
+                            VersionDeleted(v) => {
+                                versions.remove(&v.checksum);
+                            }
                         }
                     }
                     let elapsed = start.elapsed().as_secs_f32();

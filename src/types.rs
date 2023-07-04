@@ -33,12 +33,14 @@ pub enum Change {
     /// A crate version was yanked.
     Yanked(CrateVersion),
     /// The name of the crate whose file was deleted, which implies all versions were deleted as well.
-    Deleted {
+    CrateDeleted {
         /// The name of the deleted crate.
         name: String,
         /// All of its versions that were deleted along with the file.
         versions: Vec<CrateVersion>,
     },
+    /// A crate version was deleted.
+    VersionDeleted(CrateVersion),
 }
 
 impl Change {
@@ -67,9 +69,17 @@ impl Change {
     }
 
     /// Return the deleted crate, if this is this kind of change.
-    pub fn deleted(&self) -> Option<(&str, &[CrateVersion])> {
+    pub fn crate_deleted(&self) -> Option<(&str, &[CrateVersion])> {
         match self {
-            Change::Deleted { name, versions } => Some((name.as_str(), versions)),
+            Change::CrateDeleted { name, versions } => Some((name.as_str(), versions)),
+            _ => None,
+        }
+    }
+
+    /// Return the deleted version crate, if this is this kind of change.
+    pub fn version_deleted(&self) -> Option<&CrateVersion> {
+        match self {
+            Change::VersionDeleted(v) => Some(v),
             _ => None,
         }
     }
@@ -84,8 +94,9 @@ impl Change {
             Change::Added(v)
             | Change::Unyanked(v)
             | Change::AddedAndYanked(v)
-            | Change::Yanked(v) => slice::from_ref(v),
-            Change::Deleted { versions, .. } => versions,
+            | Change::Yanked(v)
+            | Change::VersionDeleted(v) => slice::from_ref(v),
+            Change::CrateDeleted { versions, .. } => versions,
         }
     }
 }
@@ -98,7 +109,8 @@ impl fmt::Display for Change {
             match *self {
                 Change::Added(_) => "added",
                 Change::Yanked(_) => "yanked",
-                Change::Deleted { .. } => "deleted",
+                Change::CrateDeleted { .. } => "crate deleted",
+                Change::VersionDeleted(_) => "version deleted",
                 Change::Unyanked(_) => "unyanked",
                 Change::AddedAndYanked(_) => "added and yanked",
             }

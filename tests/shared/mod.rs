@@ -118,7 +118,7 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                                     .expect("these events mean `Added*` events have been emitted") =
                                     v.yanked
                             }
-                            Deleted {
+                            CrateDeleted {
                                 versions: deleted, ..
                             } => {
                                 // delete a yanked crate
@@ -126,6 +126,7 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
                                     versions.remove(&deleted_version.checksum);
                                 }
                             }
+                            VersionDeleted(v) => versions.remove(&v.checksum),
                         }
                     }
                     let elapsed = start.elapsed().as_secs_f32();

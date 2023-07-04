@@ -40,6 +40,9 @@ pub enum Change {
         versions: Vec<CrateVersion>,
     },
     /// A crate version was deleted.
+    ///
+    /// Note that this is equivalent to deleting a line from a crates version file.
+    /// Should more than one lines be removed per commit, the order of these changes is nondeterministic.
     VersionDeleted(CrateVersion),
 }
 

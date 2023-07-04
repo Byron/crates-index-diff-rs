@@ -115,6 +115,26 @@ fn crate_deletion_with_multiple_versions() -> crate::Result {
 }
 
 #[test]
+fn delete_single_version() -> crate::Result {
+    let changes = changes(index_ro()?, "@^{/trigger a single-version deletion}")?;
+    assert_eq!(changes.len(), 2);
+    let mut changes: Vec<_> = changes
+        .iter()
+        .map(|change| {
+            change
+                .version_deleted()
+                .expect("only single versions deleted here")
+                .version
+                .clone()
+        })
+        .collect();
+    changes.sort();
+    assert_eq!(changes[0], "0.3.1");
+    assert_eq!(changes[1], "0.3.4");
+    Ok(())
+}
+
+#[test]
 fn new_version() -> crate::Result {
     let changes = changes(index_ro()?, ":/Updating crate `git-repository#0.22.1`")?;
     assert_eq!(changes.len(), 1);

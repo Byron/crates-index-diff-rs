@@ -21,10 +21,10 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
             // likely happen, causing `git2` to fail with a lock on the config file. It's curious that it has to lock it
             // in the first place.
             {
-                let _index = crates_index::Index::new_cargo_default()?;
+                let _index = crates_index::GitIndex::new_cargo_default()?;
             }
             let baseline = scope.spawn(|| -> Result<_, crates_index::Error> {
-                let index = crates_index::Index::new_cargo_default()?;
+                let index = crates_index::GitIndex::new_cargo_default()?;
                 let start = std::time::Instant::now();
                 let mut versions = HashMap::new();
                 for krate in index.crates() {
@@ -36,10 +36,14 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
             });
             let actual = scope.spawn(|| -> Result<_, Box<dyn std::error::Error + Send + Sync>> {
                 let start = std::time::Instant::now();
-                let repo_path = crates_index::Index::new_cargo_default()?.path().to_owned();
+                let repo_path = crates_index::GitIndex::new_cargo_default()?
+                    .path()
+                    .to_owned();
                 let index = crates_index_diff::Index::from_path_or_cloned(repo_path)?;
                 let repo = index.repository();
-                let head = repo.find_reference("refs/remotes/origin/HEAD")?.id();
+                let head = repo
+                    .find_reference("refs/remotes/origin/HEAD")?
+                    .into_fully_peeled_id()?;
                 let commits = head
                     .ancestors()
                     .first_parent_only()

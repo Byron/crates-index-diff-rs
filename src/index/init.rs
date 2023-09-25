@@ -46,7 +46,7 @@ impl Index {
         CloneOptions { url }: CloneOptions,
     ) -> Result<Index, Error>
     where
-        P: gix::Progress,
+        P: gix::NestedProgress,
         P::SubProgress: 'static,
     {
         let path = path.as_ref();

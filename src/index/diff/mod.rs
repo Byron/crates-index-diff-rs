@@ -113,7 +113,7 @@ impl Index {
         order: Order,
     ) -> Result<(Vec<Change>, gix::hash::ObjectId), Error>
     where
-        P: gix::Progress,
+        P: gix::NestedProgress,
         P::SubProgress: 'static,
     {
         let repo = &self.repo;
@@ -362,7 +362,7 @@ impl Index {
         order: Order,
     ) -> Result<Vec<Change>, Error>
     where
-        P: gix::Progress,
+        P: gix::NestedProgress,
         P::SubProgress: 'static,
     {
         let (changes, to) = self.peek_changes_with_options(progress, should_interrupt, order)?;

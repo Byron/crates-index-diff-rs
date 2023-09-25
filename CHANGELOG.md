@@ -5,7 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 21.0.0 (2023-09-25)
+
+### New Features (BREAKING)
+
+ - <csr-id-34d3510e2828e910079d1f32c73a5a59a4306f86/> upgrade to `gix` v0.54 (from v0.50)
+   This may produce smaller binaries.
+   
+   Further, no performance option is set anymore to leave this in the hands of
+   the final binary.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 6 commits contributed to the release over the course of 83 calendar days.
+ - 83 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Upgrade to `gix` v0.54 (from v0.50) ([`34d3510`](https://github.com/Byron/crates-index-diff-rs/commit/34d3510e2828e910079d1f32c73a5a59a4306f86))
+    - Merge branch 'uprade-crates-index' ([`922e962`](https://github.com/Byron/crates-index-diff-rs/commit/922e9620b4e757a0e62a8f5c038cfdea84324c4a))
+    - Upgrade to latest version of crates-index to remove git2 ([`fa1b21c`](https://github.com/Byron/crates-index-diff-rs/commit/fa1b21c15b01cbf3e974e6083a72e548377afcd5))
+    - Merge branch 'test-version-delete' ([`e200a56`](https://github.com/Byron/crates-index-diff-rs/commit/e200a5683bc8442032178c07156dc662f5d3bfaf))
+    - Add a test specifically for the `VersionDeleted` variant. ([`959c566`](https://github.com/Byron/crates-index-diff-rs/commit/959c5665b282796d47560e1ee29d131f678f2df1))
+    - Refactor ([`b0f84d0`](https://github.com/Byron/crates-index-diff-rs/commit/b0f84d0dadf29d1f68c1a20a50dd4d29e12f4a56))
+</details>
+
 ## 20.0.0 (2023-07-04)
+
+<csr-id-9946196a2b34abd88143e489cac1c57012b4cc57/>
 
 ### Chore
 
@@ -25,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release over the course of 10 calendar days.
+ - 5 commits contributed to the release over the course of 10 calendar days.
  - 11 days passed between releases.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -37,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v20.0.0 ([`dd27cae`](https://github.com/Byron/crates-index-diff-rs/commit/dd27caea0340f2a4c96f7c60326a06e314b4e628))
     - Split `Change::Delete` into `Change::VersionDeleted` and `Change::CrateDeleted`. ([`2c59dd4`](https://github.com/Byron/crates-index-diff-rs/commit/2c59dd4a4b0aff3898fc8c8a2186b6d6a7f0692a))
     - Uprgade `gix` to `v0.48` ([`9946196`](https://github.com/Byron/crates-index-diff-rs/commit/9946196a2b34abd88143e489cac1c57012b4cc57))
     - Split VersionDeleted from crate-deletes ([`2caf814`](https://github.com/Byron/crates-index-diff-rs/commit/2caf81493f2f8fe8142310507f9d4c1a7fbd248f))

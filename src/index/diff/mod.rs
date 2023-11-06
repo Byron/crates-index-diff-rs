@@ -215,8 +215,8 @@ impl Index {
     /// # Grouping and Ordering
     ///
     /// The changes are grouped by the crate they belong to.
-    /// The order of the changes for each crate are **non-deterministic**.
-    /// The order of crates is also **non-deterministic**.
+    /// The order of the changes for each crate is **deterministic** as they are ordered by line number, ascending.
+    /// The order of crates is **non-deterministic**.
     ///
     /// If a specific order is required, the changes must be sorted by the caller.
     pub fn changes_between_commits(
@@ -256,7 +256,8 @@ impl Index {
     ///
     /// # Grouping and Ordering
     ///
-    /// Note that the order of the changes for each crate are **non-deterministic**, should they happen within one commit.
+    /// Note that the order of the changes for each crate is **deterministic**, should they happen within one commit,
+    /// as the ordering is imposed to be by line number, ascending.
     /// Typically one commit does not span multiple crates, but if it does, for instance when rollups happen,
     /// then the order of crates is also **non-deterministic**.
     ///
@@ -406,7 +407,7 @@ impl Index {
     /// # Grouping and Ordering
     ///
     /// The changes are grouped by the crate they belong to.
-    /// The order of the changes for each crate are **non-deterministic**.
+    /// The order of the changes for each crate is **deterministic** as they are ordered by line number, ascending.
     /// The order of crates is also **non-deterministic**.
     ///
     /// If a specific order is required, the changes must be sorted by the caller.

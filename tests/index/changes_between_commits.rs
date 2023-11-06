@@ -44,13 +44,12 @@ fn updates_before_yanks_are_picked_up() -> crate::Result {
     let repo = index.repository();
     let from = repo.rev_parse_single("@^{/updating ansi-color-codec 0.3.11}~1")?;
     let to = repo.rev_parse_single("@^{/yanking ansi-color-codec 0.3.5}")?;
-    let mut changes = index.changes_between_commits(from, to)?;
+    let changes = index.changes_between_commits(from, to)?;
 
     assert_eq!(changes.len(), 3, "1 update and 2 yanks");
-    changes.sort_by_key(|change| change.versions()[0].version.clone());
-    assert_eq!(changes[0].added().expect("first updated").version, "0.3.11");
-    assert_eq!(changes[1].yanked().expect("second yanked").version, "0.3.4");
-    assert_eq!(changes[2].yanked().expect("third yanked").version, "0.3.5");
+    assert_eq!(changes[0].yanked().expect("second yanked").version, "0.3.4");
+    assert_eq!(changes[1].yanked().expect("third yanked").version, "0.3.5");
+    assert_eq!(changes[2].added().expect("first updated").version, "0.3.11");
 
     let (mut changes, order) = index.changes_between_ancestor_commits(from, to)?;
     assert_eq!(

@@ -3,10 +3,14 @@ use crate::{Change, CrateVersion};
 use ahash::{AHashSet, RandomState};
 use bstr::BStr;
 use hashbrown::raw::RawTable;
+use std::hash::Hasher;
+use std::ops::Deref;
 
 #[derive(Default)]
 pub(crate) struct Delegate {
     changes: Vec<Change>,
+    /// All changes that happen within a file, along the line-number it happens in .
+    per_file_changes: Vec<(usize, Change)>,
     err: Option<Error>,
 }
 
@@ -65,8 +69,8 @@ impl Delegate {
                 if let Some(diff) = change.event.diff().transpose()? {
                     let mut old_lines = AHashSet::with_capacity(1024);
                     let location = change.location;
-                    for line in diff.old.data.lines() {
-                        old_lines.insert(line);
+                    for (number, line) in diff.old.data.lines().enumerate() {
+                        old_lines.insert(Line(number, line));
                     }
 
                     // A RawTable is used to represent a Checksum -> CrateVersion map
@@ -75,47 +79,52 @@ impl Delegate {
                     let mut new_versions = RawTable::with_capacity(old_lines.len().min(1024));
                     let hasher = RandomState::new();
 
-                    for line in diff.new.data.lines() {
+                    for (number, line) in diff.new.data.lines().enumerate() {
                         // first quickly check if the exact same line is already present in this file in that case we don't need to do anything else
-                        if old_lines.remove(line) {
+                        if old_lines.remove(&Line(number, line)) {
                             continue;
                         }
                         // no need to check if the checksum already exists in the hashmap
-                        // as each checksum appear only once
+                        // as each checksum appears only once
                         let new_version = version_from_json_line(line, location)?;
                         new_versions.insert(
                             hasher.hash_one(new_version.checksum),
-                            new_version,
-                            |rehashed| hasher.hash_one(rehashed.checksum),
+                            (number, new_version),
+                            |rehashed| hasher.hash_one(rehashed.1.checksum),
                         );
                     }
 
                     for line in old_lines.drain() {
-                        let old_version = version_from_json_line(line, location)?;
+                        let old_version = version_from_json_line(&line, location)?;
                         let new_version = new_versions
                             .remove_entry(hasher.hash_one(old_version.checksum), |version| {
-                                version.checksum == old_version.checksum
+                                version.1.checksum == old_version.checksum
                             });
                         match new_version {
-                            Some(new_version) => {
+                            Some((_, new_version)) => {
                                 let change = match (old_version.yanked, new_version.yanked) {
                                     (true, false) => Change::Unyanked(new_version),
                                     (false, true) => Change::Yanked(new_version),
                                     _ => continue,
                                 };
-                                self.changes.push(change)
+                                self.per_file_changes.push((line.0, change))
                             }
-                            None => self.changes.push(Change::VersionDeleted(old_version)),
+                            None => self
+                                .per_file_changes
+                                .push((line.0, Change::VersionDeleted(old_version))),
                         }
                     }
-                    for version in new_versions.drain() {
+                    for (number, version) in new_versions.drain() {
                         let change = if version.yanked {
                             Change::AddedAndYanked(version)
                         } else {
                             Change::Added(version)
                         };
-                        self.changes.push(change);
+                        self.per_file_changes.push((number, change));
                     }
+                    self.per_file_changes.sort_by_key(|t| t.0);
+                    self.changes
+                        .extend(self.per_file_changes.drain(..).map(|t| t.1));
                 }
             }
         }
@@ -127,6 +136,32 @@ impl Delegate {
             Some(err) => Err(err),
             None => Ok(self.changes),
         }
+    }
+}
+
+/// A line that assumes there never are equal lines within a file which
+/// is the case due to the checksum.
+struct Line<'a>(usize, &'a [u8]);
+
+impl std::hash::Hash for Line<'_> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.1.hash(state)
+    }
+}
+
+impl PartialEq<Self> for Line<'_> {
+    fn eq(&self, other: &Self) -> bool {
+        self.1.eq(other.1)
+    }
+}
+
+impl Eq for Line<'_> {}
+
+impl<'a> Deref for Line<'a> {
+    type Target = [u8];
+
+    fn deref(&self) -> &Self::Target {
+        self.1
     }
 }
 

@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 21.1.0 (2023-11-06)
+
+### Chore
+
+ - <csr-id-e8b2c90602670e09653b0d77bcf109bca5afa6d7/> upgrade `gix` to 0.55.2
+
+### New Features
+
+ - <csr-id-c404f6774b09e80aa3cc9569d740c58f54e2b716/> deterministic order if multiple changes are applied in one modification.
+   This can happen if a crate is yanked and unyanked in one commit, which happens
+   in practice even though I am not sure how it's possible.
+   
+   Related issue: https://github.com/rust-lang/docs.rs/issues/2295
+
+### Other
+
+ - <csr-id-79579872c0afdfd112eb2f24ac74dd28148f34b9/> improve docs and be more clear about ordering.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 5 commits contributed to the release.
+ - 41 days passed between releases.
+ - 3 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge branch 'improvements' ([`28f0d1f`](https://github.com/Byron/crates-index-diff-rs/commit/28f0d1feedf57357005a11803919e91d9965394e))
+    - Upgrade `gix` to 0.55.2 ([`e8b2c90`](https://github.com/Byron/crates-index-diff-rs/commit/e8b2c90602670e09653b0d77bcf109bca5afa6d7))
+    - Deterministic order if multiple changes are applied in one modification. ([`c404f67`](https://github.com/Byron/crates-index-diff-rs/commit/c404f6774b09e80aa3cc9569d740c58f54e2b716))
+    - Assure `gix` versions are synced in the entire tree. ([`8576bc7`](https://github.com/Byron/crates-index-diff-rs/commit/8576bc79ff0980d3e0fef4447d71e8a522803ef9))
+    - Improve docs and be more clear about ordering. ([`7957987`](https://github.com/Byron/crates-index-diff-rs/commit/79579872c0afdfd112eb2f24ac74dd28148f34b9))
+</details>
+
 ## 21.0.0 (2023-09-25)
 
 ### New Features (BREAKING)
@@ -19,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release over the course of 83 calendar days.
+ - 7 commits contributed to the release over the course of 83 calendar days.
  - 83 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -31,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v21.0.0 ([`752ba0c`](https://github.com/Byron/crates-index-diff-rs/commit/752ba0c50d9194d096c8c6421b6089d37839d3d6))
     - Upgrade to `gix` v0.54 (from v0.50) ([`34d3510`](https://github.com/Byron/crates-index-diff-rs/commit/34d3510e2828e910079d1f32c73a5a59a4306f86))
     - Merge branch 'uprade-crates-index' ([`922e962`](https://github.com/Byron/crates-index-diff-rs/commit/922e9620b4e757a0e62a8f5c038cfdea84324c4a))
     - Upgrade to latest version of crates-index to remove git2 ([`fa1b21c`](https://github.com/Byron/crates-index-diff-rs/commit/fa1b21c15b01cbf3e974e6083a72e548377afcd5))

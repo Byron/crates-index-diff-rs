@@ -86,14 +86,14 @@ impl Index {
         )
     }
 
-    /// Return all `Change`s that are observed between the last time `peek_changes*(…)` was called
+    /// Return all [`Change`]s that are observed between the last time `peek_changes*(…)` was called
     /// and the latest state of the `crates.io` index repository, which is obtained by fetching
     /// the remote called `origin` or whatever is configured for the current `HEAD` branch and lastly
     /// what it should be based on knowledge about he crates index.
-    /// The `last_seen_reference()` will not be created or updated.
+    /// The [`Self::last_seen_reference()`] will not be created or updated.
     /// The second field in the returned tuple is the commit object to which the changes were provided.
-    /// If one would set the `last_seen_reference()` to that object, the effect is exactly the same
-    /// as if `fetch_changes(…)` had been called.
+    /// If one would set the [`Self::last_seen_reference()`] to that object, the effect is exactly the same
+    /// as if [`Self::fetch_changes()`] had been called.
     ///
     /// The `progress` and `should_interrupt` parameters are used to provide progress for fetches and allow
     /// these operations to be interrupted gracefully.
@@ -204,13 +204,16 @@ impl Index {
         ))
     }
 
-    /// Similar to `changes()`, but requires `from` and `to` objects to be provided. They may point
+    /// Similar to [`Self::changes()`], but requires `from` and `to` objects to be provided. They may point
     /// to either `Commit`s or `Tree`s.
     ///
     /// # Returns
     ///
     /// A list of atomic changes that were performed on the index
     /// between the two revisions.
+    ///
+    /// # Grouping and Ordering
+    ///
     /// The changes are grouped by the crate they belong to.
     /// The order of the changes for each crate are **non-deterministic**.
     /// The order of crates is also **non-deterministic**.
@@ -238,7 +241,7 @@ impl Index {
         delegate.into_result()
     }
 
-    /// Similar to `changes()`, but requires `ancestor_commit` and `current_commit` objects to be provided
+    /// Similar to [`Self::changes()`], but requires `ancestor_commit` and `current_commit` objects to be provided
     /// with `ancestor_commit` being in the ancestry of `current_commit`.
     ///
     /// If the invariants regarding `ancestor_commit` and `current_commit` are not upheld, we fallback
@@ -250,6 +253,13 @@ impl Index {
     /// A list of atomic changes that were performed on the index
     /// between the two revisions, but looking at it one commit at a time, along with the `Order`
     /// that the changes are actually in in case one of the invariants wasn't met.
+    ///
+    /// # Grouping and Ordering
+    ///
+    /// Note that the order of the changes for each crate are **non-deterministic**, should they happen within one commit.
+    /// Typically one commit does not span multiple crates, but if it does, for instance when rollups happen,
+    /// then the order of crates is also **non-deterministic**.
+    ///
     pub fn changes_between_ancestor_commits(
         &self,
         ancestor_commit: impl Into<gix::hash::ObjectId>,
@@ -337,10 +347,10 @@ impl Index {
         )
     }
 
-    /// Return all `Change`s that are observed between the last time this method was called
+    /// Return all [`Change`]s that are observed between the last time this method was called
     /// and the latest state of the `crates.io` index repository, which is obtained by fetching
     /// the remote called `origin`.
-    /// The `last_seen_reference()` will be created or adjusted to point to the latest fetched
+    /// The [`Self::last_seen_reference()`] will be created or adjusted to point to the latest fetched
     /// state, which causes this method to have a different result each time it is called.
     ///
     /// The `progress` and `should_interrupt` parameters are used to provide progress for fetches and allow
@@ -392,6 +402,9 @@ impl Index {
     ///
     /// A list of atomic chanes that were performed on the index
     /// between the two revisions.
+    ///
+    /// # Grouping and Ordering
+    ///
     /// The changes are grouped by the crate they belong to.
     /// The order of the changes for each crate are **non-deterministic**.
     /// The order of crates is also **non-deterministic**.

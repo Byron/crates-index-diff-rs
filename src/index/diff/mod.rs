@@ -1,4 +1,5 @@
 use crate::{Change, Index};
+use bstr::ByteSlice;
 use gix::prelude::ObjectIdExt;
 use std::sync::atomic::AtomicBool;
 
@@ -32,7 +33,9 @@ pub enum Error {
     #[error("Failed to parse rev-spec to determine which revisions to diff")]
     RevParse(#[from] gix::revision::spec::parse::Error),
     #[error(transparent)]
-    DiffRewrites(#[from] gix::object::tree::diff::rewrites::Error),
+    DiffRewrites(#[from] gix::diff::new_rewrites::Error),
+    #[error(transparent)]
+    DiffResourceCache(#[from] gix::diff::resource_cache::Error),
     #[error("Couldn't find blob that showed up when diffing trees")]
     FindObject(#[from] gix::object::find::existing::Error),
     #[error("Couldn't get the tree of a commit for diffing purposes")]
@@ -127,7 +130,7 @@ impl Index {
                 .remote_name
                 .as_deref()
                 .and_then(|name| {
-                    self.repo.find_remote(name).ok().or_else(|| {
+                    self.repo.find_remote(name.as_bstr()).ok().or_else(|| {
                         self.repo
                             .head()
                             .ok()
@@ -162,7 +165,11 @@ impl Index {
             if remote.refspecs(gix::remote::Direction::Fetch).is_empty() {
                 let spec = format!(
                     "+refs/heads/{branch}:refs/remotes/{remote}/{branch}",
-                    remote = self.remote_name.as_deref().unwrap_or("origin"),
+                    remote = self
+                        .remote_name
+                        .as_ref()
+                        .map(|n| n.as_bstr())
+                        .unwrap_or("origin".into()),
                     branch = self.branch_name,
                 );
                 remote
@@ -233,12 +240,22 @@ impl Index {
         };
         let from = into_tree(from.into())?;
         let to = into_tree(to.into())?;
-        let mut delegate = Delegate::default();
+        let mut delegate = Delegate::new(self.resource_cache()?);
         from.changes()?
             .track_filename()
             .track_rewrites(None)
             .for_each_to_obtain_tree(&to, |change| delegate.handle(change))?;
         delegate.into_result()
+    }
+
+    fn resource_cache(&self) -> Result<gix::diff::blob::Platform, Error> {
+        Ok(gix::diff::resource_cache(
+            &self.repo,
+            &gix::index::State::new(self.repo.object_hash()),
+            gix::diff::blob::pipeline::Mode::ToGit,
+            gix::worktree::stack::state::attributes::Source::IdMapping,
+            Default::default(),
+        )?)
     }
 
     /// Similar to [`Self::changes()`], but requires `ancestor_commit` and `current_commit` objects to be provided

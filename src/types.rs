@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use bstr::BString;
 use smartstring::alias::String as SmolString;
 use std::hash::Hash;
 use std::{fmt, slice};
@@ -13,7 +14,7 @@ pub struct Index {
     pub branch_name: &'static str,
     /// The name of the symbolic name of the remote to fetch from.
     /// If `None`, obtain the remote name from the configuration of the currently checked-out branch.
-    pub remote_name: Option<String>,
+    pub remote_name: Option<BString>,
     /// The git repository to use for diffing
     pub(crate) repo: gix::Repository,
 }

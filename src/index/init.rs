@@ -1,5 +1,6 @@
 use crate::index::{CloneOptions, LAST_SEEN_REFNAME};
 use crate::Index;
+use std::borrow::Cow;
 use std::path::Path;
 use std::sync::atomic::AtomicBool;
 
@@ -61,11 +62,7 @@ impl Index {
         };
 
         repo.object_cache_size_if_unset(4 * 1024 * 1024);
-        let remote_name = repo
-            .remote_names()
-            .into_iter()
-            .next()
-            .map(ToOwned::to_owned);
+        let remote_name = repo.remote_names().into_iter().next().map(Cow::into_owned);
         Ok(Index {
             repo,
             remote_name,

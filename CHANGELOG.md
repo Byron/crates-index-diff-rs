@@ -5,7 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+A maintenance release without any API changes. The major version bump is just to signal the change
+of the `gix` dependency to version v0.57.
+
+### Chore (BREAKING)
+
+ - <csr-id-bc3a8a29ad232de6dc2cd354f2cf28d41d897e8b/> update `gix` to v0.57
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 4 commits contributed to the release.
+ - 53 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge branch 'maintenance' ([`2170563`](https://github.com/Byron/crates-index-diff-rs/commit/2170563649502c02166989355b60fdc6f7605889))
+    - Turns out that using the resource cache is too costly ([`ad50624`](https://github.com/Byron/crates-index-diff-rs/commit/ad506243c6083d540f6691fb7ed3ec669c6e1977))
+    - Remove git-lfs ([`2206723`](https://github.com/Byron/crates-index-diff-rs/commit/2206723daa98048ab1b7f87a3b74f8bd8cc793c9))
+    - Update `gix` to v0.57 ([`bc3a8a2`](https://github.com/Byron/crates-index-diff-rs/commit/bc3a8a29ad232de6dc2cd354f2cf28d41d897e8b))
+</details>
+
 ## 21.1.0 (2023-11-06)
+
+<csr-id-e8b2c90602670e09653b0d77bcf109bca5afa6d7/>
+<csr-id-79579872c0afdfd112eb2f24ac74dd28148f34b9/>
 
 ### Chore
 
@@ -27,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 5 commits contributed to the release.
+ - 6 commits contributed to the release.
  - 41 days passed between releases.
  - 3 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -39,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v21.1.0 ([`167a34a`](https://github.com/Byron/crates-index-diff-rs/commit/167a34a4abdfb0c8c30d1cd2da09ca0bafe122fd))
     - Merge branch 'improvements' ([`28f0d1f`](https://github.com/Byron/crates-index-diff-rs/commit/28f0d1feedf57357005a11803919e91d9965394e))
     - Upgrade `gix` to 0.55.2 ([`e8b2c90`](https://github.com/Byron/crates-index-diff-rs/commit/e8b2c90602670e09653b0d77bcf109bca5afa6d7))
     - Deterministic order if multiple changes are applied in one modification. ([`c404f67`](https://github.com/Byron/crates-index-diff-rs/commit/c404f6774b09e80aa3cc9569d740c58f54e2b716))

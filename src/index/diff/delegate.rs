@@ -21,9 +21,9 @@ impl Delegate {
     ) -> Result<gix::object::tree::diff::Action, Error> {
         use gix::bstr::ByteSlice;
         use gix::object::tree::diff::change::Event::*;
-        use gix::objs::tree::EntryMode::*;
+        use gix::objs::tree::EntryKind::*;
         fn entry_data(
-            entry: gix::objs::tree::EntryMode,
+            entry: gix::objs::tree::EntryKind,
             id: gix::Id<'_>,
         ) -> Result<Option<gix::Object<'_>>, Error> {
             matches!(entry, Blob | BlobExecutable)
@@ -40,7 +40,7 @@ impl Delegate {
                 unreachable!("BUG: this is disabled so shouldn't happen")
             }
             Addition { entry_mode, id } => {
-                if let Some(obj) = entry_data(entry_mode, id)? {
+                if let Some(obj) = entry_data(entry_mode.kind(), id)? {
                     for line in obj.data.lines() {
                         let version = version_from_json_line(line, change.location)?;
                         let change = if version.yanked {
@@ -65,11 +65,18 @@ impl Delegate {
                     });
                 }
             }
-            Modification { .. } => {
-                if let Some(diff) = change.event.diff().transpose()? {
+            Modification {
+                entry_mode,
+                previous_id,
+                id,
+                ..
+            } => {
+                if entry_mode.is_blob() {
+                    let old = previous_id.object()?.into_blob();
+                    let new = id.object()?.into_blob();
                     let mut old_lines = AHashSet::with_capacity(1024);
                     let location = change.location;
-                    for (number, line) in diff.old.data.lines().enumerate() {
+                    for (number, line) in old.data.lines().enumerate() {
                         old_lines.insert(Line(number, line));
                     }
 
@@ -79,7 +86,7 @@ impl Delegate {
                     let mut new_versions = RawTable::with_capacity(old_lines.len().min(1024));
                     let hasher = RandomState::new();
 
-                    for (number, line) in diff.new.data.lines().enumerate() {
+                    for (number, line) in new.data.lines().enumerate() {
                         // first quickly check if the exact same line is already present in this file in that case we don't need to do anything else
                         if old_lines.remove(&Line(number, line)) {
                             continue;

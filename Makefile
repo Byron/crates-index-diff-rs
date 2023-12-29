@@ -11,5 +11,5 @@ baseline-atomic: ## run very slow tests that single-step through all commits
 
 test: ## run all tests with cargo
 	RUST_BACKTRACE=1 cargo test --test crates-index-diff
-	GITOXIDE_PACK_CACHE_MEMORY=1g RUST_BACKTRACE=1 cargo test --test baseline --release --features max-performance
+	GIX_PACK_CACHE_MEMORY=1g RUST_BACKTRACE=1 cargo test --test baseline --release --features max-performance
 

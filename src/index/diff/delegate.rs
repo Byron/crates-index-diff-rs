@@ -6,23 +6,12 @@ use hashbrown::raw::RawTable;
 use std::hash::Hasher;
 use std::ops::Deref;
 
+#[derive(Default)]
 pub(crate) struct Delegate {
     changes: Vec<Change>,
-    resource_cache: gix::diff::blob::Platform,
     /// All changes that happen within a file, along the line-number it happens in .
     per_file_changes: Vec<(usize, Change)>,
     err: Option<Error>,
-}
-
-impl Delegate {
-    pub(crate) fn new(resource_cache: gix::diff::blob::Platform) -> Self {
-        Delegate {
-            resource_cache,
-            changes: Default::default(),
-            per_file_changes: Default::default(),
-            err: None,
-        }
-    }
 }
 
 impl Delegate {
@@ -76,82 +65,73 @@ impl Delegate {
                     });
                 }
             }
-            Modification { entry_mode, .. } => {
+            Modification {
+                entry_mode,
+                previous_id,
+                id,
+                ..
+            } => {
                 if entry_mode.is_blob() {
-                    self.resource_cache.clear_resource_cache();
-                    let platform = change.diff(&mut self.resource_cache)?;
-                    if let Some((old, new)) = platform.resource_cache.resources() {
-                        let mut old_lines = AHashSet::with_capacity(1024);
-                        let location = change.location;
-                        for (number, line) in old
-                            .data
-                            .as_slice()
-                            .expect("present in modification")
-                            .lines()
-                            .enumerate()
-                        {
-                            old_lines.insert(Line(number, line));
-                        }
-
-                        // A RawTable is used to represent a Checksum -> CrateVersion map
-                        // because the checksum is already stored in the CrateVersion
-                        // and we want to avoid storing the checksum twice for performance reasons
-                        let mut new_versions = RawTable::with_capacity(old_lines.len().min(1024));
-                        let hasher = RandomState::new();
-
-                        for (number, line) in new
-                            .data
-                            .as_slice()
-                            .expect("present in modification")
-                            .lines()
-                            .enumerate()
-                        {
-                            // first quickly check if the exact same line is already present in this file in that case we don't need to do anything else
-                            if old_lines.remove(&Line(number, line)) {
-                                continue;
-                            }
-                            // no need to check if the checksum already exists in the hashmap
-                            // as each checksum appears only once
-                            let new_version = version_from_json_line(line, location)?;
-                            new_versions.insert(
-                                hasher.hash_one(new_version.checksum),
-                                (number, new_version),
-                                |rehashed| hasher.hash_one(rehashed.1.checksum),
-                            );
-                        }
-
-                        for line in old_lines.drain() {
-                            let old_version = version_from_json_line(&line, location)?;
-                            let new_version = new_versions
-                                .remove_entry(hasher.hash_one(old_version.checksum), |version| {
-                                    version.1.checksum == old_version.checksum
-                                });
-                            match new_version {
-                                Some((_, new_version)) => {
-                                    let change = match (old_version.yanked, new_version.yanked) {
-                                        (true, false) => Change::Unyanked(new_version),
-                                        (false, true) => Change::Yanked(new_version),
-                                        _ => continue,
-                                    };
-                                    self.per_file_changes.push((line.0, change))
-                                }
-                                None => self
-                                    .per_file_changes
-                                    .push((line.0, Change::VersionDeleted(old_version))),
-                            }
-                        }
-                        for (number, version) in new_versions.drain() {
-                            let change = if version.yanked {
-                                Change::AddedAndYanked(version)
-                            } else {
-                                Change::Added(version)
-                            };
-                            self.per_file_changes.push((number, change));
-                        }
-                        self.per_file_changes.sort_by_key(|t| t.0);
-                        self.changes
-                            .extend(self.per_file_changes.drain(..).map(|t| t.1));
+                    let old = previous_id.object()?.into_blob();
+                    let new = id.object()?.into_blob();
+                    let mut old_lines = AHashSet::with_capacity(1024);
+                    let location = change.location;
+                    for (number, line) in old.data.lines().enumerate() {
+                        old_lines.insert(Line(number, line));
                     }
+
+                    // A RawTable is used to represent a Checksum -> CrateVersion map
+                    // because the checksum is already stored in the CrateVersion
+                    // and we want to avoid storing the checksum twice for performance reasons
+                    let mut new_versions = RawTable::with_capacity(old_lines.len().min(1024));
+                    let hasher = RandomState::new();
+
+                    for (number, line) in new.data.lines().enumerate() {
+                        // first quickly check if the exact same line is already present in this file in that case we don't need to do anything else
+                        if old_lines.remove(&Line(number, line)) {
+                            continue;
+                        }
+                        // no need to check if the checksum already exists in the hashmap
+                        // as each checksum appears only once
+                        let new_version = version_from_json_line(line, location)?;
+                        new_versions.insert(
+                            hasher.hash_one(new_version.checksum),
+                            (number, new_version),
+                            |rehashed| hasher.hash_one(rehashed.1.checksum),
+                        );
+                    }
+
+                    for line in old_lines.drain() {
+                        let old_version = version_from_json_line(&line, location)?;
+                        let new_version = new_versions
+                            .remove_entry(hasher.hash_one(old_version.checksum), |version| {
+                                version.1.checksum == old_version.checksum
+                            });
+                        match new_version {
+                            Some((_, new_version)) => {
+                                let change = match (old_version.yanked, new_version.yanked) {
+                                    (true, false) => Change::Unyanked(new_version),
+                                    (false, true) => Change::Yanked(new_version),
+                                    _ => continue,
+                                };
+                                self.per_file_changes.push((line.0, change))
+                            }
+                            None => self
+                                .per_file_changes
+                                .push((line.0, Change::VersionDeleted(old_version))),
+                        }
+                    }
+                    for (number, version) in new_versions.drain() {
+                        let change = if version.yanked {
+                            Change::AddedAndYanked(version)
+                        } else {
+                            Change::Added(version)
+                        };
+                        self.per_file_changes.push((number, change));
+                    }
+                    self.per_file_changes.sort_by_key(|t| t.0);
+                    self.changes
+                        .extend(self.per_file_changes.drain(..).map(|t| t.1));
                 }
             }
         }

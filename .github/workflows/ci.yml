@@ -12,7 +12,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: Swatinem/rust-cache@v2
-    - run: git lfs fetch && git lfs checkout
     - name: tests
       run: make test
     - name: docs

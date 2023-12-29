@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 22.0.0 (2023-12-29)
+
+<csr-id-bc3a8a29ad232de6dc2cd354f2cf28d41d897e8b/>
 
 A maintenance release without any API changes. The major version bump is just to signal the change
 of the `gix` dependency to version v0.57.
@@ -18,7 +20,7 @@ of the `gix` dependency to version v0.57.
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
+ - 5 commits contributed to the release.
  - 53 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -30,6 +32,7 @@ of the `gix` dependency to version v0.57.
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Prepare changelog prior to release ([`98f24fe`](https://github.com/Byron/crates-index-diff-rs/commit/98f24fe5c12769747bf75468611a2540da9a46ce))
     - Merge branch 'maintenance' ([`2170563`](https://github.com/Byron/crates-index-diff-rs/commit/2170563649502c02166989355b60fdc6f7605889))
     - Turns out that using the resource cache is too costly ([`ad50624`](https://github.com/Byron/crates-index-diff-rs/commit/ad506243c6083d540f6691fb7ed3ec669c6e1977))
     - Remove git-lfs ([`2206723`](https://github.com/Byron/crates-index-diff-rs/commit/2206723daa98048ab1b7f87a3b74f8bd8cc793c9))

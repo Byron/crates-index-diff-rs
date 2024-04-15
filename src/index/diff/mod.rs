@@ -4,6 +4,7 @@ use gix::prelude::ObjectIdExt;
 use std::sync::atomic::AtomicBool;
 
 mod delegate;
+
 use delegate::Delegate;
 
 /// The order we maintain for the produced changes.
@@ -309,7 +310,9 @@ impl Index {
             .attach(&self.repo)
             .ancestors()
             .sorting(
-                gix::traverse::commit::Sorting::ByCommitTimeNewestFirstCutoffOlderThan { seconds },
+                gix::traverse::commit::simple::Sorting::ByCommitTimeNewestFirstCutoffOlderThan {
+                    seconds,
+                },
             )
             .first_parent_only()
             .all()

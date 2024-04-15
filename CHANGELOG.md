@@ -5,7 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 24.0.0 (2024-04-15)
+
+### Chore (BREAKING)
+
+ - <csr-id-6377d3d14a855de3155c1f0f0c76605d3d0e68ae/> upgrade `gix` to v0.62
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 78 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge branch 'gix-upgrade' ([`9bf5d93`](https://github.com/Byron/crates-index-diff-rs/commit/9bf5d931775bebe51aecc74be2ada93df6e2a62d))
+    - Upgrade `gix` to v0.62 ([`6377d3d`](https://github.com/Byron/crates-index-diff-rs/commit/6377d3d14a855de3155c1f0f0c76605d3d0e68ae))
+</details>
+
 ## 23.0.0 (2024-01-28)
+
+<csr-id-7044076c17bc79f5323589e55938f3670b01a269/>
 
 ### Chore (BREAKING)
 
@@ -15,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 29 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v23.0.0 ([`f502931`](https://github.com/Byron/crates-index-diff-rs/commit/f50293141a9be0b57bf476e1825663721a129100))
     - Upgrade `gix` to 0.58 ([`7044076`](https://github.com/Byron/crates-index-diff-rs/commit/7044076c17bc79f5323589e55938f3670b01a269))
 </details>
 

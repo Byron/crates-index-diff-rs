@@ -37,7 +37,7 @@ http-reqwest = ["gix/blocking-http-transport-reqwest-rust-tls"]
 
 
 [dependencies]
-gix = { version = "0.62.0", default-features = false, features = ["blocking-network-client", "blob-diff", "revision"] }
+gix = { version = "0.63.0", default-features = false, features = ["blocking-network-client", "blob-diff", "revision"] }
 serde = { version = "1", features = ["std", "derive"] }
 hex = { version = "0.4.3", features = ["serde"] }
 smartstring = { version = "1.0.1", features = ["serde"] }
@@ -48,6 +48,6 @@ ahash = "0.8.0"
 hashbrown = { version = "0.14.0", features = ["raw"] }
 
 [dev-dependencies]
-gix-testtools = "0.13.0"
-crates-index = { version = "2.5.1", default-features = false, features = ["git-performance", "git-https"] }
+gix-testtools = "0.15.0"
+crates-index = { version = "3.0.0", default-features = false, features = ["git-performance", "git-https"] }
 tempdir = "0.3.5"

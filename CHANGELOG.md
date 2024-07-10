@@ -5,7 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that contain security fixes.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 85 days passed between releases.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Set version number for new release and prepare changelog. ([`132edc6`](https://github.com/Byron/crates-index-diff-rs/commit/132edc629434964db9b3dc9cfbbb83e39f72572c))
+    - Upgrade gix, gix-testtools & crates-index ([`4419a58`](https://github.com/Byron/crates-index-diff-rs/commit/4419a58b101b45b8cc3967cd0ab1ba469ecf3c29))
+</details>
+
 ## 24.0.0 (2024-04-15)
+
+<csr-id-6377d3d14a855de3155c1f0f0c76605d3d0e68ae/>
 
 ### Chore (BREAKING)
 
@@ -15,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 78 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v24.0.0 ([`643c0ba`](https://github.com/Byron/crates-index-diff-rs/commit/643c0baf775d808933a3a960d3ad1ffc0889d900))
     - Merge branch 'gix-upgrade' ([`9bf5d93`](https://github.com/Byron/crates-index-diff-rs/commit/9bf5d931775bebe51aecc74be2ada93df6e2a62d))
     - Upgrade `gix` to v0.62 ([`6377d3d`](https://github.com/Byron/crates-index-diff-rs/commit/6377d3d14a855de3155c1f0f0c76605d3d0e68ae))
 </details>

@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 25.0.0 (2024-07-10)
 
 Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that contain security fixes.
 
@@ -25,7 +25,7 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 <details><summary>view details</summary>
 
  * **Uncategorized**
-    - Set version number for new release and prepare changelog. ([`132edc6`](https://github.com/Byron/crates-index-diff-rs/commit/132edc629434964db9b3dc9cfbbb83e39f72572c))
+    - Set version number for new release and prepare changelog. ([`f4f4592`](https://github.com/Byron/crates-index-diff-rs/commit/f4f4592034fd2fc5f7d1aec47ee8f11695dcf916))
     - Upgrade gix, gix-testtools & crates-index ([`4419a58`](https://github.com/Byron/crates-index-diff-rs/commit/4419a58b101b45b8cc3967cd0ab1ba469ecf3c29))
 </details>
 

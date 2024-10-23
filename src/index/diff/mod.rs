@@ -4,6 +4,7 @@ use gix::prelude::ObjectIdExt;
 use std::sync::atomic::AtomicBool;
 
 mod delegate;
+mod github;
 
 use delegate::Delegate;
 
@@ -66,6 +67,8 @@ pub enum Error {
         name: String,
         mappings: Vec<gix::remote::fetch::Mapping>,
     },
+    #[error("Error when fetching GitHub fastpath.")]
+    GithubFetch(#[from] reqwest::Error),
 }
 
 /// Find changes without modifying the underling repository
@@ -175,30 +178,39 @@ impl Index {
                     .replace_refspecs(Some(spec.as_str()), gix::remote::Direction::Fetch)
                     .expect("valid statically known refspec");
             }
-            let res: gix::remote::fetch::Outcome = remote
-                .connect(gix::remote::Direction::Fetch)?
-                .prepare_fetch(&mut progress, Default::default())?
-                .receive(&mut progress, should_interrupt)?;
-            let branch_name = format!("refs/heads/{}", self.branch_name);
-            let local_tracking = res
-                .ref_map
-                .mappings
-                .iter()
-                .find_map(|m| match &m.remote {
-                    gix::remote::fetch::Source::Ref(r) => (r.unpack().0 == branch_name)
-                        .then_some(m.local.as_ref())
-                        .flatten(),
-                    _ => None,
-                })
-                .ok_or_else(|| Error::NoMatchingBranch {
-                    name: branch_name,
-                    mappings: res.ref_map.mappings.clone(),
-                })?;
-            self.repo
-                .find_reference(local_tracking)
-                .expect("local tracking branch exists if we see it here")
-                .id()
-                .detach()
+
+            let (url, _) = remote.sanitized_url_and_version(gix::remote::Direction::Fetch)?;
+            if matches!(
+                github::has_changes(&url, &from, self.branch_name)?,
+                github::FastPath::UpToDate
+            ) {
+                from.clone()
+            } else {
+                let res: gix::remote::fetch::Outcome = remote
+                    .connect(gix::remote::Direction::Fetch)?
+                    .prepare_fetch(&mut progress, Default::default())?
+                    .receive(&mut progress, should_interrupt)?;
+                let branch_name = format!("refs/heads/{}", self.branch_name);
+                let local_tracking = res
+                    .ref_map
+                    .mappings
+                    .iter()
+                    .find_map(|m| match &m.remote {
+                        gix::remote::fetch::Source::Ref(r) => (r.unpack().0 == branch_name)
+                            .then_some(m.local.as_ref())
+                            .flatten(),
+                        _ => None,
+                    })
+                    .ok_or_else(|| Error::NoMatchingBranch {
+                        name: branch_name,
+                        mappings: res.ref_map.mappings.clone(),
+                    })?;
+                self.repo
+                    .find_reference(local_tracking)
+                    .expect("local tracking branch exists if we see it here")
+                    .id()
+                    .detach()
+            }
         };
 
         Ok((

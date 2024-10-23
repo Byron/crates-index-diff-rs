@@ -11,9 +11,6 @@ edition = "2018"
 readme = "changelog.md"
 include = ["src/**/*", "LICENSE.md", "README.md", "CHANGELOG.md"]
 
-[lib]
-test = false
-
 [[test]]
 name = "baseline"
 path = "tests/baseline.rs"
@@ -46,6 +43,7 @@ bstr = "1.0.1"
 thiserror = "1.0.32"
 ahash = "0.8.0"
 hashbrown = { version = "0.14.0", features = ["raw"] }
+reqwest = { version = "0.12", features = ["blocking"] }
 
 [dev-dependencies]
 gix-testtools = "0.15.0"

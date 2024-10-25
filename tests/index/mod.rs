@@ -119,7 +119,7 @@ fn changes_since_last_fetch() {
         let mut config = index.repository_mut().config_snapshot_mut();
         // TODO: use `remote.save_as_to()` here, requires a way to get the mutable repo ref again.
         config
-            .set_raw_value(
+            .set_raw_value_by(
                 "remote",
                 Some(repo_name.into()),
                 "url",
@@ -127,7 +127,7 @@ fn changes_since_last_fetch() {
             )
             .unwrap();
         config
-            .set_raw_value(
+            .set_raw_value_by(
                 "remote",
                 Some(repo_name.into()),
                 "fetch",

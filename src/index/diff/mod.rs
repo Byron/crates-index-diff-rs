@@ -1,6 +1,7 @@
 use crate::{Change, Index};
 use bstr::ByteSlice;
 use gix::prelude::ObjectIdExt;
+use gix::traverse::commit::simple::CommitTimeOrder;
 use std::sync::atomic::AtomicBool;
 
 mod delegate;
@@ -41,7 +42,7 @@ pub enum Error {
     #[error("Couldn't get the tree of a commit for diffing purposes")]
     PeelToTree(#[from] gix::object::peel::to_kind::Error),
     #[error("Failed to diff two trees to find changed crates")]
-    Diff(#[from] gix::object::blob::diff::init::Error),
+    Diff(#[from] gix::diff::options::init::Error),
     #[error(transparent)]
     DiffForEach(#[from] gix::object::tree::diff::for_each::Error),
     #[error("Failed to decode {line:?} in file {file_name:?} as crate version")]
@@ -62,7 +63,8 @@ pub enum Error {
     Fetch(#[from] gix::remote::fetch::Error),
     #[error(transparent)]
     InitAnonymousRemote(#[from] gix::remote::init::Error),
-    #[error("Could not find local tracking branch for remote branch {name:?} in any of {} fetched refs", mappings.len())]
+    #[error("Could not find local tracking branch for remote branch {name:?} in any of {} fetched refs", mappings.len()
+    )]
     NoMatchingBranch {
         name: String,
         mappings: Vec<gix::remote::fetch::Mapping>,
@@ -253,8 +255,9 @@ impl Index {
         let to = into_tree(to.into())?;
         let mut delegate = Delegate::default();
         from.changes()?
-            .track_filename()
-            .track_rewrites(None)
+            .options(|opts| {
+                opts.track_rewrites(None).track_filename();
+            })
             .for_each_to_obtain_tree(&to, |change| delegate.handle(change))?;
         delegate.into_result()
     }
@@ -321,11 +324,10 @@ impl Index {
         let mut commits = current_commit
             .attach(&self.repo)
             .ancestors()
-            .sorting(
-                gix::traverse::commit::simple::Sorting::ByCommitTimeNewestFirstCutoffOlderThan {
-                    seconds,
-                },
-            )
+            .sorting(gix::revision::walk::Sorting::ByCommitTimeCutoff {
+                seconds,
+                order: CommitTimeOrder::NewestFirst,
+            })
             .first_parent_only()
             .all()
             .ok()?

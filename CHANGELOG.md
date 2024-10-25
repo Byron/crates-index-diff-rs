@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 26.0.0 (2024-10-25)
+
+### New Features
+
+ - <csr-id-3bd1c11f02aeebefa4d60e62c7b55cb71322d4a8/> use github fast path to check for changes before git pull
+
+### Chore (BREAKING)
+
+ - <csr-id-3ea251d6fbe971c4b9af6829971a1c98fc9c4d57/> upgrade gix to v0.67
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 4 commits contributed to the release.
+ - 107 days passed between releases.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge branch 'upgrade-gix' ([`76b2bdb`](https://github.com/Byron/crates-index-diff-rs/commit/76b2bdb776ffaabcd087f2251e9a0ed803b2b9cc))
+    - Upgrade gix to v0.67 ([`3ea251d`](https://github.com/Byron/crates-index-diff-rs/commit/3ea251d6fbe971c4b9af6829971a1c98fc9c4d57))
+    - Merge pull request #47 from syphar/github-fast-path ([`1ada2f1`](https://github.com/Byron/crates-index-diff-rs/commit/1ada2f120b6f20650c63bf78567e63a6364d19f6))
+    - Use github fast path to check for changes before git pull ([`3bd1c11`](https://github.com/Byron/crates-index-diff-rs/commit/3bd1c11f02aeebefa4d60e62c7b55cb71322d4a8))
+</details>
+
 ## 25.0.0 (2024-07-10)
 
 Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that contain security fixes.
@@ -13,7 +45,7 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 85 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -25,6 +57,7 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v25.0.0 ([`674bdfc`](https://github.com/Byron/crates-index-diff-rs/commit/674bdfcf398b260ab63bb4c79c1894d7602dca0e))
     - Set version number for new release and prepare changelog. ([`f4f4592`](https://github.com/Byron/crates-index-diff-rs/commit/f4f4592034fd2fc5f7d1aec47ee8f11695dcf916))
     - Upgrade gix, gix-testtools & crates-index ([`4419a58`](https://github.com/Byron/crates-index-diff-rs/commit/4419a58b101b45b8cc3967cd0ab1ba469ecf3c29))
 </details>
@@ -42,7 +75,6 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 <csr-read-only-do-not-edit/>
 
  - 3 commits contributed to the release.
- - 78 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -147,7 +179,6 @@ of the `gix` dependency to version v0.57.
 <csr-read-only-do-not-edit/>
 
  - 6 commits contributed to the release.
- - 41 days passed between releases.
  - 3 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -318,7 +349,6 @@ of the `gix` dependency to version v0.57.
 <csr-read-only-do-not-edit/>
 
  - 4 commits contributed to the release.
- - 82 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -693,7 +723,6 @@ for his contribution. Thank you!
 <csr-read-only-do-not-edit/>
 
  - 10 commits contributed to the release.
- - 28 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -1473,7 +1502,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
     - Refactor for more flexibility; bump version ([`eb244b7`](https://github.com/Byron/crates-index-diff-rs/commit/eb244b7e2ba4a860b6979d7eb8fafdf7cdcf5517))
 </details>
 
-## v6.1.0 (2020-03-02)
+## v6.1.0 (2020-03-03)
 
 * Add support for progress messages by adding the `(fetch|peek)_changes_with_options(git2::FetchOptions)` variants.
 
@@ -1495,7 +1524,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
     - Support for progress messages ([`0167119`](https://github.com/Byron/crates-index-diff-rs/commit/0167119f67aa76ced8a45e708f6bf6b4e4345c37))
 </details>
 
-## v6.0.0 (2020-03-02)
+## v6.0.0 (2020-03-03)
 
 * Update to git2 v0.12.0
   
@@ -1718,7 +1747,6 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 <csr-read-only-do-not-edit/>
 
  - 2 commits contributed to the release.
- - 474 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -1746,7 +1774,7 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release over the course of 4 calendar days.
+ - 6 commits contributed to the release.
  - 441 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages

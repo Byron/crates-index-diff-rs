@@ -20,7 +20,7 @@ impl Delegate {
         change: gix::object::tree::diff::Change<'_, '_, '_>,
     ) -> Result<gix::object::tree::diff::Action, Error> {
         use gix::bstr::ByteSlice;
-        use gix::object::tree::diff::change::Event::*;
+        use gix::object::tree::diff::Change::*;
         use gix::objs::tree::EntryKind::*;
         fn entry_data(
             entry: gix::objs::tree::EntryKind,
@@ -31,18 +31,23 @@ impl Delegate {
                 .transpose()
                 .map_err(Into::into)
         }
-        if change.location.contains(&b'.') {
+        if change.location().contains(&b'.') {
             return Ok(Default::default());
         }
 
-        match change.event {
+        match change {
             Rewrite { .. } => {
                 unreachable!("BUG: this is disabled so shouldn't happen")
             }
-            Addition { entry_mode, id } => {
+            Addition {
+                entry_mode,
+                id,
+                location,
+                ..
+            } => {
                 if let Some(obj) = entry_data(entry_mode.kind(), id)? {
                     for line in obj.data.lines() {
-                        let version = version_from_json_line(line, change.location)?;
+                        let version = version_from_json_line(line, location)?;
                         let change = if version.yanked {
                             Change::AddedAndYanked(version)
                         } else {
@@ -52,15 +57,20 @@ impl Delegate {
                     }
                 }
             }
-            Deletion { entry_mode, id, .. } => {
+            Deletion {
+                entry_mode,
+                id,
+                location,
+                ..
+            } => {
                 if entry_mode.is_no_tree() {
                     let obj = id.object()?;
                     let mut deleted = Vec::with_capacity(obj.data.lines().count());
                     for line in obj.data.lines() {
-                        deleted.push(version_from_json_line(line, change.location)?);
+                        deleted.push(version_from_json_line(line, location)?);
                     }
                     self.changes.push(Change::CrateDeleted {
-                        name: change.location.to_string(),
+                        name: location.to_string(),
                         versions: deleted,
                     });
                 }
@@ -69,13 +79,14 @@ impl Delegate {
                 entry_mode,
                 previous_id,
                 id,
+                location,
                 ..
             } => {
                 if entry_mode.is_blob() {
                     let old = previous_id.object()?.into_blob();
                     let new = id.object()?.into_blob();
                     let mut old_lines = AHashSet::with_capacity(1024);
-                    let location = change.location;
+                    let location = location;
                     for (number, line) in old.data.lines().enumerate() {
                         old_lines.insert(Line(number, line));
                     }

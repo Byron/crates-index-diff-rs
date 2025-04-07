@@ -67,7 +67,7 @@ pub enum Error {
     )]
     NoMatchingBranch {
         name: String,
-        mappings: Vec<gix::remote::fetch::Mapping>,
+        mappings: Vec<gix::remote::fetch::refmap::Mapping>,
     },
     #[error("Error when fetching GitHub fastpath.")]
     GithubFetch(#[from] reqwest::Error),
@@ -198,7 +198,7 @@ impl Index {
                     .mappings
                     .iter()
                     .find_map(|m| match &m.remote {
-                        gix::remote::fetch::Source::Ref(r) => (r.unpack().0 == branch_name)
+                        gix::remote::fetch::refmap::Source::Ref(r) => (r.unpack().0 == branch_name)
                             .then_some(m.local.as_ref())
                             .flatten(),
                         _ => None,

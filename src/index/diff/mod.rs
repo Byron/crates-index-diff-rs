@@ -319,8 +319,7 @@ impl Index {
             .ok()?
             .committer()
             .ok()?
-            .time
-            .seconds;
+            .seconds();
         let mut commits = current_commit
             .attach(&self.repo)
             .ancestors()

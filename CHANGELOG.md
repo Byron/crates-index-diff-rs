@@ -5,17 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 27.0.0 (2025-04-07)
+## 28.0.0 (2025-04-26)
 
-### New Features (BREAKING)
+### Bug Fixes (BREAKING)
 
- - <csr-id-a694874b36c4b745d9a720ee7ce07642f3a0a872/> upgrade gix to 0.71
+ - <csr-id-44c5806ce4c27f821ba1562086df85f429fc1464/> Upgrade to gix 0.72
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 1 commit contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -26,6 +26,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Upgrade to gix 0.72 ([`44c5806`](https://github.com/Byron/crates-index-diff-rs/commit/44c5806ce4c27f821ba1562086df85f429fc1464))
+</details>
+
+## 27.0.0 (2025-04-07)
+
+### New Features (BREAKING)
+
+ - <csr-id-a694874b36c4b745d9a720ee7ce07642f3a0a872/> upgrade gix to 0.71
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 3 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release crates-index-diff v27.0.0 ([`39fda30`](https://github.com/Byron/crates-index-diff-rs/commit/39fda304b45cb38cb3f6c015165cc9a8713ca54f))
     - Merge branch 'gix-upgrade' ([`ca19e2c`](https://github.com/Byron/crates-index-diff-rs/commit/ca19e2ce7d4c3e72e1a79e0eb7b04b33033256cb))
     - Upgrade gix to 0.71 ([`a694874`](https://github.com/Byron/crates-index-diff-rs/commit/a694874b36c4b745d9a720ee7ce07642f3a0a872))
 </details>

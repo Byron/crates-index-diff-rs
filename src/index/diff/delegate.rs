@@ -86,7 +86,6 @@ impl Delegate {
                     let old = previous_id.object()?.into_blob();
                     let new = id.object()?.into_blob();
                     let mut old_lines = AHashSet::with_capacity(1024);
-                    let location = location;
                     for (number, line) in old.data.lines().enumerate() {
                         old_lines.insert(Line(number, line));
                     }

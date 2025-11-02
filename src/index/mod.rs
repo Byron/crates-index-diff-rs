@@ -38,7 +38,7 @@ impl Index {
     }
 }
 
-///
+/// Main index diff functionality
 pub mod diff;
-///
+/// initial index repo loading & cloning
 pub mod init;

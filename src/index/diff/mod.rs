@@ -186,7 +186,7 @@ impl Index {
                 github::has_changes(&url, &from, self.branch_name)?,
                 github::FastPath::UpToDate
             ) {
-                from.clone()
+                from
             } else {
                 let res: gix::remote::fetch::Outcome = remote
                     .connect(gix::remote::Direction::Fetch)?

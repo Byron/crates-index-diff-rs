@@ -46,6 +46,6 @@ hashbrown = { version = "0.14.0", features = ["raw"] }
 reqwest = { version = "0.12", features = ["blocking"] }
 
 [dev-dependencies]
-gix-testtools = "0.15.0"
+gix-testtools = "0.16.1"
 crates-index = { version = "3.0.0", default-features = false, features = ["git-performance", "git-https"] }
 tempdir = "0.3.5"

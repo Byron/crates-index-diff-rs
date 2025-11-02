@@ -22,7 +22,7 @@ path = "tests/baseline_atomic.rs"
 required-features = ["max-performance"]
 
 [features]
-default = ["http-curl"]
+default = ["http-curl", "semver"]
 ## Configure `gix` to use maximum performance, but with greater compatibility.
 max-performance-safe = ["gix/max-performance-safe"]
 ## Configure `gix` to use maximum performance.
@@ -31,6 +31,8 @@ max-performance = ["gix/max-performance"]
 http-curl = ["gix/blocking-http-transport-curl"]
 ## Use reqwest along with pure-rust TLS implementations. Needs no C toolchain, but might not be parity in features compared to curl.
 http-reqwest = ["gix/blocking-http-transport-reqwest-rust-tls"]
+## provide semver support for release version numbers
+semver = ["dep:semver"]
 
 
 [dependencies]
@@ -44,6 +46,7 @@ thiserror = "2"
 ahash = "0.8.0"
 hashbrown = { version = "0.16.0" }
 reqwest = { version = "0.12", features = ["blocking"] }
+semver = { version = "1.0.27", features = ["serde"], optional = true }
 
 [dev-dependencies]
 gix-testtools = "0.16.1"

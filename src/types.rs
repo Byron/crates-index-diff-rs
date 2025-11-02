@@ -156,6 +156,22 @@ pub struct CrateVersion {
     pub dependencies: Vec<Dependency>,
 }
 
+impl CrateVersion {
+    /// Parse and return this crate's version as a `semver::Version`.
+    ///
+    /// The crate index guarantees versions follow Semantic Versioning, so
+    /// parsing is expected to succeed. Both crates.io and cargo make sure
+    /// of that, and also rely on it.
+    ///
+    /// If parsing fails, this indicates a violation of that guarantee and
+    /// the method will panic.
+    #[cfg(feature = "semver")]
+    pub fn version(&self) -> semver::Version {
+        semver::Version::parse(&self.version)
+            .expect("crate index guarantees a valid semantic version")
+    }
+}
+
 /// A single dependency of a specific crate version
 #[derive(
     Clone, serde::Serialize, serde::Deserialize, Ord, PartialOrd, Eq, PartialEq, Debug, Hash,
@@ -181,4 +197,20 @@ pub struct Dependency {
     /// The package this crate is contained in
     #[serde(skip_serializing_if = "Option::is_none")]
     pub package: Option<SmolString>,
+}
+impl Dependency {
+    /// Parse and return this dependency's semantic version requirement as `semver::VersionReq`.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `self.required_version` is not a valid SemVer requirement.
+    ///
+    /// Cargo and crates.io enforce SemVer compliance for dependencies when a crate is
+    /// published or updated. Nevertheless, our index contains a small number of releases
+    /// whose dependency requirements are not valid SemVer (currently 14 out of ~1.8M).
+    #[cfg(feature = "semver")]
+    pub fn required_version(&self) -> semver::VersionReq {
+        semver::VersionReq::parse(&self.required_version)
+            .expect("version requirement should always be a valid SemVer")
+    }
 }

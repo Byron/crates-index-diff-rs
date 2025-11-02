@@ -2,7 +2,7 @@ use crate::index::diff::Error;
 use crate::{Change, CrateVersion};
 use ahash::{AHashSet, RandomState};
 use bstr::BStr;
-use hashbrown::raw::RawTable;
+use hashbrown::HashTable;
 use std::hash::Hasher;
 use std::ops::Deref;
 
@@ -91,10 +91,10 @@ impl Delegate {
                         old_lines.insert(Line(number, line));
                     }
 
-                    // A RawTable is used to represent a Checksum -> CrateVersion map
+                    // A HashTable is used to represent a Checksum -> CrateVersion map
                     // because the checksum is already stored in the CrateVersion
                     // and we want to avoid storing the checksum twice for performance reasons
-                    let mut new_versions = RawTable::with_capacity(old_lines.len().min(1024));
+                    let mut new_versions = HashTable::with_capacity(old_lines.len().min(1024));
                     let hasher = RandomState::new();
 
                     for (number, line) in new.data.lines().enumerate() {
@@ -105,7 +105,7 @@ impl Delegate {
                         // no need to check if the checksum already exists in the hashmap
                         // as each checksum appears only once
                         let new_version = version_from_json_line(line, location)?;
-                        new_versions.insert(
+                        new_versions.insert_unique(
                             hasher.hash_one(new_version.checksum),
                             (number, new_version),
                             |rehashed| hasher.hash_one(rehashed.1.checksum),
@@ -114,10 +114,12 @@ impl Delegate {
 
                     for line in old_lines.drain() {
                         let old_version = version_from_json_line(&line, location)?;
-                        let new_version = new_versions
-                            .remove_entry(hasher.hash_one(old_version.checksum), |version| {
+                        let new_version: Option<(usize, CrateVersion)> = new_versions
+                            .find_entry(hasher.hash_one(old_version.checksum), |version| {
                                 version.1.checksum == old_version.checksum
-                            });
+                            })
+                            .map(|entry| entry.remove().0)
+                            .ok();
                         match new_version {
                             Some((_, new_version)) => {
                                 let change = match (old_version.yanked, new_version.yanked) {

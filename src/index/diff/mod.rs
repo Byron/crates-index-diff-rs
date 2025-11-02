@@ -32,19 +32,19 @@ pub enum Order {
 #[allow(missing_docs)]
 pub enum Error {
     #[error("Couldn't update marker reference")]
-    ReferenceEdit(#[from] gix::reference::edit::Error),
+    ReferenceEdit(#[from] Box<gix::reference::edit::Error>),
     #[error("Failed to parse rev-spec to determine which revisions to diff")]
-    RevParse(#[from] gix::revision::spec::parse::Error),
+    RevParse(#[from] Box<gix::revision::spec::parse::Error>),
     #[error(transparent)]
-    DiffRewrites(#[from] gix::diff::new_rewrites::Error),
+    DiffRewrites(#[from] Box<gix::diff::new_rewrites::Error>),
     #[error("Couldn't find blob that showed up when diffing trees")]
-    FindObject(#[from] gix::object::find::existing::Error),
+    FindObject(#[from] Box<gix::object::find::existing::Error>),
     #[error("Couldn't get the tree of a commit for diffing purposes")]
-    PeelToTree(#[from] gix::object::peel::to_kind::Error),
+    PeelToTree(#[from] Box<gix::object::peel::to_kind::Error>),
     #[error("Failed to diff two trees to find changed crates")]
-    Diff(#[from] gix::diff::options::init::Error),
+    Diff(#[from] Box<gix::diff::options::init::Error>),
     #[error(transparent)]
-    DiffForEach(#[from] gix::object::tree::diff::for_each::Error),
+    DiffForEach(#[from] Box<gix::object::tree::diff::for_each::Error>),
     #[error("Failed to decode {line:?} in file {file_name:?} as crate version")]
     VersionDecode {
         source: serde_json::Error,
@@ -52,17 +52,17 @@ pub enum Error {
         line: bstr::BString,
     },
     #[error(transparent)]
-    FindRemote(#[from] gix::remote::find::existing::Error),
+    FindRemote(#[from] Box<gix::remote::find::existing::Error>),
     #[error(transparent)]
-    FindReference(#[from] gix::reference::find::existing::Error),
+    FindReference(#[from] Box<gix::reference::find::existing::Error>),
     #[error(transparent)]
-    Connect(#[from] gix::remote::connect::Error),
+    Connect(#[from] Box<gix::remote::connect::Error>),
     #[error(transparent)]
-    PrepareFetch(#[from] gix::remote::fetch::prepare::Error),
+    PrepareFetch(#[from] Box<gix::remote::fetch::prepare::Error>),
     #[error(transparent)]
-    Fetch(#[from] gix::remote::fetch::Error),
+    Fetch(#[from] Box<gix::remote::fetch::Error>),
     #[error(transparent)]
-    InitAnonymousRemote(#[from] gix::remote::init::Error),
+    InitAnonymousRemote(#[from] Box<gix::remote::init::Error>),
     #[error("Could not find local tracking branch for remote branch {name:?} in any of {} fetched refs", mappings.len()
     )]
     NoMatchingBranch {
@@ -72,6 +72,20 @@ pub enum Error {
     #[error("Error when fetching GitHub fastpath.")]
     GithubFetch(#[from] reqwest::Error),
 }
+
+impl_from_boxed!(gix::diff::new_rewrites::Error => Error::DiffRewrites);
+impl_from_boxed!(gix::diff::options::init::Error => Error::Diff);
+impl_from_boxed!(gix::object::find::existing::Error => Error::FindObject);
+impl_from_boxed!(gix::object::peel::to_kind::Error => Error::PeelToTree);
+impl_from_boxed!(gix::object::tree::diff::for_each::Error => Error::DiffForEach);
+impl_from_boxed!(gix::reference::edit::Error => Error::ReferenceEdit);
+impl_from_boxed!(gix::reference::find::existing::Error => Error::FindReference);
+impl_from_boxed!(gix::remote::connect::Error => Error::Connect);
+impl_from_boxed!(gix::remote::fetch::Error => Error::Fetch);
+impl_from_boxed!(gix::remote::fetch::prepare::Error => Error::PrepareFetch);
+impl_from_boxed!(gix::remote::find::existing::Error => Error::FindRemote);
+impl_from_boxed!(gix::remote::init::Error => Error::InitAnonymousRemote);
+impl_from_boxed!(gix::revision::spec::parse::Error => Error::RevParse);
 
 /// Find changes without modifying the underling repository
 impl Index {

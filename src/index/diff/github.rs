@@ -10,7 +10,7 @@ pub(crate) enum FastPath {
 /// extract username & repository from a fetch URL, only if it's on Github.
 fn user_and_repo_from_url_if_github(fetch_url: &gix::Url) -> Option<(String, String)> {
     let url = Url::parse(&fetch_url.to_string()).ok()?;
-    if !(url.host_str() == Some("github.com")) {
+    if url.host_str() != Some("github.com") {
         return None;
     }
 

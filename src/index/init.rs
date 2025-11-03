@@ -9,12 +9,16 @@ use std::sync::atomic::AtomicBool;
 #[allow(missing_docs)]
 pub enum Error {
     #[error(transparent)]
-    PrepareClone(#[from] gix::clone::Error),
+    PrepareClone(#[from] Box<gix::clone::Error>),
     #[error(transparent)]
-    Fetch(#[from] gix::clone::fetch::Error),
+    Fetch(#[from] Box<gix::clone::fetch::Error>),
     #[error(transparent)]
-    Open(#[from] gix::open::Error),
+    Open(#[from] Box<gix::open::Error>),
 }
+
+impl_from_boxed!(gix::clone::Error => Error::PrepareClone);
+impl_from_boxed!(gix::clone::fetch::Error => Error::Fetch);
+impl_from_boxed!(gix::open::Error => Error::Open);
 
 /// Initialization
 impl Index {

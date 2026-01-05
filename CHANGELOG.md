@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 29.0.0 (2026-01-05)
 
 Update `gix` to v0.77, and update reqwest to 0.13.
 
@@ -21,7 +21,7 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 
 <csr-read-only-do-not-edit/>
 
- - 12 commits contributed to the release over the course of 63 calendar days.
+ - 13 commits contributed to the release over the course of 63 calendar days.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -32,6 +32,7 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Bump version to 28, after `gix` upgrade. ([`9eef98a`](https://github.com/Byron/crates-index-diff-rs/commit/9eef98ad930ab9c8d6205786b710d9b0fec2f688))
     - Merge pull request #54 from syphar/upgrade ([`514eef4`](https://github.com/Byron/crates-index-diff-rs/commit/514eef41096cae485b2f915e4e42a0af0a1c763d))
     - Upgrade gix to 0.77, reqwest to 0.13 ([`c128284`](https://github.com/Byron/crates-index-diff-rs/commit/c128284f990935fa1fea72d54b02019b06097585))
     - Merge pull request #53 from syphar/parsed-version ([`9e3f5de`](https://github.com/Byron/crates-index-diff-rs/commit/9e3f5def658835935af12e0b4ae47fe219faab54))

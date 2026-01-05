@@ -36,7 +36,7 @@ semver = ["dep:semver"]
 
 
 [dependencies]
-gix = { version = "0.74.1", default-features = false, features = ["blocking-network-client", "blob-diff", "revision"] }
+gix = { version = "0.77.0", default-features = false, features = ["blocking-network-client", "blob-diff", "revision"] }
 serde = { version = "1", features = ["std", "derive"] }
 hex = { version = "0.4.3", features = ["serde"] }
 smartstring = { version = "1.0.1", features = ["serde"] }
@@ -45,7 +45,7 @@ bstr = "1.0.1"
 thiserror = "2"
 ahash = "0.8.0"
 hashbrown = { version = "0.16.0" }
-reqwest = { version = "0.12", features = ["blocking"] }
+reqwest = { version = "0.13", features = ["blocking"] }
 semver = { version = "1.0.27", features = ["serde"], optional = true }
 
 [dev-dependencies]

@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+Update `gix` to v0.77, and update reqwest to 0.13.
+
+### New Features
+
+ - <csr-id-7cc2b0745ff7e0e81bb25de8acb109f3c8d21b00/> provide parsed semver Version/Req via method on CrateVersion & Dependency
+
+### Bug Fixes (BREAKING)
+
+ - <csr-id-0790daac499dcc50a512b57885d2a66fbc32bb59/> Box<> big error variants for clippy and performance reasons
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 12 commits contributed to the release over the course of 63 calendar days.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge pull request #54 from syphar/upgrade ([`514eef4`](https://github.com/Byron/crates-index-diff-rs/commit/514eef41096cae485b2f915e4e42a0af0a1c763d))
+    - Upgrade gix to 0.77, reqwest to 0.13 ([`c128284`](https://github.com/Byron/crates-index-diff-rs/commit/c128284f990935fa1fea72d54b02019b06097585))
+    - Merge pull request #53 from syphar/parsed-version ([`9e3f5de`](https://github.com/Byron/crates-index-diff-rs/commit/9e3f5def658835935af12e0b4ae47fe219faab54))
+    - Provide parsed semver Version/Req via method on CrateVersion & Dependency ([`7cc2b07`](https://github.com/Byron/crates-index-diff-rs/commit/7cc2b0745ff7e0e81bb25de8acb109f3c8d21b00))
+    - Merge branch 'clippy' ([`5aa9280`](https://github.com/Byron/crates-index-diff-rs/commit/5aa928070b24c1e77cb410019c58907f138fb9bb))
+    - Box<> big error variants for clippy and performance reasons ([`0790daa`](https://github.com/Byron/crates-index-diff-rs/commit/0790daac499dcc50a512b57885d2a66fbc32bb59))
+    - Fix or ignore some small clippy errors ([`74c0b09`](https://github.com/Byron/crates-index-diff-rs/commit/74c0b094ea2d22133b5d6ab0da868cbf1a4456b3))
+    - Merge pull request #51 from syphar/upgrade-hashbrown ([`4de48aa`](https://github.com/Byron/crates-index-diff-rs/commit/4de48aaf3a2aaa7278dba82f1f76e09aa5640aad))
+    - Merge pull request #50 from syphar/upgrades ([`436230e`](https://github.com/Byron/crates-index-diff-rs/commit/436230ecf77f4c426a5c1477b1199c24d4fafd72))
+    - Upgrade hashbrown to 0.16.0, migrate from RawTable to HashTable ([`d14ee5c`](https://github.com/Byron/crates-index-diff-rs/commit/d14ee5cedc0756acbb16ef9476122500918411ed))
+    - Upgrade gix-testtools to 0.16.1 ([`8c6b183`](https://github.com/Byron/crates-index-diff-rs/commit/8c6b18318463c4617a1bb01a7462c585312c5ae4))
+    - Upgrade gix to 0.74.1 ([`3d8e47d`](https://github.com/Byron/crates-index-diff-rs/commit/3d8e47dc4f681d3900c55a6a1c6b869fd20adfc6))
+</details>
+
 ## 28.0.0 (2025-04-26)
 
 ### Bug Fixes (BREAKING)
@@ -15,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -26,6 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v28.0.0 ([`060d392`](https://github.com/Byron/crates-index-diff-rs/commit/060d392da79157a3cf9e250b758cd940d85f9477))
     - Upgrade to gix 0.72 ([`44c5806`](https://github.com/Byron/crates-index-diff-rs/commit/44c5806ce4c27f821ba1562086df85f429fc1464))
 </details>
 

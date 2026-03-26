@@ -154,6 +154,9 @@ pub struct CrateVersion {
     /// All crate dependencies
     #[serde(rename = "deps")]
     pub dependencies: Vec<Dependency>,
+    /// The publication time of this release as provided by the index, if available.
+    #[serde(rename = "pubtime", skip_serializing_if = "Option::is_none")]
+    pub publish_time: Option<SmolString>,
 }
 
 impl CrateVersion {

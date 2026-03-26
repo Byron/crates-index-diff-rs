@@ -25,7 +25,8 @@ fn parse_crate_version() {
             version: "1.0.0".into(),
             dependencies: Vec::new(),
             features: HashMap::new(),
-            checksum: Default::default()
+            checksum: Default::default(),
+            publish_time: None
         }
     );
 }
@@ -100,7 +101,34 @@ fn parse_crate_version_with_dependencies() {
                 package: Some("dep_package".into())
             }],
             features: HashMap::new(),
-            checksum: Default::default()
+            checksum: Default::default(),
+            publish_time: None
+        }
+    );
+}
+
+#[test]
+fn parse_crate_version_with_pubtime() {
+    let c: CrateVersion = serde_json::from_value(json!({
+        "name": "test",
+        "vers": "1.0.0",
+        "cksum": "0000000000000000000000000000000000000000000000000000000000000000",
+        "features" : {},
+        "deps" : [],
+        "yanked": false,
+        "pubtime": "2026-03-25T12:34:56Z",
+    }))
+    .unwrap();
+    assert_eq!(
+        c,
+        CrateVersion {
+            name: "test".into(),
+            yanked: false,
+            version: "1.0.0".into(),
+            dependencies: Vec::new(),
+            features: HashMap::new(),
+            checksum: Default::default(),
+            publish_time: Some("2026-03-25T12:34:56Z".into())
         }
     );
 }

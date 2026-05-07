@@ -4,6 +4,7 @@ use ahash::{AHashSet, RandomState};
 use bstr::BStr;
 use hashbrown::HashTable;
 use std::hash::Hasher;
+use std::ops::ControlFlow;
 use std::ops::Deref;
 
 #[derive(Default)]
@@ -32,7 +33,7 @@ impl Delegate {
                 .map_err(Into::into)
         }
         if change.location().contains(&b'.') {
-            return Ok(Default::default());
+            return Ok(ControlFlow::Continue(()));
         }
 
         match change {
@@ -147,7 +148,7 @@ impl Delegate {
                 }
             }
         }
-        Ok(Default::default())
+        Ok(ControlFlow::Continue(()))
     }
 
     pub fn into_result(self) -> Result<Vec<Change>, Error> {

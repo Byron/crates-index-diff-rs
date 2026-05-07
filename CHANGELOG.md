@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+Upgrade to `gix` v0.83 and change the edition to 2024.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 3 commits contributed to the release.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge pull request #55 from Byron/update-gix ([`c479c39`](https://github.com/Byron/crates-index-diff-rs/commit/c479c39f5ab27736bfa45d5bb67b2eef9398b718))
+    - Update to Rust 2024 edition ([`213ec44`](https://github.com/Byron/crates-index-diff-rs/commit/213ec448a9dc4ab5df1a0e68043acb1f96ad80b5))
+    - Upgrade `gix` to the latest version for more secure parsers ([`dde46dc`](https://github.com/Byron/crates-index-diff-rs/commit/dde46dc3bf8c8c61e4f6810bf2bc65901093a7d8))
+</details>
+
 ## 29.0.0 (2026-01-05)
 
 Update `gix` to v0.77, and update reqwest to 0.13.
@@ -21,7 +45,7 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 
 <csr-read-only-do-not-edit/>
 
- - 13 commits contributed to the release over the course of 63 calendar days.
+ - 14 commits contributed to the release over the course of 63 calendar days.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -32,6 +56,7 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release crates-index-diff v29.0.0 ([`cac247c`](https://github.com/Byron/crates-index-diff-rs/commit/cac247ca26af0fc28f1b949a71f34e8e0366eef0))
     - Bump version to 28, after `gix` upgrade. ([`9eef98a`](https://github.com/Byron/crates-index-diff-rs/commit/9eef98ad930ab9c8d6205786b710d9b0fec2f688))
     - Merge pull request #54 from syphar/upgrade ([`514eef4`](https://github.com/Byron/crates-index-diff-rs/commit/514eef41096cae485b2f915e4e42a0af0a1c763d))
     - Upgrade gix to 0.77, reqwest to 0.13 ([`c128284`](https://github.com/Byron/crates-index-diff-rs/commit/c128284f990935fa1fea72d54b02019b06097585))

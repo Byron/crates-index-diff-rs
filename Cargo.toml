@@ -7,7 +7,7 @@ license = "MIT"
 name = "crates-index-diff"
 repository = "https://github.com/Byron/crates-index-diff-rs"
 version = "29.0.0"
-edition = "2018"
+edition = "2024"
 readme = "changelog.md"
 include = ["src/**/*", "LICENSE.md", "README.md", "CHANGELOG.md"]
 

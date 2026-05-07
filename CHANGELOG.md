@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 30.0.0 (2026-05-07)
 
 Upgrade to `gix` v0.83 and change the edition to 2024.
 
@@ -13,7 +13,7 @@ Upgrade to `gix` v0.83 and change the edition to 2024.
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
+ - 4 commits contributed to the release.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -24,6 +24,7 @@ Upgrade to `gix` v0.83 and change the edition to 2024.
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Update changelog prior to release ([`1372d71`](https://github.com/Byron/crates-index-diff-rs/commit/1372d7117b04d2be40faac3263ffd293096b1855))
     - Merge pull request #55 from Byron/update-gix ([`c479c39`](https://github.com/Byron/crates-index-diff-rs/commit/c479c39f5ab27736bfa45d5bb67b2eef9398b718))
     - Update to Rust 2024 edition ([`213ec44`](https://github.com/Byron/crates-index-diff-rs/commit/213ec448a9dc4ab5df1a0e68043acb1f96ad80b5))
     - Upgrade `gix` to the latest version for more secure parsers ([`dde46dc`](https://github.com/Byron/crates-index-diff-rs/commit/dde46dc3bf8c8c61e4f6810bf2bc65901093a7d8))

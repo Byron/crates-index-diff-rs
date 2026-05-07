@@ -34,7 +34,7 @@ pub enum Error {
     #[error("Couldn't update marker reference")]
     ReferenceEdit(#[from] Box<gix::reference::edit::Error>),
     #[error("Failed to parse rev-spec to determine which revisions to diff")]
-    RevParse(#[from] Box<gix::revision::spec::parse::Error>),
+    RevParse(#[from] Box<gix::Error>),
     #[error(transparent)]
     DiffRewrites(#[from] Box<gix::diff::new_rewrites::Error>),
     #[error("Couldn't find blob that showed up when diffing trees")]
@@ -85,7 +85,7 @@ impl_from_boxed!(gix::remote::fetch::Error => Error::Fetch);
 impl_from_boxed!(gix::remote::fetch::prepare::Error => Error::PrepareFetch);
 impl_from_boxed!(gix::remote::find::existing::Error => Error::FindRemote);
 impl_from_boxed!(gix::remote::init::Error => Error::InitAnonymousRemote);
-impl_from_boxed!(gix::revision::spec::parse::Error => Error::RevParse);
+impl_from_boxed!(gix::Error => Error::RevParse);
 
 /// Find changes without modifying the underling repository
 impl Index {

@@ -5,15 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 30.0.0 (2026-05-07)
+## Unreleased
 
-Upgrade to `gix` v0.83 and change the edition to 2024.
+Bump `gix` to v0.84
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
+ - 2 commits contributed to the release.
+ - 40 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -24,6 +25,30 @@ Upgrade to `gix` v0.83 and change the edition to 2024.
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Merge pull request #56 from syphar/upgrades ([`f51d6fd`](https://github.com/Byron/crates-index-diff-rs/commit/f51d6fdda5a673949d40b08351733b255a389a94))
+    - Update gix to 0.84, hashbrown to 0.17, gix-testtools to 0.19 ([`f7ebb4b`](https://github.com/Byron/crates-index-diff-rs/commit/f7ebb4b53f1a79b2129838b798ecba4c96d8ddf4))
+</details>
+
+## 30.0.0 (2026-05-07)
+
+Upgrade to `gix` v0.83 and change the edition to 2024.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 5 commits contributed to the release.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release crates-index-diff v30.0.0 ([`d77a8c4`](https://github.com/Byron/crates-index-diff-rs/commit/d77a8c448e0fa217bcf80d24b5a64cfcbf9b2f33))
     - Update changelog prior to release ([`1372d71`](https://github.com/Byron/crates-index-diff-rs/commit/1372d7117b04d2be40faac3263ffd293096b1855))
     - Merge pull request #55 from Byron/update-gix ([`c479c39`](https://github.com/Byron/crates-index-diff-rs/commit/c479c39f5ab27736bfa45d5bb67b2eef9398b718))
     - Update to Rust 2024 edition ([`213ec44`](https://github.com/Byron/crates-index-diff-rs/commit/213ec448a9dc4ab5df1a0e68043acb1f96ad80b5))
@@ -132,10 +157,6 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 
  - <csr-id-3bd1c11f02aeebefa4d60e62c7b55cb71322d4a8/> use github fast path to check for changes before git pull
 
-### Chore (BREAKING)
-
- - <csr-id-3ea251d6fbe971c4b9af6829971a1c98fc9c4d57/> upgrade gix to v0.67
-
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
@@ -188,10 +209,6 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 
 <csr-id-6377d3d14a855de3155c1f0f0c76605d3d0e68ae/>
 
-### Chore (BREAKING)
-
- - <csr-id-6377d3d14a855de3155c1f0f0c76605d3d0e68ae/> upgrade `gix` to v0.62
-
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
@@ -215,10 +232,6 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 ## 23.0.0 (2024-01-28)
 
 <csr-id-7044076c17bc79f5323589e55938f3670b01a269/>
-
-### Chore (BREAKING)
-
- - <csr-id-7044076c17bc79f5323589e55938f3670b01a269/> upgrade `gix` to 0.58
 
 ### Commit Statistics
 
@@ -246,10 +259,6 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 
 A maintenance release without any API changes. The major version bump is just to signal the change
 of the `gix` dependency to version v0.57.
-
-### Chore (BREAKING)
-
- - <csr-id-bc3a8a29ad232de6dc2cd354f2cf28d41d897e8b/> update `gix` to v0.57
 
 ### Commit Statistics
 
@@ -280,10 +289,6 @@ of the `gix` dependency to version v0.57.
 <csr-id-e8b2c90602670e09653b0d77bcf109bca5afa6d7/>
 <csr-id-79579872c0afdfd112eb2f24ac74dd28148f34b9/>
 
-### Chore
-
- - <csr-id-e8b2c90602670e09653b0d77bcf109bca5afa6d7/> upgrade `gix` to 0.55.2
-
 ### New Features
 
  - <csr-id-c404f6774b09e80aa3cc9569d740c58f54e2b716/> deterministic order if multiple changes are applied in one modification.
@@ -291,10 +296,6 @@ of the `gix` dependency to version v0.57.
    in practice even though I am not sure how it's possible.
    
    Related issue: https://github.com/rust-lang/docs.rs/issues/2295
-
-### Other
-
- - <csr-id-79579872c0afdfd112eb2f24ac74dd28148f34b9/> improve docs and be more clear about ordering.
 
 ### Commit Statistics
 
@@ -358,10 +359,6 @@ of the `gix` dependency to version v0.57.
 
 <csr-id-9946196a2b34abd88143e489cac1c57012b4cc57/>
 
-### Chore
-
- - <csr-id-9946196a2b34abd88143e489cac1c57012b4cc57/> uprgade `gix` to `v0.48`
-
 ### Bug Fixes (BREAKING)
 
  - <csr-id-2c59dd4a4b0aff3898fc8c8a2186b6d6a7f0692a/> split `Change::Delete` into `Change::VersionDeleted` and `Change::CrateDeleted`.
@@ -399,12 +396,6 @@ of the `gix` dependency to version v0.57.
 
 <csr-id-f726287f574093c1cbbe3c5a1b44f85695591d27/>
 
-### Chore (BREAKING)
-
- - <csr-id-f726287f574093c1cbbe3c5a1b44f85695591d27/> upgrade to `gix v0.47` (from v0.45).
-   This includes integration with gix negotiation algorithms and support for
-   multi-round negotiation just like git does it.
-
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
@@ -430,12 +421,6 @@ of the `gix` dependency to version v0.57.
 
 <csr-id-74276037552fc037820854e2c28914d6ac451c22/>
 
-### Chore (BREAKING)
-
- - <csr-id-74276037552fc037820854e2c28914d6ac451c22/> upgrade dependencies
-   * gix 0.44 -> 0.45
-   * hashbrown 0.13 -> 0.14
-
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
@@ -459,12 +444,6 @@ of the `gix` dependency to version v0.57.
 ## 17.0.0 (2023-05-14)
 
 <csr-id-b00ca9946487d2de5124d0a27756c2021b4ba800/>
-
-### Chore (BREAKING)
-
- - <csr-id-b00ca9946487d2de5124d0a27756c2021b4ba800/> upgrade `gix` from v0.37 to v0.44.
-   Note that there is no breaking change, but the major version bump is merely
-   for safety and to make it easy to reatain a certain `gix` version within the tree.
 
 ### Commit Statistics
 
@@ -634,13 +613,6 @@ build as well.
 * http-request - use reqwest for http and https, which currently doesn't
      support any options.
 
-### Chore
-
- - <csr-id-d91afc930e833f4eb90f64971200d691662f9b0d/> a pipeline to validate basic assumptions are stil fulfilled.
-   Running stress-test like baseline tests regularly should help us
-   assure that `crates-index-diff` operates as it should against a
-   real crates-index.
-
 ### New Features
 
  - <csr-id-87e49b59c3a1542bee9c2965e062a8045748e821/> baseline validation now validates ordered and unordered mode.
@@ -697,18 +669,6 @@ wouldn't have been possible without the herculean efforts of [Pascal Kuthe](http
 for his contribution. Thank you!
 
 [^1]: Needs to build with `git-repository/max-performance` and setup a pack cache, for example with `GITOXIDE_PACK_CACHE_MEMORY=1g <you-application>`
-
-### Other
-
- - <csr-id-4d53b045ec3a006205b466ea051c7e1030ea981c/> try to rewrite delegate to be map based…
-   …but besides completely failing the normalization test which I don't
-   understand, it also doesn't manage to get the correct amount of
-   versions.
- - <csr-id-c0c01bb5d63c6d469a298e157cd4063853ecc50e/> try to chunk up baseline, but changes do not line up.
-   When stepping through the changes in multiple steps, we end up with
-   more crates then there are even though we identify them by
-   checksum and consider deletions. Yanking doesn't remove them from
-   the iteration either.
 
 ### New Features
 
@@ -1923,12 +1883,6 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 * use git2 v0.6 instead of v0.4 to support openssl-sys 0.9.
 
 
-### Chore
-
- - <csr-id-38d9163ed007f2d925201f9a4cb2b4e3d0758dab/> use latest version of git2
-   That way, crates-io-cli can used the latest crates.
-   Version two is used by doc.rs and must remain as is.
-
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
@@ -1980,10 +1934,6 @@ Add a tutorial to the documentation.
 
 <csr-id-bd89e7267b23d8a0bd801679d1ef74d12c84ba09/>
 
-### Chore
-
- - <csr-id-bd89e7267b23d8a0bd801679d1ef74d12c84ba09/> update to v2.0.0
-
 ### Bug Fixes
 
 * **cargo:**  use git2 version for compat with docs.rs ([0ceebed3](https://github.com/Byron/crates-index-diff-rs/commit/0ceebed3d70c4482b5d09ffa1f9af5fea2bf7cd7))
@@ -2015,11 +1965,6 @@ Add a tutorial to the documentation.
 <csr-id-de4a284687fb476dd70bed3a4eb7e1737aff57ea/>
 <csr-id-304dfafe95b23703f3b6d11230b487304d5d6bd0/>
 
-### Other
-
- - <csr-id-304dfafe95b23703f3b6d11230b487304d5d6bd0/> crates.io badge
-   [skip ci]
-
 ### Bug Fixes
 
 * **makefile:**  make quick tests quick again ([9aa756ae](https://github.com/Byron/crates-index-diff-rs/commit/9aa756ae534e78fc1c9148a0f6eda27ff07350b5))
@@ -2029,7 +1974,6 @@ Add a tutorial to the documentation.
 ### New Features
 
  - <csr-id-8ed9a81f0a84c43944f29f8407554303d84f7248/> implementation for changetype
- - <csr-id-de4a284687fb476dd70bed3a4eb7e1737aff57ea/> v1.0.1
 
 ### Commit Statistics
 
@@ -2090,46 +2034,6 @@ Add a tutorial to the documentation.
 <csr-id-094c788f0b9ebd7beda17a8a7ee71d88ebbaad71/>
 <csr-id-f9d531a63269e8e236489c9a7bb56a6bafdd9eeb/>
 
-### Chore
-
- - <csr-id-381e7cc1e59a3695f3f07061467ade159822dbcb/> v1.0.0
- - <csr-id-a4e6e7efef4bf7d6863eeade1b974a350d08f4a6/> be compatible with docs.rs
-   See
- - <csr-id-787bdacfa2c1191e121d4d5a6c8e3a09c19bf684/> fix keywords
- - <csr-id-11a006bc230d098ad8ee282069b2544c8187d14a/> see why makefile is not working
- - <csr-id-607d747c9306ad0921a6d4166ecf151bb9a39479/> found an illegal-instruction error
-   Just run cargo test
- - <csr-id-3ce91e89b520b6497eceb961065e8898c5aba883/> intermediate crate info from hunk
-   However, it's not yet working
- - <csr-id-f1568c02652781163055bcbc18bc4af0e6914cd2/> first commit
-
-### Other
-
- - <csr-id-706636b5198595ff8573505350f49aad241edfc6/> docs for all remaining methods.
- - <csr-id-91bf44d4f3c4454316f32489ba30cd250422065d/> documentation for crateversion
- - <csr-id-c4bf948b5e2c5590e58a134a3003acde7738e42d/> customizations for us
-   This could possibly work actually
- - <csr-id-b0f19b0a5d754cd9153b30ca9b363fa9534777da/> test osx as well
- - <csr-id-56d416aae569d8dbcd568428a7489072eb749249/> allow to change seen-ref name
- - <csr-id-ed7ca366454a0c99698f18beb5955cd6606c7e1e/> show backtrace
- - <csr-id-708d9c0680b797026da731bc9a9874ac71bc125b/> attempt of fetch_changes implementation
-   It fails as it cannot create the correct reference.
- - <csr-id-2ef9c028812134af6bf23f72a4ea9850c407a06a/> support for unyanking
-   We just count it as adding a crate, which also makes sense.
- - <csr-id-8048a2cf00618d669c9176b0e94353dd1cfa9011/> handle yanked files
- - <csr-id-887c088495ef78e21ca88091963dbfd0661e08ec/> now seeing the first added crates
- - <csr-id-8801ec2d1d718eb73200d29ff23a958b5b1ba9d7/> automate running tests quickly
-   Using an existing checkout is important enough to put it into
-   a makefile for documentation and automation.
- - <csr-id-e451067a939a848082def317e1cceb487910aba2/> support for commit'ishs for diffs
- - <csr-id-d49f62fa41dbba9278ec2080ae2b91f72dc6834e/> first traversal method
-   The test fails for the wrong reason though, as it fails to
-   parse my refspec even though libgit2 seems to be able to do it
-   properly, and a recent-enough version is used.
- - <csr-id-094c788f0b9ebd7beda17a8a7ee71d88ebbaad71/> test against all versions of rust
- - <csr-id-f9d531a63269e8e236489c9a7bb56a6bafdd9eeb/> simplify travis
-   travis-cargo does nothing for us in this case.
-
 ### New Features
 
  - <csr-id-accb62d00618204e76659ecb4d31e8a04291bdc5/> using openssl file as basis
@@ -2178,42 +2082,6 @@ Add a tutorial to the documentation.
  - <csr-id-a97813620f5990f4d62337e7a6a8c3b3aadd05ef/> cmake upgrade via before_script
  - <csr-id-77bbd20132b7f42dd79b55f86c000f21618d4c39/> see if a custom source will get latest cmake
  - <csr-id-2d0d5d94193d5a65cdac700d811e9d75e849a7c9/> enforce latest cmake
-
-### Refactor
-
- - <csr-id-601dc2d7ca9bd87f440455e1eb3698c6e2f0227d/> don't enforce branches
-   Previously valid ref-names would be interpreted as branches, which
-   limits their use despite the name indicating otherwise.
-   
-   Now every ref path is supported.
- - <csr-id-ef5349677d53ab2d31c921b853766a8aa21f59fa/> use quick-error
-   That way, the crate-error type is an actual error with
-   all the relevant implementations.
-   
-   It's impossible to work without it, I think :).
- - <csr-id-97a5b819df11a454f5154ae3edd5e4a03192c0e1/> move crate into own module
- - <csr-id-81c95f2a9014ace72e74da64ddb4840197d7bbec/> better diff.print implementation
- - <csr-id-988b66860a96411f9c263c582159066970ef9265/> simplify fetch-changes error handling
- - <csr-id-caa58790f61ec4e450dadbf737a0bc3224f8c0b4/> much nicer Crate from json
-   It's good to know that we can chain everything, but that
-   should only be done if there is an actual dependency of the
-   respective values.
-   
-   Otherwise, just abort early.
- - <csr-id-b0dd2770a979b278e8be4432418367c6d9620c67/> better error handling
- - <csr-id-eee513476d300c294272e0c23348cdbc1009f008/> allow direct usage of objects as well
-
-### Test
-
- - <csr-id-42e68031d586109efe7d9567279af4d4bf7ac0be/> remove duplicate
-   all crates are also iterated in the
-   'changed_since_last_fetch' test.
- - <csr-id-d06c4a0bb526eafb13a61951cd34c24febd10797/> fetch_changes()
-   Just the frame and all testing I could think of
- - <csr-id-97b417ad71b3070e3663d1ce6d998f24a0bf1365/> assure we can handle the entire index
- - <csr-id-fdf281ee3b301ab370fe1d3ea6aeb1dd5e0536d1/> first clone on demand
-   Would be nice to be able to specify --depth as well.
- - <csr-id-1c0b2c0a3723afd587779880337f5a5516c063f1/> first failing test
 
 ### Commit Statistics
 

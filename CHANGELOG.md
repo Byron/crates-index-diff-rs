@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 31.0.0 (2026-06-17)
 
 Bump `gix` to v0.84
 
@@ -13,7 +13,7 @@ Bump `gix` to v0.84
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 40 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -25,6 +25,7 @@ Bump `gix` to v0.84
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Update changelog prior to release ([`130320e`](https://github.com/Byron/crates-index-diff-rs/commit/130320ec3bb0d5fdb739d740f7744ddb7d8b9111))
     - Merge pull request #56 from syphar/upgrades ([`f51d6fd`](https://github.com/Byron/crates-index-diff-rs/commit/f51d6fdda5a673949d40b08351733b255a389a94))
     - Update gix to 0.84, hashbrown to 0.17, gix-testtools to 0.19 ([`f7ebb4b`](https://github.com/Byron/crates-index-diff-rs/commit/f7ebb4b53f1a79b2129838b798ecba4c96d8ddf4))
 </details>

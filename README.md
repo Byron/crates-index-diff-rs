@@ -17,5 +17,4 @@ crates-index-diff = "9"
 
 ## …about collapsing of the crates.io history
 
-Usually every 6 months the crates.io index repository's history is collapse for improved performance. This library handles that case gracefully.
-
+Once a week the crates.io index repository's history is collapsed for improved performance. This library handles that case gracefully.

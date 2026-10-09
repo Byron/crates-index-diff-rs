@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 32.0.0 (2026-10-09)
 
 This release adds the `publish_time` field to the `CrateVersion` struct.
 
@@ -13,7 +13,7 @@ This release adds the `publish_time` field to the `CrateVersion` struct.
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 59 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -25,6 +25,7 @@ This release adds the `publish_time` field to the `CrateVersion` struct.
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Prepare changelog prior to release ([`3f718d7`](https://github.com/Byron/crates-index-diff-rs/commit/3f718d7fab0ce7104bdf6d9b24eee7d4bb407c98))
     - Merge pull request #58 from syphar/pubtime ([`eac2f6c`](https://github.com/Byron/crates-index-diff-rs/commit/eac2f6ccf09411d33dbb9338eb975262f336a9a5))
     - Add support for "pubtime" field in index ([`7f814d1`](https://github.com/Byron/crates-index-diff-rs/commit/7f814d100de62ef37bd4c121f118a2002d897e2d))
 </details>

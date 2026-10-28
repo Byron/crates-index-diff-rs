@@ -12,7 +12,7 @@ pub(crate) struct Delegate {
     changes: Vec<Change>,
     /// All changes that happen within a file, along the line-number it happens in .
     per_file_changes: Vec<(usize, Change)>,
-    err: Option<Error>,
+    pub(super) err: Option<Error>,
 }
 
 impl Delegate {

@@ -31,38 +31,14 @@ pub enum Order {
 #[derive(Debug, thiserror::Error)]
 #[allow(missing_docs)]
 pub enum Error {
-    #[error("Couldn't update marker reference")]
-    ReferenceEdit(#[from] Box<gix::reference::edit::Error>),
-    #[error("Failed to parse rev-spec to determine which revisions to diff")]
-    RevParse(#[from] Box<gix::Error>),
     #[error(transparent)]
-    DiffRewrites(#[from] Box<gix::diff::new_rewrites::Error>),
-    #[error("Couldn't find blob that showed up when diffing trees")]
-    FindObject(#[from] Box<gix::object::find::existing::Error>),
-    #[error("Couldn't get the tree of a commit for diffing purposes")]
-    PeelToTree(#[from] Box<gix::object::peel::to_kind::Error>),
-    #[error("Failed to diff two trees to find changed crates")]
-    Diff(#[from] Box<gix::diff::options::init::Error>),
-    #[error(transparent)]
-    DiffForEach(#[from] Box<gix::object::tree::diff::for_each::Error>),
+    Git(#[from] Box<gix::Error>),
     #[error("Failed to decode {line:?} in file {file_name:?} as crate version")]
     VersionDecode {
         source: serde_json::Error,
         file_name: bstr::BString,
         line: bstr::BString,
     },
-    #[error(transparent)]
-    FindRemote(#[from] Box<gix::remote::find::existing::Error>),
-    #[error(transparent)]
-    FindReference(#[from] Box<gix::reference::find::existing::Error>),
-    #[error(transparent)]
-    Connect(#[from] Box<gix::remote::connect::Error>),
-    #[error(transparent)]
-    PrepareFetch(#[from] Box<gix::remote::fetch::prepare::Error>),
-    #[error(transparent)]
-    Fetch(#[from] Box<gix::remote::fetch::Error>),
-    #[error(transparent)]
-    InitAnonymousRemote(#[from] Box<gix::remote::init::Error>),
     #[error("Could not find local tracking branch for remote branch {name:?} in any of {} fetched refs", mappings.len()
     )]
     NoMatchingBranch {
@@ -73,19 +49,7 @@ pub enum Error {
     GithubFetch(#[from] reqwest::Error),
 }
 
-impl_from_boxed!(gix::diff::new_rewrites::Error => Error::DiffRewrites);
-impl_from_boxed!(gix::diff::options::init::Error => Error::Diff);
-impl_from_boxed!(gix::object::find::existing::Error => Error::FindObject);
-impl_from_boxed!(gix::object::peel::to_kind::Error => Error::PeelToTree);
-impl_from_boxed!(gix::object::tree::diff::for_each::Error => Error::DiffForEach);
-impl_from_boxed!(gix::reference::edit::Error => Error::ReferenceEdit);
-impl_from_boxed!(gix::reference::find::existing::Error => Error::FindReference);
-impl_from_boxed!(gix::remote::connect::Error => Error::Connect);
-impl_from_boxed!(gix::remote::fetch::Error => Error::Fetch);
-impl_from_boxed!(gix::remote::fetch::prepare::Error => Error::PrepareFetch);
-impl_from_boxed!(gix::remote::find::existing::Error => Error::FindRemote);
-impl_from_boxed!(gix::remote::init::Error => Error::InitAnonymousRemote);
-impl_from_boxed!(gix::Error => Error::RevParse);
+impl_from_boxed!(gix::Error => Error::Git);
 
 /// Find changes without modifying the underling repository
 impl Index {
@@ -268,12 +232,21 @@ impl Index {
         let from = into_tree(from.into())?;
         let to = into_tree(to.into())?;
         let mut delegate = Delegate::default();
-        from.changes()?
+        let outcome = from
+            .changes()?
             .options(|opts| {
                 opts.track_rewrites(None).track_filename();
             })
-            .for_each_to_obtain_tree(&to, |change| delegate.handle(change))?;
-        delegate.into_result()
+            .for_each_to_obtain_tree(&to, |change| match delegate.handle(change) {
+                Ok(action) => Ok(action),
+                Err(err) => {
+                    delegate.err = Some(err);
+                    Ok(std::ops::ControlFlow::Break(()))
+                }
+            });
+        let changes = delegate.into_result()?;
+        outcome?;
+        Ok(changes)
     }
 
     /// Similar to [`Self::changes()`], but requires `ancestor_commit` and `current_commit` objects to be provided

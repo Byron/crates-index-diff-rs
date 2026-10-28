@@ -8,8 +8,7 @@ static LAST_SEEN_REFNAME: &str = "refs/heads/crates-index-diff_last-seen";
 /// error value is boxed into the given `Error` enum variant.
 ///
 /// Usage:
-/// impl_from_boxed!(gix::object::find::existing::Error => ErrorEnum::FindObject);
-/// impl_from_boxed!(gix::remote::find::existing::Error => ErrorEnum::FindRemote);
+/// impl_from_boxed!(gix::Error => ErrorEnum::Git);
 ///
 /// See also:
 /// * https://rust-lang.github.io/rust-clippy/stable/index.html#/result_large_err
@@ -53,9 +52,7 @@ impl Index {
     }
 
     /// Return the reference pointing to the state we have seen after calling `fetch_changes()`.
-    pub fn last_seen_reference(
-        &self,
-    ) -> Result<gix::Reference<'_>, gix::reference::find::existing::Error> {
+    pub fn last_seen_reference(&self) -> Result<gix::Reference<'_>, gix::Error> {
         self.repo.find_reference(self.seen_ref_name)
     }
 }

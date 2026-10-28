@@ -105,9 +105,11 @@ mod tests {
 
     #[test]
     fn test_non_github_url() {
-        assert!(user_and_repo_from_url_if_github(
-            &gix::Url::try_from("https://not_github.com/some_user/some_repo.git").unwrap(),
-        )
-        .is_none());
+        assert!(
+            user_and_repo_from_url_if_github(
+                &gix::Url::try_from("https://not_github.com/some_user/some_repo.git").unwrap(),
+            )
+            .is_none()
+        );
     }
 }

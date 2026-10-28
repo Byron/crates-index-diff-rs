@@ -3,6 +3,36 @@ use crates_index_diff::index::diff::Order;
 use crates_index_diff::{Change, CrateVersion, Index};
 
 #[test]
+fn malformed_crate_data_preserves_decode_error() -> crate::Result {
+    let tmp = gix_testtools::tempfile::TempDir::new()?;
+    let repo = gix::init_bare(tmp.path())?;
+    let blob = repo.write_blob(b"invalid json")?.detach();
+    let tree = repo
+        .write_object(gix::objs::Tree {
+            entries: vec![gix::objs::tree::Entry {
+                mode: gix::objs::tree::EntryKind::Blob.into(),
+                filename: "crate".into(),
+                oid: blob,
+            }],
+        })?
+        .detach();
+    let index = Index::from_path_or_cloned(tmp.path())?;
+    let err = index
+        .changes_between_commits(gix::hash::ObjectId::empty_tree(repo.object_hash()), tree)
+        .unwrap_err();
+    match err {
+        crates_index_diff::index::diff::Error::VersionDecode {
+            file_name, line, ..
+        } => {
+            assert_eq!(file_name, "crate");
+            assert_eq!(line, "invalid json");
+        }
+        err => panic!("expected version decode error, got {err:?}"),
+    }
+    Ok(())
+}
+
+#[test]
 fn directory_deletions_are_not_picked_up() -> crate::Result {
     let changes = changes(index_ro()?, ":/reproduce issue #20")?;
     assert_eq!(changes.len(), 1);

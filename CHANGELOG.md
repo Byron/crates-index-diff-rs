@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 33.0.0 (2026-10-28)
 
 Update `gix` to v0.90 - this is a safety bump.
 
@@ -13,7 +13,7 @@ Update `gix` to v0.90 - this is a safety bump.
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
+ - 4 commits contributed to the release.
  - 19 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -25,6 +25,7 @@ Update `gix` to v0.90 - this is a safety bump.
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Prepare changelog prior to release ([`f387a35`](https://github.com/syphar/crates-index-diff-rs/commit/f387a354a74d402a0e124a171e9b512eaa1b1fb4))
     - Upgrade gix to 0.90.0, fix compatibilities ([`fb33101`](https://github.com/syphar/crates-index-diff-rs/commit/fb331014b803bdbe837702052400a5ae407eb118))
     - Merge pull request #59 from syphar/readme ([`f6f252f`](https://github.com/syphar/crates-index-diff-rs/commit/f6f252f4909faa146123d12807c336e9f4ad0c78))
     - Update readme with new index squashing frequency ([`475579d`](https://github.com/syphar/crates-index-diff-rs/commit/475579d333749885604fb740d03a939ba13168ab))
@@ -2253,3 +2254,4 @@ Add a tutorial to the documentation.
     - First failing test ([`1c0b2c0`](https://github.com/syphar/crates-index-diff-rs/commit/1c0b2c0a3723afd587779880337f5a5516c063f1))
     - First commit ([`f1568c0`](https://github.com/syphar/crates-index-diff-rs/commit/f1568c02652781163055bcbc18bc4af0e6914cd2))
 </details>
+

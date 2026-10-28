@@ -1,5 +1,5 @@
-use crates_index_diff::index::diff::Order;
 use crates_index_diff::Index;
+use crates_index_diff::index::diff::Order;
 use gix::refs::transaction::PreviousValue;
 use gix_testtools::tempfile::TempDir;
 use std::path::PathBuf;
@@ -142,7 +142,7 @@ fn changes_since_last_fetch() {
             "refs/heads/main",
             index
                 .repository()
-                .rev_parse("origin/squashed")
+                .rev_parse("refs/heads/squashed")
                 .unwrap()
                 .single()
                 .unwrap(),

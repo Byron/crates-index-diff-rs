@@ -23,7 +23,7 @@ pub fn baseline(mode: Step) -> Result<(), Box<dyn std::error::Error + Send + Syn
             {
                 let _index = crates_index::GitIndex::new_cargo_default()?;
             }
-            let baseline = scope.spawn(|| -> Result<_, crates_index::Error> {
+            let baseline = scope.spawn(|| -> Result<_, Box<crates_index::Error>> {
                 let index = crates_index::GitIndex::new_cargo_default()?;
                 let start = std::time::Instant::now();
                 let mut versions = HashMap::new();

@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 34.0.0 (2026-11-24)
+
+### Chore
+
+- <csr-id-9294828e73e92b61a06d28d3349d235aaf5a6c7b/> upgrade gix to 0.91.0
+  I deleted the tests this agent talks about, so it's just a version update
+  without any breaking change.
+  
+  <!-- agent -->
+  Use gix's support for core.sharedRepository so the last-seen marker is
+  writable by the group when the repository opts in. Under umask 077, gix
+  0.90 wrote the marker with mode 0600. Git's update-ref and gix 0.91 both
+  write it with the repository's configured mode 0660.
+  
+  Update gix-testtools to 0.23.0 to test the permissions in a subprocess
+  with an isolated umask. Drop the borrowed refs in the fetch test before
+  editing repository config, as gix 0.91 now reuses their name storage.
+  
+  Verified with the integration suite, unit tests, doctest, rustfmt, and
+  a build with the reqwest transport and SHA-256 enabled.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+- 2 commits contributed to the release over the course of 27 calendar days.
+- 27 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+- **Uncategorized**
+  - Upgrade gix to 0.91.0 ([`9294828`](https://github.com/Byron/crates-index-diff-rs/commit/9294828e73e92b61a06d28d3349d235aaf5a6c7b))
+  - Merge branch 'updates' ([`59aadae`](https://github.com/Byron/crates-index-diff-rs/commit/59aadae1410bab296adefa4b828ef7127d4037fc))
+
+</details>
+
 ## 33.0.0 (2026-10-28)
 
 Update `gix` to v0.90 - this is a safety bump.
@@ -13,10 +55,10 @@ Update `gix` to v0.90 - this is a safety bump.
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
- - 19 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 5 commits contributed to the release.
+- 19 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -24,11 +66,13 @@ Update `gix` to v0.90 - this is a safety bump.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Prepare changelog prior to release ([`f387a35`](https://github.com/syphar/crates-index-diff-rs/commit/f387a354a74d402a0e124a171e9b512eaa1b1fb4))
-    - Upgrade gix to 0.90.0, fix compatibilities ([`fb33101`](https://github.com/syphar/crates-index-diff-rs/commit/fb331014b803bdbe837702052400a5ae407eb118))
-    - Merge pull request #59 from syphar/readme ([`f6f252f`](https://github.com/syphar/crates-index-diff-rs/commit/f6f252f4909faa146123d12807c336e9f4ad0c78))
-    - Update readme with new index squashing frequency ([`475579d`](https://github.com/syphar/crates-index-diff-rs/commit/475579d333749885604fb740d03a939ba13168ab))
+- **Uncategorized**
+  - Release crates-index-diff v33.0.0 ([`1a36106`](https://github.com/Byron/crates-index-diff-rs/commit/1a36106c14cf4ca718286cb586b4f88b62b8c213))
+  - Prepare changelog prior to release ([`f387a35`](https://github.com/Byron/crates-index-diff-rs/commit/f387a354a74d402a0e124a171e9b512eaa1b1fb4))
+  - Upgrade gix to 0.90.0, fix compatibilities ([`fb33101`](https://github.com/Byron/crates-index-diff-rs/commit/fb331014b803bdbe837702052400a5ae407eb118))
+  - Merge pull request #59 from syphar/readme ([`f6f252f`](https://github.com/Byron/crates-index-diff-rs/commit/f6f252f4909faa146123d12807c336e9f4ad0c78))
+  - Update readme with new index squashing frequency ([`475579d`](https://github.com/Byron/crates-index-diff-rs/commit/475579d333749885604fb740d03a939ba13168ab))
+
 </details>
 
 ## 32.0.0 (2026-10-09)
@@ -39,10 +83,10 @@ This release adds the `publish_time` field to the `CrateVersion` struct.
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
- - 59 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 4 commits contributed to the release.
+- 59 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -50,11 +94,12 @@ This release adds the `publish_time` field to the `CrateVersion` struct.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v32.0.0 ([`fe63731`](https://github.com/syphar/crates-index-diff-rs/commit/fe6373122efde2c5d53bdd009ede0de8880becfd))
-    - Prepare changelog prior to release ([`3f718d7`](https://github.com/syphar/crates-index-diff-rs/commit/3f718d7fab0ce7104bdf6d9b24eee7d4bb407c98))
-    - Merge pull request #58 from syphar/pubtime ([`eac2f6c`](https://github.com/syphar/crates-index-diff-rs/commit/eac2f6ccf09411d33dbb9338eb975262f336a9a5))
-    - Add support for "pubtime" field in index ([`7f814d1`](https://github.com/syphar/crates-index-diff-rs/commit/7f814d100de62ef37bd4c121f118a2002d897e2d))
+- **Uncategorized**
+  - Release crates-index-diff v32.0.0 ([`fe63731`](https://github.com/Byron/crates-index-diff-rs/commit/fe6373122efde2c5d53bdd009ede0de8880becfd))
+  - Prepare changelog prior to release ([`3f718d7`](https://github.com/Byron/crates-index-diff-rs/commit/3f718d7fab0ce7104bdf6d9b24eee7d4bb407c98))
+  - Merge pull request #58 from syphar/pubtime ([`eac2f6c`](https://github.com/Byron/crates-index-diff-rs/commit/eac2f6ccf09411d33dbb9338eb975262f336a9a5))
+  - Add support for "pubtime" field in index ([`7f814d1`](https://github.com/Byron/crates-index-diff-rs/commit/7f814d100de62ef37bd4c121f118a2002d897e2d))
+
 </details>
 
 ## 31.0.1 (2026-08-11)
@@ -65,10 +110,10 @@ Replace unmaintained `smartstr` crate with `compact_str`.
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
- - 55 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 4 commits contributed to the release.
+- 55 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -76,11 +121,12 @@ Replace unmaintained `smartstr` crate with `compact_str`.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v31.0.1 ([`6902eb3`](https://github.com/syphar/crates-index-diff-rs/commit/6902eb3d499d5ff4676d7ac7e961c6f36a360606))
-    - Adjusting changelogs prior to release of crates-index-diff v31.0.1 ([`5708aa7`](https://github.com/syphar/crates-index-diff-rs/commit/5708aa79e1bbe3af1db1da22f763d4eae564c7a9))
-    - Merge pull request #57 from syphar/smar-str ([`777df0b`](https://github.com/syphar/crates-index-diff-rs/commit/777df0b08beffecc4420067d82cb36588248f877))
-    - Replace unmaintained `smartstring` crate with `compact_str` ([`8dd62a8`](https://github.com/syphar/crates-index-diff-rs/commit/8dd62a8134aaf860e75c4374172baf28f4ebf2d4))
+- **Uncategorized**
+  - Release crates-index-diff v31.0.1 ([`6902eb3`](https://github.com/Byron/crates-index-diff-rs/commit/6902eb3d499d5ff4676d7ac7e961c6f36a360606))
+  - Adjusting changelogs prior to release of crates-index-diff v31.0.1 ([`5708aa7`](https://github.com/Byron/crates-index-diff-rs/commit/5708aa79e1bbe3af1db1da22f763d4eae564c7a9))
+  - Merge pull request #57 from syphar/smar-str ([`777df0b`](https://github.com/Byron/crates-index-diff-rs/commit/777df0b08beffecc4420067d82cb36588248f877))
+  - Replace unmaintained `smartstring` crate with `compact_str` ([`8dd62a8`](https://github.com/Byron/crates-index-diff-rs/commit/8dd62a8134aaf860e75c4374172baf28f4ebf2d4))
+
 </details>
 
 ## 31.0.0 (2026-06-17)
@@ -91,10 +137,10 @@ Bump `gix` to v0.84
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
- - 41 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 4 commits contributed to the release.
+- 41 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -102,11 +148,12 @@ Bump `gix` to v0.84
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v31.0.0 ([`2a41376`](https://github.com/syphar/crates-index-diff-rs/commit/2a413762300a66b6e7bfe96b0035f972bc01b755))
-    - Update changelog prior to release ([`130320e`](https://github.com/syphar/crates-index-diff-rs/commit/130320ec3bb0d5fdb739d740f7744ddb7d8b9111))
-    - Merge pull request #56 from syphar/upgrades ([`f51d6fd`](https://github.com/syphar/crates-index-diff-rs/commit/f51d6fdda5a673949d40b08351733b255a389a94))
-    - Update gix to 0.84, hashbrown to 0.17, gix-testtools to 0.19 ([`f7ebb4b`](https://github.com/syphar/crates-index-diff-rs/commit/f7ebb4b53f1a79b2129838b798ecba4c96d8ddf4))
+- **Uncategorized**
+  - Release crates-index-diff v31.0.0 ([`2a41376`](https://github.com/Byron/crates-index-diff-rs/commit/2a413762300a66b6e7bfe96b0035f972bc01b755))
+  - Update changelog prior to release ([`130320e`](https://github.com/Byron/crates-index-diff-rs/commit/130320ec3bb0d5fdb739d740f7744ddb7d8b9111))
+  - Merge pull request #56 from syphar/upgrades ([`f51d6fd`](https://github.com/Byron/crates-index-diff-rs/commit/f51d6fdda5a673949d40b08351733b255a389a94))
+  - Update gix to 0.84, hashbrown to 0.17, gix-testtools to 0.19 ([`f7ebb4b`](https://github.com/Byron/crates-index-diff-rs/commit/f7ebb4b53f1a79b2129838b798ecba4c96d8ddf4))
+
 </details>
 
 ## 30.0.0 (2026-05-07)
@@ -117,10 +164,10 @@ Upgrade to `gix` v0.83 and change the edition to 2024.
 
 <csr-read-only-do-not-edit/>
 
- - 5 commits contributed to the release.
- - 122 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 5 commits contributed to the release.
+- 122 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -128,12 +175,13 @@ Upgrade to `gix` v0.83 and change the edition to 2024.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v30.0.0 ([`d77a8c4`](https://github.com/syphar/crates-index-diff-rs/commit/d77a8c448e0fa217bcf80d24b5a64cfcbf9b2f33))
-    - Update changelog prior to release ([`1372d71`](https://github.com/syphar/crates-index-diff-rs/commit/1372d7117b04d2be40faac3263ffd293096b1855))
-    - Merge pull request #55 from Byron/update-gix ([`c479c39`](https://github.com/syphar/crates-index-diff-rs/commit/c479c39f5ab27736bfa45d5bb67b2eef9398b718))
-    - Update to Rust 2024 edition ([`213ec44`](https://github.com/syphar/crates-index-diff-rs/commit/213ec448a9dc4ab5df1a0e68043acb1f96ad80b5))
-    - Upgrade `gix` to the latest version for more secure parsers ([`dde46dc`](https://github.com/syphar/crates-index-diff-rs/commit/dde46dc3bf8c8c61e4f6810bf2bc65901093a7d8))
+- **Uncategorized**
+  - Release crates-index-diff v30.0.0 ([`d77a8c4`](https://github.com/Byron/crates-index-diff-rs/commit/d77a8c448e0fa217bcf80d24b5a64cfcbf9b2f33))
+  - Update changelog prior to release ([`1372d71`](https://github.com/Byron/crates-index-diff-rs/commit/1372d7117b04d2be40faac3263ffd293096b1855))
+  - Merge pull request #55 from Byron/update-gix ([`c479c39`](https://github.com/Byron/crates-index-diff-rs/commit/c479c39f5ab27736bfa45d5bb67b2eef9398b718))
+  - Update to Rust 2024 edition ([`213ec44`](https://github.com/Byron/crates-index-diff-rs/commit/213ec448a9dc4ab5df1a0e68043acb1f96ad80b5))
+  - Upgrade `gix` to the latest version for more secure parsers ([`dde46dc`](https://github.com/Byron/crates-index-diff-rs/commit/dde46dc3bf8c8c61e4f6810bf2bc65901093a7d8))
+
 </details>
 
 ## 29.0.0 (2026-01-05)
@@ -142,20 +190,20 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 
 ### New Features
 
- - <csr-id-7cc2b0745ff7e0e81bb25de8acb109f3c8d21b00/> provide parsed semver Version/Req via method on CrateVersion & Dependency
+- <csr-id-7cc2b0745ff7e0e81bb25de8acb109f3c8d21b00/> provide parsed semver Version/Req via method on CrateVersion & Dependency
 
 ### Bug Fixes (BREAKING)
 
- - <csr-id-0790daac499dcc50a512b57885d2a66fbc32bb59/> Box<> big error variants for clippy and performance reasons
+- <csr-id-0790daac499dcc50a512b57885d2a66fbc32bb59/> Box<> big error variants for clippy and performance reasons
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 14 commits contributed to the release over the course of 63 calendar days.
- - 254 days passed between releases.
- - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 14 commits contributed to the release over the course of 63 calendar days.
+- 254 days passed between releases.
+- 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -163,37 +211,38 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v29.0.0 ([`cac247c`](https://github.com/syphar/crates-index-diff-rs/commit/cac247ca26af0fc28f1b949a71f34e8e0366eef0))
-    - Bump version to 28, after `gix` upgrade. ([`9eef98a`](https://github.com/syphar/crates-index-diff-rs/commit/9eef98ad930ab9c8d6205786b710d9b0fec2f688))
-    - Merge pull request #54 from syphar/upgrade ([`514eef4`](https://github.com/syphar/crates-index-diff-rs/commit/514eef41096cae485b2f915e4e42a0af0a1c763d))
-    - Upgrade gix to 0.77, reqwest to 0.13 ([`c128284`](https://github.com/syphar/crates-index-diff-rs/commit/c128284f990935fa1fea72d54b02019b06097585))
-    - Merge pull request #53 from syphar/parsed-version ([`9e3f5de`](https://github.com/syphar/crates-index-diff-rs/commit/9e3f5def658835935af12e0b4ae47fe219faab54))
-    - Provide parsed semver Version/Req via method on CrateVersion & Dependency ([`7cc2b07`](https://github.com/syphar/crates-index-diff-rs/commit/7cc2b0745ff7e0e81bb25de8acb109f3c8d21b00))
-    - Merge branch 'clippy' ([`5aa9280`](https://github.com/syphar/crates-index-diff-rs/commit/5aa928070b24c1e77cb410019c58907f138fb9bb))
-    - Box<> big error variants for clippy and performance reasons ([`0790daa`](https://github.com/syphar/crates-index-diff-rs/commit/0790daac499dcc50a512b57885d2a66fbc32bb59))
-    - Fix or ignore some small clippy errors ([`74c0b09`](https://github.com/syphar/crates-index-diff-rs/commit/74c0b094ea2d22133b5d6ab0da868cbf1a4456b3))
-    - Merge pull request #51 from syphar/upgrade-hashbrown ([`4de48aa`](https://github.com/syphar/crates-index-diff-rs/commit/4de48aaf3a2aaa7278dba82f1f76e09aa5640aad))
-    - Merge pull request #50 from syphar/upgrades ([`436230e`](https://github.com/syphar/crates-index-diff-rs/commit/436230ecf77f4c426a5c1477b1199c24d4fafd72))
-    - Upgrade hashbrown to 0.16.0, migrate from RawTable to HashTable ([`d14ee5c`](https://github.com/syphar/crates-index-diff-rs/commit/d14ee5cedc0756acbb16ef9476122500918411ed))
-    - Upgrade gix-testtools to 0.16.1 ([`8c6b183`](https://github.com/syphar/crates-index-diff-rs/commit/8c6b18318463c4617a1bb01a7462c585312c5ae4))
-    - Upgrade gix to 0.74.1 ([`3d8e47d`](https://github.com/syphar/crates-index-diff-rs/commit/3d8e47dc4f681d3900c55a6a1c6b869fd20adfc6))
+- **Uncategorized**
+  - Release crates-index-diff v29.0.0 ([`cac247c`](https://github.com/Byron/crates-index-diff-rs/commit/cac247ca26af0fc28f1b949a71f34e8e0366eef0))
+  - Bump version to 28, after `gix` upgrade. ([`9eef98a`](https://github.com/Byron/crates-index-diff-rs/commit/9eef98ad930ab9c8d6205786b710d9b0fec2f688))
+  - Merge pull request #54 from syphar/upgrade ([`514eef4`](https://github.com/Byron/crates-index-diff-rs/commit/514eef41096cae485b2f915e4e42a0af0a1c763d))
+  - Upgrade gix to 0.77, reqwest to 0.13 ([`c128284`](https://github.com/Byron/crates-index-diff-rs/commit/c128284f990935fa1fea72d54b02019b06097585))
+  - Merge pull request #53 from syphar/parsed-version ([`9e3f5de`](https://github.com/Byron/crates-index-diff-rs/commit/9e3f5def658835935af12e0b4ae47fe219faab54))
+  - Provide parsed semver Version/Req via method on CrateVersion & Dependency ([`7cc2b07`](https://github.com/Byron/crates-index-diff-rs/commit/7cc2b0745ff7e0e81bb25de8acb109f3c8d21b00))
+  - Merge branch 'clippy' ([`5aa9280`](https://github.com/Byron/crates-index-diff-rs/commit/5aa928070b24c1e77cb410019c58907f138fb9bb))
+  - Box<> big error variants for clippy and performance reasons ([`0790daa`](https://github.com/Byron/crates-index-diff-rs/commit/0790daac499dcc50a512b57885d2a66fbc32bb59))
+  - Fix or ignore some small clippy errors ([`74c0b09`](https://github.com/Byron/crates-index-diff-rs/commit/74c0b094ea2d22133b5d6ab0da868cbf1a4456b3))
+  - Merge pull request #51 from syphar/upgrade-hashbrown ([`4de48aa`](https://github.com/Byron/crates-index-diff-rs/commit/4de48aaf3a2aaa7278dba82f1f76e09aa5640aad))
+  - Merge pull request #50 from syphar/upgrades ([`436230e`](https://github.com/Byron/crates-index-diff-rs/commit/436230ecf77f4c426a5c1477b1199c24d4fafd72))
+  - Upgrade hashbrown to 0.16.0, migrate from RawTable to HashTable ([`d14ee5c`](https://github.com/Byron/crates-index-diff-rs/commit/d14ee5cedc0756acbb16ef9476122500918411ed))
+  - Upgrade gix-testtools to 0.16.1 ([`8c6b183`](https://github.com/Byron/crates-index-diff-rs/commit/8c6b18318463c4617a1bb01a7462c585312c5ae4))
+  - Upgrade gix to 0.74.1 ([`3d8e47d`](https://github.com/Byron/crates-index-diff-rs/commit/3d8e47dc4f681d3900c55a6a1c6b869fd20adfc6))
+
 </details>
 
 ## 28.0.0 (2025-04-26)
 
 ### Bug Fixes (BREAKING)
 
- - <csr-id-44c5806ce4c27f821ba1562086df85f429fc1464/> Upgrade to gix 0.72
+- <csr-id-44c5806ce4c27f821ba1562086df85f429fc1464/> Upgrade to gix 0.72
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 19 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 19 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -201,25 +250,26 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v28.0.0 ([`060d392`](https://github.com/syphar/crates-index-diff-rs/commit/060d392da79157a3cf9e250b758cd940d85f9477))
-    - Upgrade to gix 0.72 ([`44c5806`](https://github.com/syphar/crates-index-diff-rs/commit/44c5806ce4c27f821ba1562086df85f429fc1464))
+- **Uncategorized**
+  - Release crates-index-diff v28.0.0 ([`060d392`](https://github.com/Byron/crates-index-diff-rs/commit/060d392da79157a3cf9e250b758cd940d85f9477))
+  - Upgrade to gix 0.72 ([`44c5806`](https://github.com/Byron/crates-index-diff-rs/commit/44c5806ce4c27f821ba1562086df85f429fc1464))
+
 </details>
 
 ## 27.0.0 (2025-04-07)
 
 ### New Features (BREAKING)
 
- - <csr-id-a694874b36c4b745d9a720ee7ce07642f3a0a872/> upgrade gix to 0.71
+- <csr-id-a694874b36c4b745d9a720ee7ce07642f3a0a872/> upgrade gix to 0.71
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
- - 164 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 3 commits contributed to the release.
+- 164 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -227,10 +277,11 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v27.0.0 ([`39fda30`](https://github.com/syphar/crates-index-diff-rs/commit/39fda304b45cb38cb3f6c015165cc9a8713ca54f))
-    - Merge branch 'gix-upgrade' ([`ca19e2c`](https://github.com/syphar/crates-index-diff-rs/commit/ca19e2ce7d4c3e72e1a79e0eb7b04b33033256cb))
-    - Upgrade gix to 0.71 ([`a694874`](https://github.com/syphar/crates-index-diff-rs/commit/a694874b36c4b745d9a720ee7ce07642f3a0a872))
+- **Uncategorized**
+  - Release crates-index-diff v27.0.0 ([`39fda30`](https://github.com/Byron/crates-index-diff-rs/commit/39fda304b45cb38cb3f6c015165cc9a8713ca54f))
+  - Merge branch 'gix-upgrade' ([`ca19e2c`](https://github.com/Byron/crates-index-diff-rs/commit/ca19e2ce7d4c3e72e1a79e0eb7b04b33033256cb))
+  - Upgrade gix to 0.71 ([`a694874`](https://github.com/Byron/crates-index-diff-rs/commit/a694874b36c4b745d9a720ee7ce07642f3a0a872))
+
 </details>
 
 ## 26.0.0 (2024-10-25)
@@ -239,16 +290,16 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 
 ### New Features
 
- - <csr-id-3bd1c11f02aeebefa4d60e62c7b55cb71322d4a8/> use github fast path to check for changes before git pull
+- <csr-id-3bd1c11f02aeebefa4d60e62c7b55cb71322d4a8/> use github fast path to check for changes before git pull
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 5 commits contributed to the release.
- - 107 days passed between releases.
- - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 5 commits contributed to the release.
+- 107 days passed between releases.
+- 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -256,12 +307,13 @@ Update `gix` to v0.77, and update reqwest to 0.13.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v26.0.0 ([`3f22952`](https://github.com/syphar/crates-index-diff-rs/commit/3f22952c5d6266bc335a03bb0821b3828b32f37c))
-    - Merge branch 'upgrade-gix' ([`76b2bdb`](https://github.com/syphar/crates-index-diff-rs/commit/76b2bdb776ffaabcd087f2251e9a0ed803b2b9cc))
-    - Upgrade gix to v0.67 ([`3ea251d`](https://github.com/syphar/crates-index-diff-rs/commit/3ea251d6fbe971c4b9af6829971a1c98fc9c4d57))
-    - Merge pull request #47 from syphar/github-fast-path ([`1ada2f1`](https://github.com/syphar/crates-index-diff-rs/commit/1ada2f120b6f20650c63bf78567e63a6364d19f6))
-    - Use github fast path to check for changes before git pull ([`3bd1c11`](https://github.com/syphar/crates-index-diff-rs/commit/3bd1c11f02aeebefa4d60e62c7b55cb71322d4a8))
+- **Uncategorized**
+  - Release crates-index-diff v26.0.0 ([`3f22952`](https://github.com/Byron/crates-index-diff-rs/commit/3f22952c5d6266bc335a03bb0821b3828b32f37c))
+  - Merge branch 'upgrade-gix' ([`76b2bdb`](https://github.com/Byron/crates-index-diff-rs/commit/76b2bdb776ffaabcd087f2251e9a0ed803b2b9cc))
+  - Upgrade gix to v0.67 ([`3ea251d`](https://github.com/Byron/crates-index-diff-rs/commit/3ea251d6fbe971c4b9af6829971a1c98fc9c4d57))
+  - Merge pull request #47 from syphar/github-fast-path ([`1ada2f1`](https://github.com/Byron/crates-index-diff-rs/commit/1ada2f120b6f20650c63bf78567e63a6364d19f6))
+  - Use github fast path to check for changes before git pull ([`3bd1c11`](https://github.com/Byron/crates-index-diff-rs/commit/3bd1c11f02aeebefa4d60e62c7b55cb71322d4a8))
+
 </details>
 
 ## 25.0.0 (2024-07-10)
@@ -272,10 +324,10 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
- - 86 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 3 commits contributed to the release.
+- 86 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -283,10 +335,11 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v25.0.0 ([`674bdfc`](https://github.com/syphar/crates-index-diff-rs/commit/674bdfcf398b260ab63bb4c79c1894d7602dca0e))
-    - Set version number for new release and prepare changelog. ([`f4f4592`](https://github.com/syphar/crates-index-diff-rs/commit/f4f4592034fd2fc5f7d1aec47ee8f11695dcf916))
-    - Upgrade gix, gix-testtools & crates-index ([`4419a58`](https://github.com/syphar/crates-index-diff-rs/commit/4419a58b101b45b8cc3967cd0ab1ba469ecf3c29))
+- **Uncategorized**
+  - Release crates-index-diff v25.0.0 ([`674bdfc`](https://github.com/Byron/crates-index-diff-rs/commit/674bdfcf398b260ab63bb4c79c1894d7602dca0e))
+  - Set version number for new release and prepare changelog. ([`f4f4592`](https://github.com/Byron/crates-index-diff-rs/commit/f4f4592034fd2fc5f7d1aec47ee8f11695dcf916))
+  - Upgrade gix, gix-testtools & crates-index ([`4419a58`](https://github.com/Byron/crates-index-diff-rs/commit/4419a58b101b45b8cc3967cd0ab1ba469ecf3c29))
+
 </details>
 
 ## 24.0.0 (2024-04-15)
@@ -297,10 +350,10 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
- - 78 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 3 commits contributed to the release.
+- 78 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -308,10 +361,11 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v24.0.0 ([`643c0ba`](https://github.com/syphar/crates-index-diff-rs/commit/643c0baf775d808933a3a960d3ad1ffc0889d900))
-    - Merge branch 'gix-upgrade' ([`9bf5d93`](https://github.com/syphar/crates-index-diff-rs/commit/9bf5d931775bebe51aecc74be2ada93df6e2a62d))
-    - Upgrade `gix` to v0.62 ([`6377d3d`](https://github.com/syphar/crates-index-diff-rs/commit/6377d3d14a855de3155c1f0f0c76605d3d0e68ae))
+- **Uncategorized**
+  - Release crates-index-diff v24.0.0 ([`643c0ba`](https://github.com/Byron/crates-index-diff-rs/commit/643c0baf775d808933a3a960d3ad1ffc0889d900))
+  - Merge branch 'gix-upgrade' ([`9bf5d93`](https://github.com/Byron/crates-index-diff-rs/commit/9bf5d931775bebe51aecc74be2ada93df6e2a62d))
+  - Upgrade `gix` to v0.62 ([`6377d3d`](https://github.com/Byron/crates-index-diff-rs/commit/6377d3d14a855de3155c1f0f0c76605d3d0e68ae))
+
 </details>
 
 ## 23.0.0 (2024-01-28)
@@ -322,10 +376,10 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 30 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 30 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -333,9 +387,10 @@ Upgrade `gix` to 0.63 and crates-index to use the same version of `gix` that con
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v23.0.0 ([`f502931`](https://github.com/syphar/crates-index-diff-rs/commit/f50293141a9be0b57bf476e1825663721a129100))
-    - Upgrade `gix` to 0.58 ([`7044076`](https://github.com/syphar/crates-index-diff-rs/commit/7044076c17bc79f5323589e55938f3670b01a269))
+- **Uncategorized**
+  - Release crates-index-diff v23.0.0 ([`f502931`](https://github.com/Byron/crates-index-diff-rs/commit/f50293141a9be0b57bf476e1825663721a129100))
+  - Upgrade `gix` to 0.58 ([`7044076`](https://github.com/Byron/crates-index-diff-rs/commit/7044076c17bc79f5323589e55938f3670b01a269))
+
 </details>
 
 ## 22.0.0 (2023-12-29)
@@ -349,10 +404,10 @@ of the `gix` dependency to version v0.57.
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release.
- - 53 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 6 commits contributed to the release.
+- 53 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -360,13 +415,14 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v22.0.0 ([`084acc8`](https://github.com/syphar/crates-index-diff-rs/commit/084acc82ea23d0708ca00c91d9da1c6b9511731d))
-    - Prepare changelog prior to release ([`98f24fe`](https://github.com/syphar/crates-index-diff-rs/commit/98f24fe5c12769747bf75468611a2540da9a46ce))
-    - Merge branch 'maintenance' ([`2170563`](https://github.com/syphar/crates-index-diff-rs/commit/2170563649502c02166989355b60fdc6f7605889))
-    - Turns out that using the resource cache is too costly ([`ad50624`](https://github.com/syphar/crates-index-diff-rs/commit/ad506243c6083d540f6691fb7ed3ec669c6e1977))
-    - Remove git-lfs ([`2206723`](https://github.com/syphar/crates-index-diff-rs/commit/2206723daa98048ab1b7f87a3b74f8bd8cc793c9))
-    - Update `gix` to v0.57 ([`bc3a8a2`](https://github.com/syphar/crates-index-diff-rs/commit/bc3a8a29ad232de6dc2cd354f2cf28d41d897e8b))
+- **Uncategorized**
+  - Release crates-index-diff v22.0.0 ([`084acc8`](https://github.com/Byron/crates-index-diff-rs/commit/084acc82ea23d0708ca00c91d9da1c6b9511731d))
+  - Prepare changelog prior to release ([`98f24fe`](https://github.com/Byron/crates-index-diff-rs/commit/98f24fe5c12769747bf75468611a2540da9a46ce))
+  - Merge branch 'maintenance' ([`2170563`](https://github.com/Byron/crates-index-diff-rs/commit/2170563649502c02166989355b60fdc6f7605889))
+  - Turns out that using the resource cache is too costly ([`ad50624`](https://github.com/Byron/crates-index-diff-rs/commit/ad506243c6083d540f6691fb7ed3ec669c6e1977))
+  - Remove git-lfs ([`2206723`](https://github.com/Byron/crates-index-diff-rs/commit/2206723daa98048ab1b7f87a3b74f8bd8cc793c9))
+  - Update `gix` to v0.57 ([`bc3a8a2`](https://github.com/Byron/crates-index-diff-rs/commit/bc3a8a29ad232de6dc2cd354f2cf28d41d897e8b))
+
 </details>
 
 ## 21.1.0 (2023-11-06)
@@ -376,20 +432,20 @@ of the `gix` dependency to version v0.57.
 
 ### New Features
 
- - <csr-id-c404f6774b09e80aa3cc9569d740c58f54e2b716/> deterministic order if multiple changes are applied in one modification.
-   This can happen if a crate is yanked and unyanked in one commit, which happens
-   in practice even though I am not sure how it's possible.
-   
-   Related issue: https://github.com/rust-lang/docs.rs/issues/2295
+- <csr-id-c404f6774b09e80aa3cc9569d740c58f54e2b716/> deterministic order if multiple changes are applied in one modification.
+  This can happen if a crate is yanked and unyanked in one commit, which happens
+  in practice even though I am not sure how it's possible.
+  
+  Related issue: https://github.com/rust-lang/docs.rs/issues/2295
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release.
- - 42 days passed between releases.
- - 3 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 6 commits contributed to the release.
+- 42 days passed between releases.
+- 3 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -397,33 +453,34 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v21.1.0 ([`167a34a`](https://github.com/syphar/crates-index-diff-rs/commit/167a34a4abdfb0c8c30d1cd2da09ca0bafe122fd))
-    - Merge branch 'improvements' ([`28f0d1f`](https://github.com/syphar/crates-index-diff-rs/commit/28f0d1feedf57357005a11803919e91d9965394e))
-    - Upgrade `gix` to 0.55.2 ([`e8b2c90`](https://github.com/syphar/crates-index-diff-rs/commit/e8b2c90602670e09653b0d77bcf109bca5afa6d7))
-    - Deterministic order if multiple changes are applied in one modification. ([`c404f67`](https://github.com/syphar/crates-index-diff-rs/commit/c404f6774b09e80aa3cc9569d740c58f54e2b716))
-    - Assure `gix` versions are synced in the entire tree. ([`8576bc7`](https://github.com/syphar/crates-index-diff-rs/commit/8576bc79ff0980d3e0fef4447d71e8a522803ef9))
-    - Improve docs and be more clear about ordering. ([`7957987`](https://github.com/syphar/crates-index-diff-rs/commit/79579872c0afdfd112eb2f24ac74dd28148f34b9))
+- **Uncategorized**
+  - Release crates-index-diff v21.1.0 ([`167a34a`](https://github.com/Byron/crates-index-diff-rs/commit/167a34a4abdfb0c8c30d1cd2da09ca0bafe122fd))
+  - Merge branch 'improvements' ([`28f0d1f`](https://github.com/Byron/crates-index-diff-rs/commit/28f0d1feedf57357005a11803919e91d9965394e))
+  - Upgrade `gix` to 0.55.2 ([`e8b2c90`](https://github.com/Byron/crates-index-diff-rs/commit/e8b2c90602670e09653b0d77bcf109bca5afa6d7))
+  - Deterministic order if multiple changes are applied in one modification. ([`c404f67`](https://github.com/Byron/crates-index-diff-rs/commit/c404f6774b09e80aa3cc9569d740c58f54e2b716))
+  - Assure `gix` versions are synced in the entire tree. ([`8576bc7`](https://github.com/Byron/crates-index-diff-rs/commit/8576bc79ff0980d3e0fef4447d71e8a522803ef9))
+  - Improve docs and be more clear about ordering. ([`7957987`](https://github.com/Byron/crates-index-diff-rs/commit/79579872c0afdfd112eb2f24ac74dd28148f34b9))
+
 </details>
 
 ## 21.0.0 (2023-09-25)
 
 ### New Features (BREAKING)
 
- - <csr-id-34d3510e2828e910079d1f32c73a5a59a4306f86/> upgrade to `gix` v0.54 (from v0.50)
-   This may produce smaller binaries.
-   
-   Further, no performance option is set anymore to leave this in the hands of
-   the final binary.
+- <csr-id-34d3510e2828e910079d1f32c73a5a59a4306f86/> upgrade to `gix` v0.54 (from v0.50)
+  This may produce smaller binaries.
+  
+  Further, no performance option is set anymore to leave this in the hands of
+  the final binary.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 7 commits contributed to the release over the course of 83 calendar days.
- - 83 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 7 commits contributed to the release over the course of 83 calendar days.
+- 83 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -431,14 +488,15 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v21.0.0 ([`752ba0c`](https://github.com/syphar/crates-index-diff-rs/commit/752ba0c50d9194d096c8c6421b6089d37839d3d6))
-    - Upgrade to `gix` v0.54 (from v0.50) ([`34d3510`](https://github.com/syphar/crates-index-diff-rs/commit/34d3510e2828e910079d1f32c73a5a59a4306f86))
-    - Merge branch 'uprade-crates-index' ([`922e962`](https://github.com/syphar/crates-index-diff-rs/commit/922e9620b4e757a0e62a8f5c038cfdea84324c4a))
-    - Upgrade to latest version of crates-index to remove git2 ([`fa1b21c`](https://github.com/syphar/crates-index-diff-rs/commit/fa1b21c15b01cbf3e974e6083a72e548377afcd5))
-    - Merge branch 'test-version-delete' ([`e200a56`](https://github.com/syphar/crates-index-diff-rs/commit/e200a5683bc8442032178c07156dc662f5d3bfaf))
-    - Add a test specifically for the `VersionDeleted` variant. ([`959c566`](https://github.com/syphar/crates-index-diff-rs/commit/959c5665b282796d47560e1ee29d131f678f2df1))
-    - Refactor ([`b0f84d0`](https://github.com/syphar/crates-index-diff-rs/commit/b0f84d0dadf29d1f68c1a20a50dd4d29e12f4a56))
+- **Uncategorized**
+  - Release crates-index-diff v21.0.0 ([`752ba0c`](https://github.com/Byron/crates-index-diff-rs/commit/752ba0c50d9194d096c8c6421b6089d37839d3d6))
+  - Upgrade to `gix` v0.54 (from v0.50) ([`34d3510`](https://github.com/Byron/crates-index-diff-rs/commit/34d3510e2828e910079d1f32c73a5a59a4306f86))
+  - Merge branch 'uprade-crates-index' ([`922e962`](https://github.com/Byron/crates-index-diff-rs/commit/922e9620b4e757a0e62a8f5c038cfdea84324c4a))
+  - Upgrade to latest version of crates-index to remove git2 ([`fa1b21c`](https://github.com/Byron/crates-index-diff-rs/commit/fa1b21c15b01cbf3e974e6083a72e548377afcd5))
+  - Merge branch 'test-version-delete' ([`e200a56`](https://github.com/Byron/crates-index-diff-rs/commit/e200a5683bc8442032178c07156dc662f5d3bfaf))
+  - Add a test specifically for the `VersionDeleted` variant. ([`959c566`](https://github.com/Byron/crates-index-diff-rs/commit/959c5665b282796d47560e1ee29d131f678f2df1))
+  - Refactor ([`b0f84d0`](https://github.com/Byron/crates-index-diff-rs/commit/b0f84d0dadf29d1f68c1a20a50dd4d29e12f4a56))
+
 </details>
 
 ## 20.0.0 (2023-07-04)
@@ -447,22 +505,22 @@ of the `gix` dependency to version v0.57.
 
 ### Bug Fixes (BREAKING)
 
- - <csr-id-2c59dd4a4b0aff3898fc8c8a2186b6d6a7f0692a/> split `Change::Delete` into `Change::VersionDeleted` and `Change::CrateDeleted`.
-   This resolves an ambiguity (facilitated by incorrect documentation) that would emit
-   `Change::Delete` when a single version was deleted, even though downstream that would
-   rightfully be interpreted as deleting the whole crate.
-   
-   Adimittedly, previously there were no single-version deletions, just yanks, so we didn't
-   think of it either.
+- <csr-id-2c59dd4a4b0aff3898fc8c8a2186b6d6a7f0692a/> split `Change::Delete` into `Change::VersionDeleted` and `Change::CrateDeleted`.
+  This resolves an ambiguity (facilitated by incorrect documentation) that would emit
+  `Change::Delete` when a single version was deleted, even though downstream that would
+  rightfully be interpreted as deleting the whole crate.
+  
+  Adimittedly, previously there were no single-version deletions, just yanks, so we didn't
+  think of it either.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 5 commits contributed to the release over the course of 10 calendar days.
- - 12 days passed between releases.
- - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 5 commits contributed to the release over the course of 10 calendar days.
+- 12 days passed between releases.
+- 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -470,12 +528,13 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v20.0.0 ([`dd27cae`](https://github.com/syphar/crates-index-diff-rs/commit/dd27caea0340f2a4c96f7c60326a06e314b4e628))
-    - Split `Change::Delete` into `Change::VersionDeleted` and `Change::CrateDeleted`. ([`2c59dd4`](https://github.com/syphar/crates-index-diff-rs/commit/2c59dd4a4b0aff3898fc8c8a2186b6d6a7f0692a))
-    - Uprgade `gix` to `v0.48` ([`9946196`](https://github.com/syphar/crates-index-diff-rs/commit/9946196a2b34abd88143e489cac1c57012b4cc57))
-    - Split VersionDeleted from crate-deletes ([`2caf814`](https://github.com/syphar/crates-index-diff-rs/commit/2caf81493f2f8fe8142310507f9d4c1a7fbd248f))
-    - Fix stress-test invocation ([`967836b`](https://github.com/syphar/crates-index-diff-rs/commit/967836bf63451021817c30c4d9c35d2cae720bea))
+- **Uncategorized**
+  - Release crates-index-diff v20.0.0 ([`dd27cae`](https://github.com/Byron/crates-index-diff-rs/commit/dd27caea0340f2a4c96f7c60326a06e314b4e628))
+  - Split `Change::Delete` into `Change::VersionDeleted` and `Change::CrateDeleted`. ([`2c59dd4`](https://github.com/Byron/crates-index-diff-rs/commit/2c59dd4a4b0aff3898fc8c8a2186b6d6a7f0692a))
+  - Uprgade `gix` to `v0.48` ([`9946196`](https://github.com/Byron/crates-index-diff-rs/commit/9946196a2b34abd88143e489cac1c57012b4cc57))
+  - Split VersionDeleted from crate-deletes ([`2caf814`](https://github.com/Byron/crates-index-diff-rs/commit/2caf81493f2f8fe8142310507f9d4c1a7fbd248f))
+  - Fix stress-test invocation ([`967836b`](https://github.com/Byron/crates-index-diff-rs/commit/967836bf63451021817c30c4d9c35d2cae720bea))
+
 </details>
 
 ## 19.0.0 (2023-06-22)
@@ -486,10 +545,10 @@ of the `gix` dependency to version v0.57.
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release over the course of 13 calendar days.
- - 14 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 3 commits contributed to the release over the course of 13 calendar days.
+- 14 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -497,10 +556,11 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v19.0.0 ([`f54eabd`](https://github.com/syphar/crates-index-diff-rs/commit/f54eabd9b458948bdc66a738c7f8fe546e812dba))
-    - Upgrade to `gix v0.47` (from v0.45). ([`f726287`](https://github.com/syphar/crates-index-diff-rs/commit/f726287f574093c1cbbe3c5a1b44f85695591d27))
-    - Try to fix the baseline test which now starts failing on CI ([`892561a`](https://github.com/syphar/crates-index-diff-rs/commit/892561a0ef352a22880c76555c3de612a74b416f))
+- **Uncategorized**
+  - Release crates-index-diff v19.0.0 ([`f54eabd`](https://github.com/Byron/crates-index-diff-rs/commit/f54eabd9b458948bdc66a738c7f8fe546e812dba))
+  - Upgrade to `gix v0.47` (from v0.45). ([`f726287`](https://github.com/Byron/crates-index-diff-rs/commit/f726287f574093c1cbbe3c5a1b44f85695591d27))
+  - Try to fix the baseline test which now starts failing on CI ([`892561a`](https://github.com/Byron/crates-index-diff-rs/commit/892561a0ef352a22880c76555c3de612a74b416f))
+
 </details>
 
 ## 18.0.0 (2023-06-08)
@@ -511,10 +571,10 @@ of the `gix` dependency to version v0.57.
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 25 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 25 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -522,9 +582,10 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v18.0.0 ([`4a94ff8`](https://github.com/syphar/crates-index-diff-rs/commit/4a94ff8cd576b535ab042ea5cab3f1eeb4e40e39))
-    - Upgrade dependencies ([`7427603`](https://github.com/syphar/crates-index-diff-rs/commit/74276037552fc037820854e2c28914d6ac451c22))
+- **Uncategorized**
+  - Release crates-index-diff v18.0.0 ([`4a94ff8`](https://github.com/Byron/crates-index-diff-rs/commit/4a94ff8cd576b535ab042ea5cab3f1eeb4e40e39))
+  - Upgrade dependencies ([`7427603`](https://github.com/Byron/crates-index-diff-rs/commit/74276037552fc037820854e2c28914d6ac451c22))
+
 </details>
 
 ## 17.0.0 (2023-05-14)
@@ -535,10 +596,10 @@ of the `gix` dependency to version v0.57.
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
- - 82 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 4 commits contributed to the release.
+- 82 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -546,28 +607,29 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v17.0.0 ([`365e304`](https://github.com/syphar/crates-index-diff-rs/commit/365e304545ed5a8ed5979504f90a2d501799fe62))
-    - Upgrade `gix` from v0.37 to v0.44. ([`b00ca99`](https://github.com/syphar/crates-index-diff-rs/commit/b00ca9946487d2de5124d0a27756c2021b4ba800))
-    - Reduce code-size by reusing the same type for `Progress`. ([`c3d5518`](https://github.com/syphar/crates-index-diff-rs/commit/c3d551834763d235347f4d754585c587dc74f3ee))
-    - Upgrade gix dependency to 0.44.1 ([`4489ef7`](https://github.com/syphar/crates-index-diff-rs/commit/4489ef79c9a96cb1a38377e32c7551c7ee61457b))
+- **Uncategorized**
+  - Release crates-index-diff v17.0.0 ([`365e304`](https://github.com/Byron/crates-index-diff-rs/commit/365e304545ed5a8ed5979504f90a2d501799fe62))
+  - Upgrade `gix` from v0.37 to v0.44. ([`b00ca99`](https://github.com/Byron/crates-index-diff-rs/commit/b00ca9946487d2de5124d0a27756c2021b4ba800))
+  - Reduce code-size by reusing the same type for `Progress`. ([`c3d5518`](https://github.com/Byron/crates-index-diff-rs/commit/c3d551834763d235347f4d754585c587dc74f3ee))
+  - Upgrade gix dependency to 0.44.1 ([`4489ef7`](https://github.com/Byron/crates-index-diff-rs/commit/4489ef79c9a96cb1a38377e32c7551c7ee61457b))
+
 </details>
 
 ## 16.0.1 (2023-02-21)
 
 ### Bug Fixes
 
- - <csr-id-8d7b7b680b415a57f6d6151317de1e076d6f52a6/> make `DependencyKind` publicly accessible
-   Previously it was used as field within an exported type, but it couldn't
-   be used directly.
+- <csr-id-8d7b7b680b415a57f6d6151317de1e076d6f52a6/> make `DependencyKind` publicly accessible
+  Previously it was used as field within an exported type, but it couldn't
+  be used directly.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -575,27 +637,28 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v16.0.1 ([`bffe167`](https://github.com/syphar/crates-index-diff-rs/commit/bffe1677baf844bf029d39686282341c3c00d140))
-    - Make `DependencyKind` publicly accessible ([`8d7b7b6`](https://github.com/syphar/crates-index-diff-rs/commit/8d7b7b680b415a57f6d6151317de1e076d6f52a6))
+- **Uncategorized**
+  - Release crates-index-diff v16.0.1 ([`bffe167`](https://github.com/Byron/crates-index-diff-rs/commit/bffe1677baf844bf029d39686282341c3c00d140))
+  - Make `DependencyKind` publicly accessible ([`8d7b7b6`](https://github.com/Byron/crates-index-diff-rs/commit/8d7b7b680b415a57f6d6151317de1e076d6f52a6))
+
 </details>
 
 ## 16.0.0 (2023-02-21)
 
 ### Bug Fixes (BREAKING)
 
- - <csr-id-80825885a819fc273ddd29e8598c145cda47852c/> upgrade from `git-repository` to `gix`
-   This change renames the public re-export from `git` to `gix` as well
-   for consistency.
+- <csr-id-80825885a819fc273ddd29e8598c145cda47852c/> upgrade from `git-repository` to `gix`
+  This change renames the public re-export from `git` to `gix` as well
+  for consistency.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 78 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 78 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -603,25 +666,26 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v16.0.0 ([`9d17c5a`](https://github.com/syphar/crates-index-diff-rs/commit/9d17c5ac900a1d32d84b0e3a572e01d5c05355cd))
-    - Upgrade from `git-repository` to `gix` ([`8082588`](https://github.com/syphar/crates-index-diff-rs/commit/80825885a819fc273ddd29e8598c145cda47852c))
+- **Uncategorized**
+  - Release crates-index-diff v16.0.0 ([`9d17c5a`](https://github.com/Byron/crates-index-diff-rs/commit/9d17c5ac900a1d32d84b0e3a572e01d5c05355cd))
+  - Upgrade from `git-repository` to `gix` ([`8082588`](https://github.com/Byron/crates-index-diff-rs/commit/80825885a819fc273ddd29e8598c145cda47852c))
+
 </details>
 
 ## 15.0.2 (2022-12-05)
 
 ### Bug Fixes
 
- - <csr-id-44a5579feb424abcb2d6d75e0631577f1c71b33b/> `Index::peek_changes_ordered()` now actually provides ordered changes.
+- <csr-id-44a5579feb424abcb2d6d75e0631577f1c71b33b/> `Index::peek_changes_ordered()` now actually provides ordered changes.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release over the course of 8 calendar days.
- - 9 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release over the course of 8 calendar days.
+- 9 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -629,33 +693,34 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v15.0.2 ([`7ea9dda`](https://github.com/syphar/crates-index-diff-rs/commit/7ea9dda2a9ca3702dbafbb2009c3c801bfb34669))
-    - `Index::peek_changes_ordered()` now actually provides ordered changes. ([`44a5579`](https://github.com/syphar/crates-index-diff-rs/commit/44a5579feb424abcb2d6d75e0631577f1c71b33b))
+- **Uncategorized**
+  - Release crates-index-diff v15.0.2 ([`7ea9dda`](https://github.com/Byron/crates-index-diff-rs/commit/7ea9dda2a9ca3702dbafbb2009c3c801bfb34669))
+  - `Index::peek_changes_ordered()` now actually provides ordered changes. ([`44a5579`](https://github.com/Byron/crates-index-diff-rs/commit/44a5579feb424abcb2d6d75e0631577f1c71b33b))
+
 </details>
 
 ## 15.0.1 (2022-11-26)
 
 ### Bug Fixes
 
- - <csr-id-c91599244e974c3d6c4f443563a32f57858b1d0b/> correctly configure 'serde' features of dependencies.
-   Due to surprising an to me still quite unclear behaviour `cargo`
-   will turn on the `serde` features in the `hex` and `smartstring`
-   dependencies when building it locally from a repository clone,
-   but won't do it when building the crates-io version of the crate
-   after adding it as dependency.
-   
-   This fixes the issue by correctly configuring it the `serde`
-   feature.
+- <csr-id-c91599244e974c3d6c4f443563a32f57858b1d0b/> correctly configure 'serde' features of dependencies.
+  Due to surprising an to me still quite unclear behaviour `cargo`
+  will turn on the `serde` features in the `hex` and `smartstring`
+  dependencies when building it locally from a repository clone,
+  but won't do it when building the crates-io version of the crate
+  after adding it as dependency.
+  
+  This fixes the issue by correctly configuring it the `serde`
+  feature.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 5 commits contributed to the release over the course of 3 calendar days.
- - 4 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#33](https://github.com/syphar/crates-index-diff-rs/issues/33)
+- 5 commits contributed to the release over the course of 3 calendar days.
+- 4 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#33](https://github.com/Byron/crates-index-diff-rs/issues/33)
 
 ### Commit Details
 
@@ -663,13 +728,14 @@ of the `gix` dependency to version v0.57.
 
 <details><summary>view details</summary>
 
- * **[#33](https://github.com/syphar/crates-index-diff-rs/issues/33)**
-    - Correctly configure 'serde' features of dependencies. ([`c915992`](https://github.com/syphar/crates-index-diff-rs/commit/c91599244e974c3d6c4f443563a32f57858b1d0b))
- * **Uncategorized**
-    - Release crates-index-diff v15.0.1 ([`a6b40e1`](https://github.com/syphar/crates-index-diff-rs/commit/a6b40e18c92daddcc8750e148b90abf00d5e7b7d))
-    - Merge branch 'fix-build' ([`57ca8f0`](https://github.com/syphar/crates-index-diff-rs/commit/57ca8f08341dd21d1a5a87daf366a44d65ebd3bc))
-    - A failing test to reproduce #33 ([`8bfd04d`](https://github.com/syphar/crates-index-diff-rs/commit/8bfd04da4a25be5d68446779e2a2669e6b880b02))
-    - Fix stress test ([`9afe15b`](https://github.com/syphar/crates-index-diff-rs/commit/9afe15b9ad746ac253c82e11acb3e58d224832c0))
+- **[#33](https://github.com/Byron/crates-index-diff-rs/issues/33)**
+  - Correctly configure 'serde' features of dependencies. ([`c915992`](https://github.com/Byron/crates-index-diff-rs/commit/c91599244e974c3d6c4f443563a32f57858b1d0b))
+- **Uncategorized**
+  - Release crates-index-diff v15.0.1 ([`a6b40e1`](https://github.com/Byron/crates-index-diff-rs/commit/a6b40e18c92daddcc8750e148b90abf00d5e7b7d))
+  - Merge branch 'fix-build' ([`57ca8f0`](https://github.com/Byron/crates-index-diff-rs/commit/57ca8f08341dd21d1a5a87daf366a44d65ebd3bc))
+  - A failing test to reproduce #33 ([`8bfd04d`](https://github.com/Byron/crates-index-diff-rs/commit/8bfd04da4a25be5d68446779e2a2669e6b880b02))
+  - Fix stress test ([`9afe15b`](https://github.com/Byron/crates-index-diff-rs/commit/9afe15b9ad746ac253c82e11acb3e58d224832c0))
+
 </details>
 
 ## 15.0.0 (2022-11-22)
@@ -691,42 +757,42 @@ build as well.
 
 ### Bug Fixes
 
- - <csr-id-c3cff8849c16c2fdcb150014ff4833f14ab0dcae/> allow to configure the http transport layer in `git-repository`.
-   This way the user of the library has a choice to activate any of these
-   features:
-   
-   * http-curl (default) - use curl and a lot of C dependencies for HTTP/HTTPS.
-   But also support advanced HTTP options.
+- <csr-id-c3cff8849c16c2fdcb150014ff4833f14ab0dcae/> allow to configure the http transport layer in `git-repository`.
+  This way the user of the library has a choice to activate any of these
+  features:
+  
+  * http-curl (default) - use curl and a lot of C dependencies for HTTP/HTTPS.
+  But also support advanced HTTP options.
 * http-request - use reqwest for http and https, which currently doesn't
      support any options.
 
 ### New Features
 
- - <csr-id-87e49b59c3a1542bee9c2965e062a8045748e821/> baseline validation now validates ordered and unordered mode.
- - <csr-id-81c6dd2a2413d2556284ef188c06059c1177bc42/> greatly improve performance and realism of `baseline-atomic` test.
-   We now set a fixed amount of 'big' steps along with one of those chunks
-   being a range where the step-size is one commit at a time, which
-   might be the way changes are obtained in the future.
- - <csr-id-4dd4a4c86f710fad582e4cf82f799384e42921d9/> baseline also validates the `yanked` status.
-   That way we assure that the state we are interested in is indeed
-   communicated perfectly through the events we emit.
+- <csr-id-87e49b59c3a1542bee9c2965e062a8045748e821/> baseline validation now validates ordered and unordered mode.
+- <csr-id-81c6dd2a2413d2556284ef188c06059c1177bc42/> greatly improve performance and realism of `baseline-atomic` test.
+  We now set a fixed amount of 'big' steps along with one of those chunks
+  being a range where the step-size is one commit at a time, which
+  might be the way changes are obtained in the future.
+- <csr-id-4dd4a4c86f710fad582e4cf82f799384e42921d9/> baseline also validates the `yanked` status.
+  That way we assure that the state we are interested in is indeed
+  communicated perfectly through the events we emit.
 
 ### New Features (BREAKING)
 
- - <csr-id-133f2f5db418470e6ab4537ebd9a123f33e5fe7b/> Support for in-order changes via `changes_between_ancestor_commits()`.
-   This improvement also makes available an enum to select `Order`
-   in higher-level methods like `peek_changes_with_options()`.
-   
-   We also add `peek_changes_ordered()` and `changes_ordered()` for convenience.
+- <csr-id-133f2f5db418470e6ab4537ebd9a123f33e5fe7b/> Support for in-order changes via `changes_between_ancestor_commits()`.
+  This improvement also makes available an enum to select `Order`
+  in higher-level methods like `peek_changes_with_options()`.
+  
+  We also add `peek_changes_ordered()` and `changes_ordered()` for convenience.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 9 commits contributed to the release.
- - 1 day passed between releases.
- - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#30](https://github.com/syphar/crates-index-diff-rs/issues/30)
+- 9 commits contributed to the release.
+- 1 day passed between releases.
+- 6 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#30](https://github.com/Byron/crates-index-diff-rs/issues/30)
 
 ### Commit Details
 
@@ -734,17 +800,18 @@ build as well.
 
 <details><summary>view details</summary>
 
- * **[#30](https://github.com/syphar/crates-index-diff-rs/issues/30)**
-    - Allow to configure the http transport layer in `git-repository`. ([`c3cff88`](https://github.com/syphar/crates-index-diff-rs/commit/c3cff8849c16c2fdcb150014ff4833f14ab0dcae))
-    - Prepare changelog ([`b887560`](https://github.com/syphar/crates-index-diff-rs/commit/b887560ed7d95abc4d8d9f5ad3b75cf6a696a2ac))
-    - Baseline validation now validates ordered and unordered mode. ([`87e49b5`](https://github.com/syphar/crates-index-diff-rs/commit/87e49b59c3a1542bee9c2965e062a8045748e821))
-    - Greatly improve performance and realism of `baseline-atomic` test. ([`81c6dd2`](https://github.com/syphar/crates-index-diff-rs/commit/81c6dd2a2413d2556284ef188c06059c1177bc42))
-    - Baseline also validates the `yanked` status. ([`4dd4a4c`](https://github.com/syphar/crates-index-diff-rs/commit/4dd4a4c86f710fad582e4cf82f799384e42921d9))
- * **Uncategorized**
-    - Release crates-index-diff v15.0.0 ([`50eed5b`](https://github.com/syphar/crates-index-diff-rs/commit/50eed5bf08e0be2d0cd972d5c3c8f5ebc692559a))
-    - Merge branch 'baseline-improvements' ([`a80c7fa`](https://github.com/syphar/crates-index-diff-rs/commit/a80c7faab2770dfc6b4593a02c5c897f055c5fe5))
-    - Support for in-order changes via `changes_between_ancestor_commits()`. ([`133f2f5`](https://github.com/syphar/crates-index-diff-rs/commit/133f2f5db418470e6ab4537ebd9a123f33e5fe7b))
-    - A pipeline to validate basic assumptions are stil fulfilled. ([`d91afc9`](https://github.com/syphar/crates-index-diff-rs/commit/d91afc930e833f4eb90f64971200d691662f9b0d))
+- **[#30](https://github.com/Byron/crates-index-diff-rs/issues/30)**
+  - Allow to configure the http transport layer in `git-repository`. ([`c3cff88`](https://github.com/Byron/crates-index-diff-rs/commit/c3cff8849c16c2fdcb150014ff4833f14ab0dcae))
+  - Prepare changelog ([`b887560`](https://github.com/Byron/crates-index-diff-rs/commit/b887560ed7d95abc4d8d9f5ad3b75cf6a696a2ac))
+  - Baseline validation now validates ordered and unordered mode. ([`87e49b5`](https://github.com/Byron/crates-index-diff-rs/commit/87e49b59c3a1542bee9c2965e062a8045748e821))
+  - Greatly improve performance and realism of `baseline-atomic` test. ([`81c6dd2`](https://github.com/Byron/crates-index-diff-rs/commit/81c6dd2a2413d2556284ef188c06059c1177bc42))
+  - Baseline also validates the `yanked` status. ([`4dd4a4c`](https://github.com/Byron/crates-index-diff-rs/commit/4dd4a4c86f710fad582e4cf82f799384e42921d9))
+- **Uncategorized**
+  - Release crates-index-diff v15.0.0 ([`50eed5b`](https://github.com/Byron/crates-index-diff-rs/commit/50eed5bf08e0be2d0cd972d5c3c8f5ebc692559a))
+  - Merge branch 'baseline-improvements' ([`a80c7fa`](https://github.com/Byron/crates-index-diff-rs/commit/a80c7faab2770dfc6b4593a02c5c897f055c5fe5))
+  - Support for in-order changes via `changes_between_ancestor_commits()`. ([`133f2f5`](https://github.com/Byron/crates-index-diff-rs/commit/133f2f5db418470e6ab4537ebd9a123f33e5fe7b))
+  - A pipeline to validate basic assumptions are stil fulfilled. ([`d91afc9`](https://github.com/Byron/crates-index-diff-rs/commit/d91afc930e833f4eb90f64971200d691662f9b0d))
+
 </details>
 
 ## 14.0.0 (2022-11-21)
@@ -763,38 +830,38 @@ for his contribution. Thank you!
 <csr-id-4d53b045ec3a006205b466ea051c7e1030ea981c/>
 <csr-id-c0c01bb5d63c6d469a298e157cd4063853ecc50e/>
 
- - <csr-id-6f5b12a35d0ae6b2bcb05c4f42153ec8fa4f37a2/> a `max-performance` feature to tune `git-repository`.
-   The performance difference is rather drastic at about 2.5x, and
-   definitely worth having if there is no compatibility issue
-   due to shared C dependencies in the same binary.
-   
-   Additionally we setup the makefile to use big object caches
-   to avoid having to decompress the same object too often, accelerating
-   the diffing process about 4x, for a total of 10x performance boost.
+- <csr-id-6f5b12a35d0ae6b2bcb05c4f42153ec8fa4f37a2/> a `max-performance` feature to tune `git-repository`.
+  The performance difference is rather drastic at about 2.5x, and
+  definitely worth having if there is no compatibility issue
+  due to shared C dependencies in the same binary.
+  
+  Additionally we setup the makefile to use big object caches
+  to avoid having to decompress the same object too often, accelerating
+  the diffing process about 4x, for a total of 10x performance boost.
 
 ### Changed (BREAKING)
 
- - <csr-id-b538ad6ad9c6b11354583f32986b16907de7f4f4/> `Change::Deleted` variant now has `versions` field to include all deleted versions.
-   That way it doesn't degenerate any information, previously the exact
-   version information was lost.
-   
-   Not doing so helps to be able to reproduce the current state by
-   aggregating all changes.
+- <csr-id-b538ad6ad9c6b11354583f32986b16907de7f4f4/> `Change::Deleted` variant now has `versions` field to include all deleted versions.
+  That way it doesn't degenerate any information, previously the exact
+  version information was lost.
+  
+  Not doing so helps to be able to reproduce the current state by
+  aggregating all changes.
 
 ### New Features (BREAKING)
 
- - <csr-id-f9be536b089199460330cf0ad6d6a74d8813a9cf/> Reduce heap-allocations `CrateVersion` type and sub-types.
-   This improves performance slightly when dealing with a lot of versions,
-   like when all versions are obtained from the beginning of time.
+- <csr-id-f9be536b089199460330cf0ad6d6a74d8813a9cf/> Reduce heap-allocations `CrateVersion` type and sub-types.
+  This improves performance slightly when dealing with a lot of versions,
+  like when all versions are obtained from the beginning of time.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 22 commits contributed to the release over the course of 3 calendar days.
- - 3 days passed between releases.
- - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#26](https://github.com/syphar/crates-index-diff-rs/issues/26)
+- 22 commits contributed to the release over the course of 3 calendar days.
+- 3 days passed between releases.
+- 5 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#26](https://github.com/Byron/crates-index-diff-rs/issues/26)
 
 ### Thanks Clippy
 
@@ -808,54 +875,55 @@ for his contribution. Thank you!
 
 <details><summary>view details</summary>
 
- * **[#26](https://github.com/syphar/crates-index-diff-rs/issues/26)**
-    - Refactor ([`b42ac1e`](https://github.com/syphar/crates-index-diff-rs/commit/b42ac1e055bb8264804c40a2fe436e45850e9422))
-    - Revert previous to FAILed commits ([`3b52cfd`](https://github.com/syphar/crates-index-diff-rs/commit/3b52cfdf74fc1b38d604a79e83dc0b0de1f61843))
-    - Try to rewrite delegate to be map based… ([`4d53b04`](https://github.com/syphar/crates-index-diff-rs/commit/4d53b045ec3a006205b466ea051c7e1030ea981c))
-    - Try to chunk up baseline, but changes do not line up. ([`c0c01bb`](https://github.com/syphar/crates-index-diff-rs/commit/c0c01bb5d63c6d469a298e157cd4063853ecc50e))
-    - Refactor ([`097209c`](https://github.com/syphar/crates-index-diff-rs/commit/097209c3fe54d56fd908907a54ab07268ba8804b))
-    - Now the baseline result is the same. ([`02cdb2e`](https://github.com/syphar/crates-index-diff-rs/commit/02cdb2ee5425e3f88d1ad8720c6ac2f3f247716d))
-    - Make baseline work with CI ([`b9a1850`](https://github.com/syphar/crates-index-diff-rs/commit/b9a1850b6723c26d3af359cce9163747d30e8874))
-    - A baseline test which shows that we cannot reproduce the status quo with changes just yet. ([`3fcf96b`](https://github.com/syphar/crates-index-diff-rs/commit/3fcf96be95647bf9e66c85a33b52c7e74ccc9cce))
-    - `Change::Deleted` variant now as `versions` to include all deleted versions. ([`b538ad6`](https://github.com/syphar/crates-index-diff-rs/commit/b538ad6ad9c6b11354583f32986b16907de7f4f4))
-    - Reduce heap-allocations `CrateVersion` type and sub-types. ([`f9be536`](https://github.com/syphar/crates-index-diff-rs/commit/f9be536b089199460330cf0ad6d6a74d8813a9cf))
-    - Layout baseline for exhaustive test against the latest available index ([`7e9d3cd`](https://github.com/syphar/crates-index-diff-rs/commit/7e9d3cd25afa27bee80a382dfe61792a99ed0f35))
- * **Uncategorized**
-    - Release crates-index-diff v14.0.0 ([`dfaf1be`](https://github.com/syphar/crates-index-diff-rs/commit/dfaf1beb292dea55d40d5d8d6d5e0cba93f82a69))
-    - Prepare changelog prior to release ([`a93ba40`](https://github.com/syphar/crates-index-diff-rs/commit/a93ba40269cec0f02c041b299952df22b3010736))
-    - Merge branch 'fix-diff' ([`ec9842a`](https://github.com/syphar/crates-index-diff-rs/commit/ec9842ac8861a55cb51ed28caeeea5e0a18757f3))
-    - Refactor ([`bd3bc22`](https://github.com/syphar/crates-index-diff-rs/commit/bd3bc220ab28679cb4ce81376aeb4088b5053279))
-    - Remove unnecessary unsafe code ([`1b5684f`](https://github.com/syphar/crates-index-diff-rs/commit/1b5684fe702545d120877852e64ffdb800bbc2e4))
-    - A `max-performance` feature to tune `git-repository`. ([`6f5b12a`](https://github.com/syphar/crates-index-diff-rs/commit/6f5b12a35d0ae6b2bcb05c4f42153ec8fa4f37a2))
-    - Improve baseline tests to be more practical ([`bae80b0`](https://github.com/syphar/crates-index-diff-rs/commit/bae80b04ecd97ac37c12f90f5cd60a480b9bea6a))
-    - Add baseline tests that steps trough each commit individually ([`a377ca4`](https://github.com/syphar/crates-index-diff-rs/commit/a377ca47627e0c4449f0410d2887afed4d07d634))
-    - Perform an unordered comparison instead of using a linear edit-sequence ([`8256cbb`](https://github.com/syphar/crates-index-diff-rs/commit/8256cbbd3651073394d6aa9de38c734618df9102))
-    - Merge branch 'complete-baseline' ([`61c6272`](https://github.com/syphar/crates-index-diff-rs/commit/61c62723520aa6257adf75cf4e3558187f986844))
-    - Thanks clippy ([`249d141`](https://github.com/syphar/crates-index-diff-rs/commit/249d14118f8716ffd83adc6559edf41e89b9c4a8))
+- **[#26](https://github.com/Byron/crates-index-diff-rs/issues/26)**
+  - Refactor ([`b42ac1e`](https://github.com/Byron/crates-index-diff-rs/commit/b42ac1e055bb8264804c40a2fe436e45850e9422))
+  - Revert previous to FAILed commits ([`3b52cfd`](https://github.com/Byron/crates-index-diff-rs/commit/3b52cfdf74fc1b38d604a79e83dc0b0de1f61843))
+  - Try to rewrite delegate to be map based… ([`4d53b04`](https://github.com/Byron/crates-index-diff-rs/commit/4d53b045ec3a006205b466ea051c7e1030ea981c))
+  - Try to chunk up baseline, but changes do not line up. ([`c0c01bb`](https://github.com/Byron/crates-index-diff-rs/commit/c0c01bb5d63c6d469a298e157cd4063853ecc50e))
+  - Refactor ([`097209c`](https://github.com/Byron/crates-index-diff-rs/commit/097209c3fe54d56fd908907a54ab07268ba8804b))
+  - Now the baseline result is the same. ([`02cdb2e`](https://github.com/Byron/crates-index-diff-rs/commit/02cdb2ee5425e3f88d1ad8720c6ac2f3f247716d))
+  - Make baseline work with CI ([`b9a1850`](https://github.com/Byron/crates-index-diff-rs/commit/b9a1850b6723c26d3af359cce9163747d30e8874))
+  - A baseline test which shows that we cannot reproduce the status quo with changes just yet. ([`3fcf96b`](https://github.com/Byron/crates-index-diff-rs/commit/3fcf96be95647bf9e66c85a33b52c7e74ccc9cce))
+  - `Change::Deleted` variant now as `versions` to include all deleted versions. ([`b538ad6`](https://github.com/Byron/crates-index-diff-rs/commit/b538ad6ad9c6b11354583f32986b16907de7f4f4))
+  - Reduce heap-allocations `CrateVersion` type and sub-types. ([`f9be536`](https://github.com/Byron/crates-index-diff-rs/commit/f9be536b089199460330cf0ad6d6a74d8813a9cf))
+  - Layout baseline for exhaustive test against the latest available index ([`7e9d3cd`](https://github.com/Byron/crates-index-diff-rs/commit/7e9d3cd25afa27bee80a382dfe61792a99ed0f35))
+- **Uncategorized**
+  - Release crates-index-diff v14.0.0 ([`dfaf1be`](https://github.com/Byron/crates-index-diff-rs/commit/dfaf1beb292dea55d40d5d8d6d5e0cba93f82a69))
+  - Prepare changelog prior to release ([`a93ba40`](https://github.com/Byron/crates-index-diff-rs/commit/a93ba40269cec0f02c041b299952df22b3010736))
+  - Merge branch 'fix-diff' ([`ec9842a`](https://github.com/Byron/crates-index-diff-rs/commit/ec9842ac8861a55cb51ed28caeeea5e0a18757f3))
+  - Refactor ([`bd3bc22`](https://github.com/Byron/crates-index-diff-rs/commit/bd3bc220ab28679cb4ce81376aeb4088b5053279))
+  - Remove unnecessary unsafe code ([`1b5684f`](https://github.com/Byron/crates-index-diff-rs/commit/1b5684fe702545d120877852e64ffdb800bbc2e4))
+  - A `max-performance` feature to tune `git-repository`. ([`6f5b12a`](https://github.com/Byron/crates-index-diff-rs/commit/6f5b12a35d0ae6b2bcb05c4f42153ec8fa4f37a2))
+  - Improve baseline tests to be more practical ([`bae80b0`](https://github.com/Byron/crates-index-diff-rs/commit/bae80b04ecd97ac37c12f90f5cd60a480b9bea6a))
+  - Add baseline tests that steps trough each commit individually ([`a377ca4`](https://github.com/Byron/crates-index-diff-rs/commit/a377ca47627e0c4449f0410d2887afed4d07d634))
+  - Perform an unordered comparison instead of using a linear edit-sequence ([`8256cbb`](https://github.com/Byron/crates-index-diff-rs/commit/8256cbbd3651073394d6aa9de38c734618df9102))
+  - Merge branch 'complete-baseline' ([`61c6272`](https://github.com/Byron/crates-index-diff-rs/commit/61c62723520aa6257adf75cf4e3558187f986844))
+  - Thanks clippy ([`249d141`](https://github.com/Byron/crates-index-diff-rs/commit/249d14118f8716ffd83adc6559edf41e89b9c4a8))
+
 </details>
 
 ## 13.0.3 (2022-11-18)
 
 ### Bug Fixes
 
- - <csr-id-51c5109c30d42eabf0a4ee4c8272aaec3275b556/> assure differences are handled exhaustively.
-   Previously it was possible to have multiple diffs in one crate
-   distributed over multiple commits to rightfully show up as multiple
-   hunks of modified and added lines only register the modified lines,
-   not the new ones (or the deleted ones for that matter).
-   
-   This would cause updates or removals to be missed.
-   
-   Now hunks of changes are exhaused properly, fixing [the issue](https://github.com/Byron/crates-index-diff-rs/issues/26).
+- <csr-id-51c5109c30d42eabf0a4ee4c8272aaec3275b556/> assure differences are handled exhaustively.
+  Previously it was possible to have multiple diffs in one crate
+  distributed over multiple commits to rightfully show up as multiple
+  hunks of modified and added lines only register the modified lines,
+  not the new ones (or the deleted ones for that matter).
+  
+  This would cause updates or removals to be missed.
+  
+  Now hunks of changes are exhaused properly, fixing [the issue](https://github.com/Byron/crates-index-diff-rs/issues/26).
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 9 commits contributed to the release.
- - 10 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#26](https://github.com/syphar/crates-index-diff-rs/issues/26)
+- 9 commits contributed to the release.
+- 10 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#26](https://github.com/Byron/crates-index-diff-rs/issues/26)
 
 ### Thanks Clippy
 
@@ -869,17 +937,18 @@ for his contribution. Thank you!
 
 <details><summary>view details</summary>
 
- * **[#26](https://github.com/syphar/crates-index-diff-rs/issues/26)**
-    - Prepare changelog prior to release ([`46d94b5`](https://github.com/syphar/crates-index-diff-rs/commit/46d94b5120364aa5a285492b8fce543e6487fe98))
-    - Refactor ([`87678db`](https://github.com/syphar/crates-index-diff-rs/commit/87678db79a798c17575678c233dc9d21f4e16d70))
-    - Thanks clippy ([`425fd57`](https://github.com/syphar/crates-index-diff-rs/commit/425fd57b8223d8fb35503b7aee06f16c403d1ea5))
-    - Refactor ([`d059360`](https://github.com/syphar/crates-index-diff-rs/commit/d0593607c76e7b31fd8ac91a0068de128e6bfaf4))
-    - Assure differences are handled exhaustively. ([`51c5109`](https://github.com/syphar/crates-index-diff-rs/commit/51c5109c30d42eabf0a4ee4c8272aaec3275b556))
-    - Reproduce issue ([`69c8f43`](https://github.com/syphar/crates-index-diff-rs/commit/69c8f43829166949e7afeb8d42c8076480bc3c08))
-    - Add test fixtures for reproduction ([`462d44f`](https://github.com/syphar/crates-index-diff-rs/commit/462d44fd019ea2544c070163a2ec2839f9c57b4d))
- * **Uncategorized**
-    - Release crates-index-diff v13.0.3 ([`1d06ee9`](https://github.com/syphar/crates-index-diff-rs/commit/1d06ee90b51d1147fc6cb21370744799ffd9a512))
-    - Merge branch 'fix-26' ([`7ea3d6e`](https://github.com/syphar/crates-index-diff-rs/commit/7ea3d6e89e4804ff1cdfa664c9454f433ca35dc8))
+- **[#26](https://github.com/Byron/crates-index-diff-rs/issues/26)**
+  - Prepare changelog prior to release ([`46d94b5`](https://github.com/Byron/crates-index-diff-rs/commit/46d94b5120364aa5a285492b8fce543e6487fe98))
+  - Refactor ([`87678db`](https://github.com/Byron/crates-index-diff-rs/commit/87678db79a798c17575678c233dc9d21f4e16d70))
+  - Thanks clippy ([`425fd57`](https://github.com/Byron/crates-index-diff-rs/commit/425fd57b8223d8fb35503b7aee06f16c403d1ea5))
+  - Refactor ([`d059360`](https://github.com/Byron/crates-index-diff-rs/commit/d0593607c76e7b31fd8ac91a0068de128e6bfaf4))
+  - Assure differences are handled exhaustively. ([`51c5109`](https://github.com/Byron/crates-index-diff-rs/commit/51c5109c30d42eabf0a4ee4c8272aaec3275b556))
+  - Reproduce issue ([`69c8f43`](https://github.com/Byron/crates-index-diff-rs/commit/69c8f43829166949e7afeb8d42c8076480bc3c08))
+  - Add test fixtures for reproduction ([`462d44f`](https://github.com/Byron/crates-index-diff-rs/commit/462d44fd019ea2544c070163a2ec2839f9c57b4d))
+- **Uncategorized**
+  - Release crates-index-diff v13.0.3 ([`1d06ee9`](https://github.com/Byron/crates-index-diff-rs/commit/1d06ee90b51d1147fc6cb21370744799ffd9a512))
+  - Merge branch 'fix-26' ([`7ea3d6e`](https://github.com/Byron/crates-index-diff-rs/commit/7ea3d6e89e4804ff1cdfa664c9454f433ca35dc8))
+
 </details>
 
 ## 13.0.2 (2022-11-08)
@@ -892,10 +961,10 @@ for his contribution. Thank you!
 
 <csr-read-only-do-not-edit/>
 
- - 10 commits contributed to the release.
- - 28 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 10 commits contributed to the release.
+- 28 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -903,35 +972,36 @@ for his contribution. Thank you!
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v13.0.2 ([`3708131`](https://github.com/syphar/crates-index-diff-rs/commit/3708131ce4eb40bb500ab430bd10c5142f423cf8))
-    - Prepare changelog prior to release ([`adecda5`](https://github.com/syphar/crates-index-diff-rs/commit/adecda5290674442baf4315772103200fdb7ad8b))
-    - Merge branch 'git-repository-upgrade' ([`b28b7ca`](https://github.com/syphar/crates-index-diff-rs/commit/b28b7ca065bec9ff894ee9c0639ae441564f56fd))
-    - Upgrade to git-repository v0.27 ([`377065e`](https://github.com/syphar/crates-index-diff-rs/commit/377065ecbbbe8dfa0817873fd03b80f9e70bb7aa))
-    - All tests are green ([`6b47427`](https://github.com/syphar/crates-index-diff-rs/commit/6b47427e6fa98b01bfda5cd7508179c95203647a))
-    - One more test bytes the dust, but… ([`62cb6eb`](https://github.com/syphar/crates-index-diff-rs/commit/62cb6ebd66802d6500b9cb52e94cd1581ad8fe9b))
-    - Fix most of the tests ([`276e726`](https://github.com/syphar/crates-index-diff-rs/commit/276e726221bab2bea2e0d06ff396f757df74d393))
-    - A first stab at getting the diff back to work with `imara-diff` ([`5573529`](https://github.com/syphar/crates-index-diff-rs/commit/5573529fa44c2c1e7e108c00c0784f301c599d61))
-    - Try to rewrite explicit trait impl as closure, same lifeimte issues. ([`2809c75`](https://github.com/syphar/crates-index-diff-rs/commit/2809c75cff185190d6f1075e10c1d5f1668200ed))
-    - Upgrade to `git-repoitory v0.26`, fail to make diff compile. ([`3f47ec3`](https://github.com/syphar/crates-index-diff-rs/commit/3f47ec38b4cfe1ed2b3ec2cb88d31e4598dafe67))
+- **Uncategorized**
+  - Release crates-index-diff v13.0.2 ([`3708131`](https://github.com/Byron/crates-index-diff-rs/commit/3708131ce4eb40bb500ab430bd10c5142f423cf8))
+  - Prepare changelog prior to release ([`adecda5`](https://github.com/Byron/crates-index-diff-rs/commit/adecda5290674442baf4315772103200fdb7ad8b))
+  - Merge branch 'git-repository-upgrade' ([`b28b7ca`](https://github.com/Byron/crates-index-diff-rs/commit/b28b7ca065bec9ff894ee9c0639ae441564f56fd))
+  - Upgrade to git-repository v0.27 ([`377065e`](https://github.com/Byron/crates-index-diff-rs/commit/377065ecbbbe8dfa0817873fd03b80f9e70bb7aa))
+  - All tests are green ([`6b47427`](https://github.com/Byron/crates-index-diff-rs/commit/6b47427e6fa98b01bfda5cd7508179c95203647a))
+  - One more test bytes the dust, but… ([`62cb6eb`](https://github.com/Byron/crates-index-diff-rs/commit/62cb6ebd66802d6500b9cb52e94cd1581ad8fe9b))
+  - Fix most of the tests ([`276e726`](https://github.com/Byron/crates-index-diff-rs/commit/276e726221bab2bea2e0d06ff396f757df74d393))
+  - A first stab at getting the diff back to work with `imara-diff` ([`5573529`](https://github.com/Byron/crates-index-diff-rs/commit/5573529fa44c2c1e7e108c00c0784f301c599d61))
+  - Try to rewrite explicit trait impl as closure, same lifeimte issues. ([`2809c75`](https://github.com/Byron/crates-index-diff-rs/commit/2809c75cff185190d6f1075e10c1d5f1668200ed))
+  - Upgrade to `git-repoitory v0.26`, fail to make diff compile. ([`3f47ec3`](https://github.com/Byron/crates-index-diff-rs/commit/3f47ec38b4cfe1ed2b3ec2cb88d31e4598dafe67))
+
 </details>
 
 ## 13.0.1 (2022-10-11)
 
 ### Bug Fixes
 
- - <csr-id-a6975ce303385cb124a2409d2900a1f2aa278225/> rename `init::Error2` to `init::Error`.
-   This name was left by mistake and shouldn't have made it into the
-   release.
+- <csr-id-a6975ce303385cb124a2409d2900a1f2aa278225/> rename `init::Error2` to `init::Error`.
+  This name was left by mistake and shouldn't have made it into the
+  release.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 1 day passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 1 day passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -939,9 +1009,10 @@ for his contribution. Thank you!
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v13.0.1 ([`acd06a1`](https://github.com/syphar/crates-index-diff-rs/commit/acd06a154e3a50e76a3a29c14fa64880a734e6f3))
-    - Rename `init::Error2` to `init::Error`. ([`a6975ce`](https://github.com/syphar/crates-index-diff-rs/commit/a6975ce303385cb124a2409d2900a1f2aa278225))
+- **Uncategorized**
+  - Release crates-index-diff v13.0.1 ([`acd06a1`](https://github.com/Byron/crates-index-diff-rs/commit/acd06a154e3a50e76a3a29c14fa64880a734e6f3))
+  - Rename `init::Error2` to `init::Error`. ([`a6975ce`](https://github.com/Byron/crates-index-diff-rs/commit/a6975ce303385cb124a2409d2900a1f2aa278225))
+
 </details>
 
 ## 13.0.0 (2022-10-10)
@@ -960,17 +1031,17 @@ If that's a problem, prefer staying with the v12.X line.
 
 ### Changed (BREAKING)
 
- - <csr-id-4cedf27d510ff9031bf9f142ecbb3788a6337f8c/> remove `git2` in favor of `gitoxide`.
-   `gitoxide` is now used for cloning and fetching as well.
+- <csr-id-4cedf27d510ff9031bf9f142ecbb3788a6337f8c/> remove `git2` in favor of `gitoxide`.
+  `gitoxide` is now used for cloning and fetching as well.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 12 commits contributed to the release over the course of 6 calendar days.
- - 11 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 12 commits contributed to the release over the course of 6 calendar days.
+- 11 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -978,35 +1049,36 @@ If that's a problem, prefer staying with the v12.X line.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v13.0.0 ([`2b08485`](https://github.com/syphar/crates-index-diff-rs/commit/2b08485ca4739aff0e3f6619f0ae92c9d032557f))
-    - Prepare changelog  prior to release ([`35b1ce7`](https://github.com/syphar/crates-index-diff-rs/commit/35b1ce77a4ee3ad5ebfd494926e5881c9c8ea473))
-    - Merge branch 'remove-git2' ([`ab529ad`](https://github.com/syphar/crates-index-diff-rs/commit/ab529adbcd85691958297cf451898cb1bece63cd))
-    - Switch to released version of git-repository (v0.25) ([`533bfab`](https://github.com/syphar/crates-index-diff-rs/commit/533bfabc36d4c1d515c30f4d16733b62dbac02b9))
-    - Fix makefile ([`7cede70`](https://github.com/syphar/crates-index-diff-rs/commit/7cede70cc829919ea4d3b40f61e2a7ee8f6057a6))
-    - Remove `git2` in favor of `gitoxide`. ([`4cedf27`](https://github.com/syphar/crates-index-diff-rs/commit/4cedf27d510ff9031bf9f142ecbb3788a6337f8c))
-    - All tests pass, time to remove git2 ([`6975d67`](https://github.com/syphar/crates-index-diff-rs/commit/6975d671fa9f11f7f11f520705b4832a080bb3b7))
-    - Use gitoxide based cloning on demand in tests, one failure ([`1774f94`](https://github.com/syphar/crates-index-diff-rs/commit/1774f94e8de0939ca66df8fc0240355967be5699))
-    - Add a way to clone using `gitoxide` without removing git2 just yet. ([`878abe9`](https://github.com/syphar/crates-index-diff-rs/commit/878abe9071b8d36df496206a0eda204aa133c274))
-    - Add `fetch_changes_with_options()` using gitoxide ([`900ae56`](https://github.com/syphar/crates-index-diff-rs/commit/900ae56286894ddcdb371bf3bea55a7ba4dfba72))
-    - Use gitoxide for fetching in test ([`00e6875`](https://github.com/syphar/crates-index-diff-rs/commit/00e6875209b059797fccb538dd97122e10803d20))
-    - Sketch a new peek method that uses gitoxide to fetch things ([`759ff30`](https://github.com/syphar/crates-index-diff-rs/commit/759ff30ad771deefa3d226badea72796c74f3096))
+- **Uncategorized**
+  - Release crates-index-diff v13.0.0 ([`2b08485`](https://github.com/Byron/crates-index-diff-rs/commit/2b08485ca4739aff0e3f6619f0ae92c9d032557f))
+  - Prepare changelog  prior to release ([`35b1ce7`](https://github.com/Byron/crates-index-diff-rs/commit/35b1ce77a4ee3ad5ebfd494926e5881c9c8ea473))
+  - Merge branch 'remove-git2' ([`ab529ad`](https://github.com/Byron/crates-index-diff-rs/commit/ab529adbcd85691958297cf451898cb1bece63cd))
+  - Switch to released version of git-repository (v0.25) ([`533bfab`](https://github.com/Byron/crates-index-diff-rs/commit/533bfabc36d4c1d515c30f4d16733b62dbac02b9))
+  - Fix makefile ([`7cede70`](https://github.com/Byron/crates-index-diff-rs/commit/7cede70cc829919ea4d3b40f61e2a7ee8f6057a6))
+  - Remove `git2` in favor of `gitoxide`. ([`4cedf27`](https://github.com/Byron/crates-index-diff-rs/commit/4cedf27d510ff9031bf9f142ecbb3788a6337f8c))
+  - All tests pass, time to remove git2 ([`6975d67`](https://github.com/Byron/crates-index-diff-rs/commit/6975d671fa9f11f7f11f520705b4832a080bb3b7))
+  - Use gitoxide based cloning on demand in tests, one failure ([`1774f94`](https://github.com/Byron/crates-index-diff-rs/commit/1774f94e8de0939ca66df8fc0240355967be5699))
+  - Add a way to clone using `gitoxide` without removing git2 just yet. ([`878abe9`](https://github.com/Byron/crates-index-diff-rs/commit/878abe9071b8d36df496206a0eda204aa133c274))
+  - Add `fetch_changes_with_options()` using gitoxide ([`900ae56`](https://github.com/Byron/crates-index-diff-rs/commit/900ae56286894ddcdb371bf3bea55a7ba4dfba72))
+  - Use gitoxide for fetching in test ([`00e6875`](https://github.com/Byron/crates-index-diff-rs/commit/00e6875209b059797fccb538dd97122e10803d20))
+  - Sketch a new peek method that uses gitoxide to fetch things ([`759ff30`](https://github.com/Byron/crates-index-diff-rs/commit/759ff30ad771deefa3d226badea72796c74f3096))
+
 </details>
 
 ## 12.1.0 (2022-09-29)
 
 ### New Features
 
- - <csr-id-74866b44ada127894b63969818e64564a294c8d0/> re-export `git-repository` as `git`
-   This makes type conversions possible where needed.
+- <csr-id-74866b44ada127894b63969818e64564a294c8d0/> re-export `git-repository` as `git`
+  This makes type conversions possible where needed.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1014,9 +1086,10 @@ If that's a problem, prefer staying with the v12.X line.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v12.1.0 ([`ad2f6d9`](https://github.com/syphar/crates-index-diff-rs/commit/ad2f6d9f6e2bf3ac7f0a5db2a2bdcbdc92a0744a))
-    - Re-export `git-repository` as `git` ([`74866b4`](https://github.com/syphar/crates-index-diff-rs/commit/74866b44ada127894b63969818e64564a294c8d0))
+- **Uncategorized**
+  - Release crates-index-diff v12.1.0 ([`ad2f6d9`](https://github.com/Byron/crates-index-diff-rs/commit/ad2f6d9f6e2bf3ac7f0a5db2a2bdcbdc92a0744a))
+  - Re-export `git-repository` as `git` ([`74866b4`](https://github.com/Byron/crates-index-diff-rs/commit/74866b44ada127894b63969818e64564a294c8d0))
+
 </details>
 
 ## 12.0.0 (2022-09-29)
@@ -1028,10 +1101,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
- - 9 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#23](https://github.com/syphar/crates-index-diff-rs/issues/23)
+- 3 commits contributed to the release.
+- 9 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#23](https://github.com/Byron/crates-index-diff-rs/issues/23)
 
 ### Commit Details
 
@@ -1039,27 +1112,28 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **[#23](https://github.com/syphar/crates-index-diff-rs/issues/23)**
-    - Update changelog prior to release ([`6017b3f`](https://github.com/syphar/crates-index-diff-rs/commit/6017b3fe3f46079e86181d1a7107cd77dd1ab797))
-    - Update version to 12.0 to indicate breaking change via git-repository ([`1fcac4b`](https://github.com/syphar/crates-index-diff-rs/commit/1fcac4b92ec7d2ef90206dabeebc7d07322b0723))
- * **Uncategorized**
-    - Release crates-index-diff v12.0.0 ([`ee27555`](https://github.com/syphar/crates-index-diff-rs/commit/ee275556b2bac9845b9dc71165df8caf51bad6a5))
+- **[#23](https://github.com/Byron/crates-index-diff-rs/issues/23)**
+  - Update changelog prior to release ([`6017b3f`](https://github.com/Byron/crates-index-diff-rs/commit/6017b3fe3f46079e86181d1a7107cd77dd1ab797))
+  - Update version to 12.0 to indicate breaking change via git-repository ([`1fcac4b`](https://github.com/Byron/crates-index-diff-rs/commit/1fcac4b92ec7d2ef90206dabeebc7d07322b0723))
+- **Uncategorized**
+  - Release crates-index-diff v12.0.0 ([`ee27555`](https://github.com/Byron/crates-index-diff-rs/commit/ee275556b2bac9845b9dc71165df8caf51bad6a5))
+
 </details>
 
 ## 11.2.0 (2022-09-20)
 
 ### New Features
 
- - <csr-id-91593970b6989b93a48138ca35a799808e99afd0/> upgrade to `git-repository` v0.24 to simplify diff implementation.
+- <csr-id-91593970b6989b93a48138ca35a799808e99afd0/> upgrade to `git-repository` v0.24 to simplify diff implementation.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release over the course of 6 calendar days.
- - 6 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 4 commits contributed to the release over the course of 6 calendar days.
+- 6 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1067,31 +1141,32 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v11.2.0 ([`7e420d2`](https://github.com/syphar/crates-index-diff-rs/commit/7e420d284099f195f316429d0ac9ca2262cf881c))
-    - Use the latest diff API to obtain line diffs. ([`300e966`](https://github.com/syphar/crates-index-diff-rs/commit/300e966f905feb75d8ecc721ae479f0a5e68e681))
-    - Upgrade to `git-repository` v0.24 to simplify diff implementation. ([`9159397`](https://github.com/syphar/crates-index-diff-rs/commit/91593970b6989b93a48138ca35a799808e99afd0))
-    - Remove accidentally added example ([`cd23a28`](https://github.com/syphar/crates-index-diff-rs/commit/cd23a28c45b4d3e6f6ac2fce1034a03eee0ac65f))
+- **Uncategorized**
+  - Release crates-index-diff v11.2.0 ([`7e420d2`](https://github.com/Byron/crates-index-diff-rs/commit/7e420d284099f195f316429d0ac9ca2262cf881c))
+  - Use the latest diff API to obtain line diffs. ([`300e966`](https://github.com/Byron/crates-index-diff-rs/commit/300e966f905feb75d8ecc721ae479f0a5e68e681))
+  - Upgrade to `git-repository` v0.24 to simplify diff implementation. ([`9159397`](https://github.com/Byron/crates-index-diff-rs/commit/91593970b6989b93a48138ca35a799808e99afd0))
+  - Remove accidentally added example ([`cd23a28`](https://github.com/Byron/crates-index-diff-rs/commit/cd23a28c45b4d3e6f6ac2fce1034a03eee0ac65f))
+
 </details>
 
 ## 11.1.6 (2022-09-14)
 
 ### Bug Fixes
 
- - <csr-id-4ce0021433ba2f4636ff97156ce323c1d8c6042e/> Ignore directory deletions.
-   Previously deleted directories would be picked up as crate deletions,
-   with the crate name being the deleted directory.
-   
-   Now only file deletions will be assumed to be crate deletions.
+- <csr-id-4ce0021433ba2f4636ff97156ce323c1d8c6042e/> Ignore directory deletions.
+  Previously deleted directories would be picked up as crate deletions,
+  with the crate name being the deleted directory.
+  
+  Now only file deletions will be assumed to be crate deletions.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 12 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#20](https://github.com/syphar/crates-index-diff-rs/issues/20)
+- 2 commits contributed to the release.
+- 12 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#20](https://github.com/Byron/crates-index-diff-rs/issues/20)
 
 ### Commit Details
 
@@ -1099,33 +1174,34 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **[#20](https://github.com/syphar/crates-index-diff-rs/issues/20)**
-    - Ignore directory deletions. ([`4ce0021`](https://github.com/syphar/crates-index-diff-rs/commit/4ce0021433ba2f4636ff97156ce323c1d8c6042e))
- * **Uncategorized**
-    - Release crates-index-diff v11.1.6 ([`3a1ecd1`](https://github.com/syphar/crates-index-diff-rs/commit/3a1ecd183e695772a602d32b8e512eb501fa1201))
+- **[#20](https://github.com/Byron/crates-index-diff-rs/issues/20)**
+  - Ignore directory deletions. ([`4ce0021`](https://github.com/Byron/crates-index-diff-rs/commit/4ce0021433ba2f4636ff97156ce323c1d8c6042e))
+- **Uncategorized**
+  - Release crates-index-diff v11.1.6 ([`3a1ecd1`](https://github.com/Byron/crates-index-diff-rs/commit/3a1ecd183e695772a602d32b8e512eb501fa1201))
+
 </details>
 
 ## 11.1.5 (2022-09-02)
 
 ### Bug Fixes
 
- - <csr-id-8af61f2a20eee72b0e53ae3b6ce22a3a9d52546c/> Ignore all changed files with an extension.
-   There are non-crate files that as far as we know all have file
-   extensions, as opposed to the crate files we are interested in, which do
-   not.
-   
-   Thus skipping all files with extension helps us to get past the initial
-   commit which includes such files, like `.github/*.yml`.
-   
-   Related to https://github.com/rust-lang/docs.rs/pull/1807#issuecomment-1235158502
+- <csr-id-8af61f2a20eee72b0e53ae3b6ce22a3a9d52546c/> Ignore all changed files with an extension.
+  There are non-crate files that as far as we know all have file
+  extensions, as opposed to the crate files we are interested in, which do
+  not.
+  
+  Thus skipping all files with extension helps us to get past the initial
+  commit which includes such files, like `.github/*.yml`.
+  
+  Related to https://github.com/rust-lang/docs.rs/pull/1807#issuecomment-1235158502
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1133,29 +1209,30 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v11.1.5 ([`516a779`](https://github.com/syphar/crates-index-diff-rs/commit/516a779f861abeb3972ec721512fe424ab70d8e6))
-    - Ignore all changed files with an extension. ([`8af61f2`](https://github.com/syphar/crates-index-diff-rs/commit/8af61f2a20eee72b0e53ae3b6ce22a3a9d52546c))
+- **Uncategorized**
+  - Release crates-index-diff v11.1.5 ([`516a779`](https://github.com/Byron/crates-index-diff-rs/commit/516a779f861abeb3972ec721512fe424ab70d8e6))
+  - Ignore all changed files with an extension. ([`8af61f2`](https://github.com/Byron/crates-index-diff-rs/commit/8af61f2a20eee72b0e53ae3b6ce22a3a9d52546c))
+
 </details>
 
 ## 11.1.4 (2022-09-02)
 
 ### Bug Fixes
 
- - <csr-id-ab6e46ced56d1aaed22b5619cfbc5c131a93ba32/> improve error descriptions and provide details when decoding of crate versions fails.
-   It was suggested in this comment:
-   https://github.com/rust-lang/docs.rs/pull/1807#issuecomment-1234825498 ,
-   and if marker references aren't as expected it's possible to diff lines
-   that are not actually crate versions.
+- <csr-id-ab6e46ced56d1aaed22b5619cfbc5c131a93ba32/> improve error descriptions and provide details when decoding of crate versions fails.
+  It was suggested in this comment:
+  https://github.com/rust-lang/docs.rs/pull/1807#issuecomment-1234825498 ,
+  and if marker references aren't as expected it's possible to diff lines
+  that are not actually crate versions.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
- - 1 day passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 3 commits contributed to the release.
+- 1 day passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1163,27 +1240,28 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v11.1.4 ([`9d41b20`](https://github.com/syphar/crates-index-diff-rs/commit/9d41b200f5bec12953d62fc4ca892f38b6d28ac1))
-    - Improve error descriptions and provide details when decoding of crate versions fails. ([`ab6e46c`](https://github.com/syphar/crates-index-diff-rs/commit/ab6e46ced56d1aaed22b5619cfbc5c131a93ba32))
-    - Fix rev-spec ([`83e91f5`](https://github.com/syphar/crates-index-diff-rs/commit/83e91f56e4f93b6de5210e6a5f6d80afaeba4e6d))
+- **Uncategorized**
+  - Release crates-index-diff v11.1.4 ([`9d41b20`](https://github.com/Byron/crates-index-diff-rs/commit/9d41b200f5bec12953d62fc4ca892f38b6d28ac1))
+  - Improve error descriptions and provide details when decoding of crate versions fails. ([`ab6e46c`](https://github.com/Byron/crates-index-diff-rs/commit/ab6e46ced56d1aaed22b5619cfbc5c131a93ba32))
+  - Fix rev-spec ([`83e91f5`](https://github.com/Byron/crates-index-diff-rs/commit/83e91f56e4f93b6de5210e6a5f6d80afaeba4e6d))
+
 </details>
 
 ## 11.1.3 (2022-09-01)
 
 ### Bug Fixes
 
- - <csr-id-a430c03d950d073084e3555cb264fa5c416b8ded/> switch git2 back to v0.14 - v0.15 is a breaking change…
-   …for everyone who uses git2 as direct dependency as well due to
-   libgit2-sys.
+- <csr-id-a430c03d950d073084e3555cb264fa5c416b8ded/> switch git2 back to v0.14 - v0.15 is a breaking change…
+  …for everyone who uses git2 as direct dependency as well due to
+  libgit2-sys.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1191,35 +1269,36 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v11.1.3 ([`d46402a`](https://github.com/syphar/crates-index-diff-rs/commit/d46402ab2ed4e65c7b1c03635ed39ea68d31ffe7))
-    - Switch git2 back to v0.14 - v0.15 is a breaking change… ([`a430c03`](https://github.com/syphar/crates-index-diff-rs/commit/a430c03d950d073084e3555cb264fa5c416b8ded))
+- **Uncategorized**
+  - Release crates-index-diff v11.1.3 ([`d46402a`](https://github.com/Byron/crates-index-diff-rs/commit/d46402ab2ed4e65c7b1c03635ed39ea68d31ffe7))
+  - Switch git2 back to v0.14 - v0.15 is a breaking change… ([`a430c03`](https://github.com/Byron/crates-index-diff-rs/commit/a430c03d950d073084e3555cb264fa5c416b8ded))
+
 </details>
 
 ## 11.1.2 (2022-09-01)
 
 ### Bug Fixes
 
- - <csr-id-23a66b9da25ef40d4e545bed028788f83836a584/> make fetches work again by using safe-performance mode of `git-repository`.
-   This fixes the 'zlib stream broken' issue when fetching crates.io
-   changes which was caused by `git-repository` configuring for
-   max-performance by default, which affects a crate used by `git2` as
-   well. For some reason, changing to `zlib-ng` as backend wasn't taken
-   kindly by `libgit2` causing it to fail after a short while of receiving
-   a pack from the remote.
-   
-   The fix avoids making such modifications to the zlib crate, allowing
-   both crates, `git-repository` and `git2` to co-exist in the same
-   dependency tree.
+- <csr-id-23a66b9da25ef40d4e545bed028788f83836a584/> make fetches work again by using safe-performance mode of `git-repository`.
+  This fixes the 'zlib stream broken' issue when fetching crates.io
+  changes which was caused by `git-repository` configuring for
+  max-performance by default, which affects a crate used by `git2` as
+  well. For some reason, changing to `zlib-ng` as backend wasn't taken
+  kindly by `libgit2` causing it to fail after a short while of receiving
+  a pack from the remote.
+  
+  The fix avoids making such modifications to the zlib crate, allowing
+  both crates, `git-repository` and `git2` to co-exist in the same
+  dependency tree.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 7 commits contributed to the release.
- - 1 day passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 7 commits contributed to the release.
+- 1 day passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1227,41 +1306,42 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v11.1.2 ([`5b2e3ce`](https://github.com/syphar/crates-index-diff-rs/commit/5b2e3ce028c043d8cc8c0e100f225626d5f11654))
-    - Merge branch 'fix-zlib-stream-error' ([`ac83e7a`](https://github.com/syphar/crates-index-diff-rs/commit/ac83e7a5afaa7ae238f441dccfdbcb97edc5edc3))
-    - Make fetches work again by using safe-performance mode of `git-repository`. ([`23a66b9`](https://github.com/syphar/crates-index-diff-rs/commit/23a66b9da25ef40d4e545bed028788f83836a584))
-    - Refactor ([`e93f1c6`](https://github.com/syphar/crates-index-diff-rs/commit/e93f1c66fd4c18de60f6fe75f913e8a1d7968a29))
-    - Upgrade to latest git2 version ([`7616db2`](https://github.com/syphar/crates-index-diff-rs/commit/7616db2a4022fdf97cab00ed298242de46291f23))
-    - Properly parameterize script so it's obvious what is what ([`02f715e`](https://github.com/syphar/crates-index-diff-rs/commit/02f715e0b6b74559b8702234798c36eae510f6de))
-    - Make test-lookup independent of prior commits ([`4b7fc6e`](https://github.com/syphar/crates-index-diff-rs/commit/4b7fc6e54336b642f0739b8d7845a9dba2346209))
+- **Uncategorized**
+  - Release crates-index-diff v11.1.2 ([`5b2e3ce`](https://github.com/Byron/crates-index-diff-rs/commit/5b2e3ce028c043d8cc8c0e100f225626d5f11654))
+  - Merge branch 'fix-zlib-stream-error' ([`ac83e7a`](https://github.com/Byron/crates-index-diff-rs/commit/ac83e7a5afaa7ae238f441dccfdbcb97edc5edc3))
+  - Make fetches work again by using safe-performance mode of `git-repository`. ([`23a66b9`](https://github.com/Byron/crates-index-diff-rs/commit/23a66b9da25ef40d4e545bed028788f83836a584))
+  - Refactor ([`e93f1c6`](https://github.com/Byron/crates-index-diff-rs/commit/e93f1c66fd4c18de60f6fe75f913e8a1d7968a29))
+  - Upgrade to latest git2 version ([`7616db2`](https://github.com/Byron/crates-index-diff-rs/commit/7616db2a4022fdf97cab00ed298242de46291f23))
+  - Properly parameterize script so it's obvious what is what ([`02f715e`](https://github.com/Byron/crates-index-diff-rs/commit/02f715e0b6b74559b8702234798c36eae510f6de))
+  - Make test-lookup independent of prior commits ([`4b7fc6e`](https://github.com/Byron/crates-index-diff-rs/commit/4b7fc6e54336b642f0739b8d7845a9dba2346209))
+
 </details>
 
 ## 11.1.1 (2022-08-31)
 
 ### Bug Fixes
 
- - <csr-id-28de9d4a6385bd495dbf93ef0d2b58e00e993104/> Consider all crates yanked if 'yanked = true'.
-   Previously, due to a missing test, a bug snuck in that would assume
-   that all lines in an added files must be new versions, marking them
-   as `Change::Added`. This ignored the fact that any line could also
-   carry a yanked crate, misrepresenting them.
-   
-   This is now fixed, and yanked crates generally show up as
-   `Change::Yanked`.
-   
-   One might take this as a hint that diffentiating by yank status might
-   not be that useful after all as it doesn't scale that well. Maybe
-   a future version changes how `Change` is represented.
+- <csr-id-28de9d4a6385bd495dbf93ef0d2b58e00e993104/> Consider all crates yanked if 'yanked = true'.
+  Previously, due to a missing test, a bug snuck in that would assume
+  that all lines in an added files must be new versions, marking them
+  as `Change::Added`. This ignored the fact that any line could also
+  carry a yanked crate, misrepresenting them.
+  
+  This is now fixed, and yanked crates generally show up as
+  `Change::Yanked`.
+  
+  One might take this as a hint that diffentiating by yank status might
+  not be that useful after all as it doesn't scale that well. Maybe
+  a future version changes how `Change` is represented.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
- - 1 day passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#19](https://github.com/syphar/crates-index-diff-rs/issues/19)
+- 3 commits contributed to the release.
+- 1 day passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#19](https://github.com/Byron/crates-index-diff-rs/issues/19)
 
 ### Commit Details
 
@@ -1269,37 +1349,38 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **[#19](https://github.com/syphar/crates-index-diff-rs/issues/19)**
-    - Consider all crates yanked if 'yanked = true'. ([`28de9d4`](https://github.com/syphar/crates-index-diff-rs/commit/28de9d4a6385bd495dbf93ef0d2b58e00e993104))
-    - Add failing test ([`89378e1`](https://github.com/syphar/crates-index-diff-rs/commit/89378e10b395cb1c0d963557d46568fda7b49f7b))
- * **Uncategorized**
-    - Release crates-index-diff v11.1.1 ([`708288f`](https://github.com/syphar/crates-index-diff-rs/commit/708288f52f26ecff03ddc89ea792be1a765b8b85))
+- **[#19](https://github.com/Byron/crates-index-diff-rs/issues/19)**
+  - Consider all crates yanked if 'yanked = true'. ([`28de9d4`](https://github.com/Byron/crates-index-diff-rs/commit/28de9d4a6385bd495dbf93ef0d2b58e00e993104))
+  - Add failing test ([`89378e1`](https://github.com/Byron/crates-index-diff-rs/commit/89378e10b395cb1c0d963557d46568fda7b49f7b))
+- **Uncategorized**
+  - Release crates-index-diff v11.1.1 ([`708288f`](https://github.com/Byron/crates-index-diff-rs/commit/708288f52f26ecff03ddc89ea792be1a765b8b85))
+
 </details>
 
 ## 11.1.0 (2022-08-30)
 
 ### New Features
 
- - <csr-id-09489ab888124954119c70a5828f0e1011198253/> make the name of the remote configurable.
-   This is primarily used in testing and we try even harder to make it fail
-   to deal with squashed remote references, but it seems to work fine.
-   
-   For good measure, now using `+` in the refspec to assure it forces
-   an update.
+- <csr-id-09489ab888124954119c70a5828f0e1011198253/> make the name of the remote configurable.
+  This is primarily used in testing and we try even harder to make it fail
+  to deal with squashed remote references, but it seems to work fine.
+  
+  For good measure, now using `+` in the refspec to assure it forces
+  an update.
 
 ### Bug Fixes
 
- - <csr-id-cdcac4127490713de60e19d007ebcac0a2459c0d/> assure refs can be reet when fetching to support squashing.
-   Previously tests didn't replicate this, now they do.
+- <csr-id-cdcac4127490713de60e19d007ebcac0a2459c0d/> assure refs can be reet when fetching to support squashing.
+  Previously tests didn't replicate this, now they do.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 5 commits contributed to the release over the course of 1 calendar day.
- - 2 days passed between releases.
- - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#16](https://github.com/syphar/crates-index-diff-rs/issues/16)
+- 5 commits contributed to the release over the course of 1 calendar day.
+- 2 days passed between releases.
+- 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#16](https://github.com/Byron/crates-index-diff-rs/issues/16)
 
 ### Commit Details
 
@@ -1307,39 +1388,40 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **[#16](https://github.com/syphar/crates-index-diff-rs/issues/16)**
-    - Fix assertion message ([`51559b8`](https://github.com/syphar/crates-index-diff-rs/commit/51559b87a7c6b28b626e74b64445335d9a9f813a))
- * **Uncategorized**
-    - Release crates-index-diff v11.1.0 ([`01ca770`](https://github.com/syphar/crates-index-diff-rs/commit/01ca770ba0e2fd14994c6ca5ba1ecfa6c0349fa3))
-    - Make the name of the remote configurable. ([`09489ab`](https://github.com/syphar/crates-index-diff-rs/commit/09489ab888124954119c70a5828f0e1011198253))
-    - Assure refs can be reet when fetching to support squashing. ([`cdcac41`](https://github.com/syphar/crates-index-diff-rs/commit/cdcac4127490713de60e19d007ebcac0a2459c0d))
-    - Add test to validate we can deal with squashed indices ([`ed4ba38`](https://github.com/syphar/crates-index-diff-rs/commit/ed4ba38ce3875372c35cbd9476b1e922065f2f78))
+- **[#16](https://github.com/Byron/crates-index-diff-rs/issues/16)**
+  - Fix assertion message ([`51559b8`](https://github.com/Byron/crates-index-diff-rs/commit/51559b87a7c6b28b626e74b64445335d9a9f813a))
+- **Uncategorized**
+  - Release crates-index-diff v11.1.0 ([`01ca770`](https://github.com/Byron/crates-index-diff-rs/commit/01ca770ba0e2fd14994c6ca5ba1ecfa6c0349fa3))
+  - Make the name of the remote configurable. ([`09489ab`](https://github.com/Byron/crates-index-diff-rs/commit/09489ab888124954119c70a5828f0e1011198253))
+  - Assure refs can be reet when fetching to support squashing. ([`cdcac41`](https://github.com/Byron/crates-index-diff-rs/commit/cdcac4127490713de60e19d007ebcac0a2459c0d))
+  - Add test to validate we can deal with squashed indices ([`ed4ba38`](https://github.com/Byron/crates-index-diff-rs/commit/ed4ba38ce3875372c35cbd9476b1e922065f2f78))
+
 </details>
 
 ## 11.0.0 (2022-08-28)
 
 ### Changed (BREAKING)
 
- - <csr-id-2d3a182819077a1fe068cb16fdfeceed2f6882da/> Use `gitoxide` `Repository` instead of `git2::Repository`
-   This comes with plenty of changes to the API of the
-   `last_seen_reference()` and to the lower-level methods that take
-   object ids (now `gix::hash::ObjectId`.
-   
-   Note that `git2` is still used internally for fetching and cloning.
-   This change was made to assure that at no time there are two open
-   repositories (once for git2, once for `gitoxide`), as this has the
-   potential to double resource usage for file handles.
- - <csr-id-07f4b6c022ae8c48907250314db3a9eeb59ae89e/> move `CloneOptions` into `index` module.
-   The `index` module is now public for that reason.
+- <csr-id-2d3a182819077a1fe068cb16fdfeceed2f6882da/> Use `gitoxide` `Repository` instead of `git2::Repository`
+  This comes with plenty of changes to the API of the
+  `last_seen_reference()` and to the lower-level methods that take
+  object ids (now `gix::hash::ObjectId`.
+  
+  Note that `git2` is still used internally for fetching and cloning.
+  This change was made to assure that at no time there are two open
+  repositories (once for git2, once for `gitoxide`), as this has the
+  potential to double resource usage for file handles.
+- <csr-id-07f4b6c022ae8c48907250314db3a9eeb59ae89e/> move `CloneOptions` into `index` module.
+  The `index` module is now public for that reason.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 39 commits contributed to the release over the course of 1 calendar day.
- - 97 days passed between releases.
- - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#16](https://github.com/syphar/crates-index-diff-rs/issues/16)
+- 39 commits contributed to the release over the course of 1 calendar day.
+- 97 days passed between releases.
+- 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#16](https://github.com/Byron/crates-index-diff-rs/issues/16)
 
 ### Thanks Clippy
 
@@ -1353,73 +1435,74 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **[#16](https://github.com/syphar/crates-index-diff-rs/issues/16)**
-    - Update to latest release of `gitoxide` ([`23e14af`](https://github.com/syphar/crates-index-diff-rs/commit/23e14af509e72efaa65215f3f6f88166e32dbeb0))
-    - And normalization works now ([`eb148e5`](https://github.com/syphar/crates-index-diff-rs/commit/eb148e512bc29cdc81f4eb35bda0a1819d9abd69))
-    - First stab at normalization can reduce 245 version, but… ([`ae3f971`](https://github.com/syphar/crates-index-diff-rs/commit/ae3f971e627d491e239220bb5ba15a89c026302e))
-    - Adapt to changes in git-repository ([`68ff142`](https://github.com/syphar/crates-index-diff-rs/commit/68ff142961f4afc2d2d31b4d457047a6db321156))
-    - Remove git2 verion of the diff algorithm ([`371b512`](https://github.com/syphar/crates-index-diff-rs/commit/371b51293047b41beac82be7a9e9d1bd43fd5d7a))
-    - Refactor ([`3749220`](https://github.com/syphar/crates-index-diff-rs/commit/374922041710eb9ace92a7a319c2c407a4897baa))
-    - Refactor ([`7cee17e`](https://github.com/syphar/crates-index-diff-rs/commit/7cee17eccd74757277049e92c8074ee41cceedaf))
-    - All diff-tests pass like before ([`9ba7921`](https://github.com/syphar/crates-index-diff-rs/commit/9ba79212042a501e1cae21ce28daea2a3637a383))
-    - Handle modifications and yanks ([`3416414`](https://github.com/syphar/crates-index-diff-rs/commit/34164140dd5aada52907a30d0ea483490d6da833))
-    - Handle entire crate deletions as well ([`eadc65f`](https://github.com/syphar/crates-index-diff-rs/commit/eadc65ff9b86cd02aeb29161511b6fec5d19cb04))
-    - First sketch of addition is working ([`55d71dc`](https://github.com/syphar/crates-index-diff-rs/commit/55d71dc2f2f7c78af9940e1f9128e56753ac2191))
-    - Frame for diffing ([`cd86f5b`](https://github.com/syphar/crates-index-diff-rs/commit/cd86f5b82c8ac57106fa5ed1c254189fa894c3cd))
-    - Refactor ([`fa9cfab`](https://github.com/syphar/crates-index-diff-rs/commit/fa9cfab4053c630b8793a782ef732d7330b6f6c6))
-    - Use `gitoxide` `Repository` instead of `git2::Repository` ([`2d3a182`](https://github.com/syphar/crates-index-diff-rs/commit/2d3a182819077a1fe068cb16fdfeceed2f6882da))
-    - Port all old tests to the new fixture ([`272bec8`](https://github.com/syphar/crates-index-diff-rs/commit/272bec8848e277eda4747523ed7497ef5d7f4d06))
-    - Test for auto-clone ([`8a1bc25`](https://github.com/syphar/crates-index-diff-rs/commit/8a1bc25ac020cc03513bf2bafd6d576b0dc2dded))
-    - Remove redundant tests ([`45494f0`](https://github.com/syphar/crates-index-diff-rs/commit/45494f081a2154f478929c19268f163e86595f29))
-    - Test for peek changes ([`61e217a`](https://github.com/syphar/crates-index-diff-rs/commit/61e217a2e0ef84e0f7bf091c0636a84804dd2fcf))
-    - Refactor ([`aeb6f45`](https://github.com/syphar/crates-index-diff-rs/commit/aeb6f45b9866e1c15862f336b6fe49bb3cf2dc2c))
-    - Use most recent git version of gitoxide for now ([`6dadfb7`](https://github.com/syphar/crates-index-diff-rs/commit/6dadfb759324e9858ea3a0774d6be89d6b9e5251))
-    - Thanks clippy ([`ebacafd`](https://github.com/syphar/crates-index-diff-rs/commit/ebacafd7855dda736fc5c6c90a608f06eb22b355))
-    - Normalization test ([`877b519`](https://github.com/syphar/crates-index-diff-rs/commit/877b5197fd13b7057b8daa6a75f9a517fa802d91))
-    - Add more tests for typical operations ([`56bfad7`](https://github.com/syphar/crates-index-diff-rs/commit/56bfad785be8dcc7259043b91cda8c4a267f617b))
-    - First successful test for addition ([`365bcf0`](https://github.com/syphar/crates-index-diff-rs/commit/365bcf040b2493bb98da050fdcb6b420ac2f9b68))
-    - Simplify CI.yml ([`c0295c5`](https://github.com/syphar/crates-index-diff-rs/commit/c0295c53d8115e22536def570d9e09991bd186e9))
-    - Fix fixture script ([`0efccd4`](https://github.com/syphar/crates-index-diff-rs/commit/0efccd493aa61f4d33e1ffd5f18bb48d61555ce9))
-    - First test can instantiate an `Index` on the new fixture ([`f9e31f2`](https://github.com/syphar/crates-index-diff-rs/commit/f9e31f20608ce093f590307d8fe46fd5fac91479))
-    - Add support for git-lfs to support archives ([`9a2ce43`](https://github.com/syphar/crates-index-diff-rs/commit/9a2ce43ef2961daef2951a0bc4fbc186917cd920))
-    - Build git repository from parts ([`d28591b`](https://github.com/syphar/crates-index-diff-rs/commit/d28591be86fb10b00f4db4f07cb1399c3b4305de))
-    - Also add commit-message information ([`7e85688`](https://github.com/syphar/crates-index-diff-rs/commit/7e85688272bc02e6e9ba923bfc72e219ee228a7a))
-    - Refactor ([`0c77e40`](https://github.com/syphar/crates-index-diff-rs/commit/0c77e40654abc741ae1f7ed08dba7129437a10bd))
-    - Refactor ([`78e05bd`](https://github.com/syphar/crates-index-diff-rs/commit/78e05bdd93ed3b88013ea5439b857d83f827e21c))
-    - Re-enable and fix doc-tests ([`946ca4c`](https://github.com/syphar/crates-index-diff-rs/commit/946ca4c8d7b9bc528569a89c6d2a14895c4e2314))
-    - Move `CloneOptions` into `index` module. ([`07f4b6c`](https://github.com/syphar/crates-index-diff-rs/commit/07f4b6c022ae8c48907250314db3a9eeb59ae89e))
-    - Refactor ([`ecd84eb`](https://github.com/syphar/crates-index-diff-rs/commit/ecd84eb489824abd7589526c864cbd8dfebb3a55))
-    - A script to create an index fixture ([`9a5f312`](https://github.com/syphar/crates-index-diff-rs/commit/9a5f312b781e82a35d7ae9812e8d8095e371d656))
- * **Uncategorized**
-    - Release crates-index-diff v11.0.0 ([`898024f`](https://github.com/syphar/crates-index-diff-rs/commit/898024ffe563e9b776f928fa9e41065ac2dcdd06))
-    - Merge branch 'semantic-stability' ([`b7574d8`](https://github.com/syphar/crates-index-diff-rs/commit/b7574d8e518390e00d5eb50579c8644ed2f85eb2))
-    - Thanks clippy ([`9e9b972`](https://github.com/syphar/crates-index-diff-rs/commit/9e9b9726c4ea59ead04f071928042e65bc2e0204))
+- **[#16](https://github.com/Byron/crates-index-diff-rs/issues/16)**
+  - Update to latest release of `gitoxide` ([`23e14af`](https://github.com/Byron/crates-index-diff-rs/commit/23e14af509e72efaa65215f3f6f88166e32dbeb0))
+  - And normalization works now ([`eb148e5`](https://github.com/Byron/crates-index-diff-rs/commit/eb148e512bc29cdc81f4eb35bda0a1819d9abd69))
+  - First stab at normalization can reduce 245 version, but… ([`ae3f971`](https://github.com/Byron/crates-index-diff-rs/commit/ae3f971e627d491e239220bb5ba15a89c026302e))
+  - Adapt to changes in git-repository ([`68ff142`](https://github.com/Byron/crates-index-diff-rs/commit/68ff142961f4afc2d2d31b4d457047a6db321156))
+  - Remove git2 verion of the diff algorithm ([`371b512`](https://github.com/Byron/crates-index-diff-rs/commit/371b51293047b41beac82be7a9e9d1bd43fd5d7a))
+  - Refactor ([`3749220`](https://github.com/Byron/crates-index-diff-rs/commit/374922041710eb9ace92a7a319c2c407a4897baa))
+  - Refactor ([`7cee17e`](https://github.com/Byron/crates-index-diff-rs/commit/7cee17eccd74757277049e92c8074ee41cceedaf))
+  - All diff-tests pass like before ([`9ba7921`](https://github.com/Byron/crates-index-diff-rs/commit/9ba79212042a501e1cae21ce28daea2a3637a383))
+  - Handle modifications and yanks ([`3416414`](https://github.com/Byron/crates-index-diff-rs/commit/34164140dd5aada52907a30d0ea483490d6da833))
+  - Handle entire crate deletions as well ([`eadc65f`](https://github.com/Byron/crates-index-diff-rs/commit/eadc65ff9b86cd02aeb29161511b6fec5d19cb04))
+  - First sketch of addition is working ([`55d71dc`](https://github.com/Byron/crates-index-diff-rs/commit/55d71dc2f2f7c78af9940e1f9128e56753ac2191))
+  - Frame for diffing ([`cd86f5b`](https://github.com/Byron/crates-index-diff-rs/commit/cd86f5b82c8ac57106fa5ed1c254189fa894c3cd))
+  - Refactor ([`fa9cfab`](https://github.com/Byron/crates-index-diff-rs/commit/fa9cfab4053c630b8793a782ef732d7330b6f6c6))
+  - Use `gitoxide` `Repository` instead of `git2::Repository` ([`2d3a182`](https://github.com/Byron/crates-index-diff-rs/commit/2d3a182819077a1fe068cb16fdfeceed2f6882da))
+  - Port all old tests to the new fixture ([`272bec8`](https://github.com/Byron/crates-index-diff-rs/commit/272bec8848e277eda4747523ed7497ef5d7f4d06))
+  - Test for auto-clone ([`8a1bc25`](https://github.com/Byron/crates-index-diff-rs/commit/8a1bc25ac020cc03513bf2bafd6d576b0dc2dded))
+  - Remove redundant tests ([`45494f0`](https://github.com/Byron/crates-index-diff-rs/commit/45494f081a2154f478929c19268f163e86595f29))
+  - Test for peek changes ([`61e217a`](https://github.com/Byron/crates-index-diff-rs/commit/61e217a2e0ef84e0f7bf091c0636a84804dd2fcf))
+  - Refactor ([`aeb6f45`](https://github.com/Byron/crates-index-diff-rs/commit/aeb6f45b9866e1c15862f336b6fe49bb3cf2dc2c))
+  - Use most recent git version of gitoxide for now ([`6dadfb7`](https://github.com/Byron/crates-index-diff-rs/commit/6dadfb759324e9858ea3a0774d6be89d6b9e5251))
+  - Thanks clippy ([`ebacafd`](https://github.com/Byron/crates-index-diff-rs/commit/ebacafd7855dda736fc5c6c90a608f06eb22b355))
+  - Normalization test ([`877b519`](https://github.com/Byron/crates-index-diff-rs/commit/877b5197fd13b7057b8daa6a75f9a517fa802d91))
+  - Add more tests for typical operations ([`56bfad7`](https://github.com/Byron/crates-index-diff-rs/commit/56bfad785be8dcc7259043b91cda8c4a267f617b))
+  - First successful test for addition ([`365bcf0`](https://github.com/Byron/crates-index-diff-rs/commit/365bcf040b2493bb98da050fdcb6b420ac2f9b68))
+  - Simplify CI.yml ([`c0295c5`](https://github.com/Byron/crates-index-diff-rs/commit/c0295c53d8115e22536def570d9e09991bd186e9))
+  - Fix fixture script ([`0efccd4`](https://github.com/Byron/crates-index-diff-rs/commit/0efccd493aa61f4d33e1ffd5f18bb48d61555ce9))
+  - First test can instantiate an `Index` on the new fixture ([`f9e31f2`](https://github.com/Byron/crates-index-diff-rs/commit/f9e31f20608ce093f590307d8fe46fd5fac91479))
+  - Add support for git-lfs to support archives ([`9a2ce43`](https://github.com/Byron/crates-index-diff-rs/commit/9a2ce43ef2961daef2951a0bc4fbc186917cd920))
+  - Build git repository from parts ([`d28591b`](https://github.com/Byron/crates-index-diff-rs/commit/d28591be86fb10b00f4db4f07cb1399c3b4305de))
+  - Also add commit-message information ([`7e85688`](https://github.com/Byron/crates-index-diff-rs/commit/7e85688272bc02e6e9ba923bfc72e219ee228a7a))
+  - Refactor ([`0c77e40`](https://github.com/Byron/crates-index-diff-rs/commit/0c77e40654abc741ae1f7ed08dba7129437a10bd))
+  - Refactor ([`78e05bd`](https://github.com/Byron/crates-index-diff-rs/commit/78e05bdd93ed3b88013ea5439b857d83f827e21c))
+  - Re-enable and fix doc-tests ([`946ca4c`](https://github.com/Byron/crates-index-diff-rs/commit/946ca4c8d7b9bc528569a89c6d2a14895c4e2314))
+  - Move `CloneOptions` into `index` module. ([`07f4b6c`](https://github.com/Byron/crates-index-diff-rs/commit/07f4b6c022ae8c48907250314db3a9eeb59ae89e))
+  - Refactor ([`ecd84eb`](https://github.com/Byron/crates-index-diff-rs/commit/ecd84eb489824abd7589526c864cbd8dfebb3a55))
+  - A script to create an index fixture ([`9a5f312`](https://github.com/Byron/crates-index-diff-rs/commit/9a5f312b781e82a35d7ae9812e8d8095e371d656))
+- **Uncategorized**
+  - Release crates-index-diff v11.0.0 ([`898024f`](https://github.com/Byron/crates-index-diff-rs/commit/898024ffe563e9b776f928fa9e41065ac2dcdd06))
+  - Merge branch 'semantic-stability' ([`b7574d8`](https://github.com/Byron/crates-index-diff-rs/commit/b7574d8e518390e00d5eb50579c8644ed2f85eb2))
+  - Thanks clippy ([`9e9b972`](https://github.com/Byron/crates-index-diff-rs/commit/9e9b9726c4ea59ead04f071928042e65bc2e0204))
+
 </details>
 
 ## 10.0.0 (2022-05-23)
 
 ### New Features (BREAKING)
 
- - <csr-id-38319375d07ca5d09700d40a778c367564cd8a66/> Add support for detecting deleted crates.
-   Previously there was no need to do that as deletions couldn't happen -
-   crates are yanked instead.
-   
-   Now that the ecosystem experienced its first (known) supply-chain attack
-   crates can also be deleted and we should be able to detect that to allow
-   downstream users to act on this automatically.
+- <csr-id-38319375d07ca5d09700d40a778c367564cd8a66/> Add support for detecting deleted crates.
+  Previously there was no need to do that as deletions couldn't happen -
+  crates are yanked instead.
+  
+  Now that the ecosystem experienced its first (known) supply-chain attack
+  crates can also be deleted and we should be able to detect that to allow
+  downstream users to act on this automatically.
 
 ### Bug Fixes
 
- - <csr-id-d273245d99836ef799946373444a0b85e02523d0/> update version in usage example
+- <csr-id-d273245d99836ef799946373444a0b85e02523d0/> update version in usage example
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 10 commits contributed to the release over the course of 84 calendar days.
- - 86 days passed between releases.
- - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 10 commits contributed to the release over the course of 84 calendar days.
+- 86 days passed between releases.
+- 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Thanks Clippy
 
@@ -1433,17 +1516,18 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v10.0.0 ([`43c63ca`](https://github.com/syphar/crates-index-diff-rs/commit/43c63ca51487aa15d6eac3ee5733809bdbaffd43))
-    - Prepare changelog prior to release ([`cc19788`](https://github.com/syphar/crates-index-diff-rs/commit/cc1978812ca6d6d0177fb3f2b4550181b5f32465))
-    - Assure tests run serially without needing --jobs 1 ([`2701f5c`](https://github.com/syphar/crates-index-diff-rs/commit/2701f5c65fd104c9d481ebdf041806e6dee2f07a))
-    - Merge branch 'syphar-handle-crate-delets' ([`aba9087`](https://github.com/syphar/crates-index-diff-rs/commit/aba908736924935c9d3b07ab793c28879368bc5f))
-    - Thanks clippy ([`df91215`](https://github.com/syphar/crates-index-diff-rs/commit/df912155a89f765853c6901e71df388558bd11b7))
-    - Disallow Rust 2018 idioms for clearer code ([`220b943`](https://github.com/syphar/crates-index-diff-rs/commit/220b9435b1b1da33410f4630166b41e376409df3))
-    - Add support for detecting deleted crates. ([`3831937`](https://github.com/syphar/crates-index-diff-rs/commit/38319375d07ca5d09700d40a778c367564cd8a66))
-    - Upgrade makefile for better auto-docs ([`0301da5`](https://github.com/syphar/crates-index-diff-rs/commit/0301da56a751018c8405ea0a46ba07487d9e2648))
-    - Refactor logic to handle crate-deletes ([`40655bd`](https://github.com/syphar/crates-index-diff-rs/commit/40655bdc5b1ba2ba20c6c9a99269fe13f124367a))
-    - Update version in usage example ([`d273245`](https://github.com/syphar/crates-index-diff-rs/commit/d273245d99836ef799946373444a0b85e02523d0))
+- **Uncategorized**
+  - Release crates-index-diff v10.0.0 ([`43c63ca`](https://github.com/Byron/crates-index-diff-rs/commit/43c63ca51487aa15d6eac3ee5733809bdbaffd43))
+  - Prepare changelog prior to release ([`cc19788`](https://github.com/Byron/crates-index-diff-rs/commit/cc1978812ca6d6d0177fb3f2b4550181b5f32465))
+  - Assure tests run serially without needing --jobs 1 ([`2701f5c`](https://github.com/Byron/crates-index-diff-rs/commit/2701f5c65fd104c9d481ebdf041806e6dee2f07a))
+  - Merge branch 'syphar-handle-crate-delets' ([`aba9087`](https://github.com/Byron/crates-index-diff-rs/commit/aba908736924935c9d3b07ab793c28879368bc5f))
+  - Thanks clippy ([`df91215`](https://github.com/Byron/crates-index-diff-rs/commit/df912155a89f765853c6901e71df388558bd11b7))
+  - Disallow Rust 2018 idioms for clearer code ([`220b943`](https://github.com/Byron/crates-index-diff-rs/commit/220b9435b1b1da33410f4630166b41e376409df3))
+  - Add support for detecting deleted crates. ([`3831937`](https://github.com/Byron/crates-index-diff-rs/commit/38319375d07ca5d09700d40a778c367564cd8a66))
+  - Upgrade makefile for better auto-docs ([`0301da5`](https://github.com/Byron/crates-index-diff-rs/commit/0301da56a751018c8405ea0a46ba07487d9e2648))
+  - Refactor logic to handle crate-deletes ([`40655bd`](https://github.com/Byron/crates-index-diff-rs/commit/40655bdc5b1ba2ba20c6c9a99269fe13f124367a))
+  - Update version in usage example ([`d273245`](https://github.com/Byron/crates-index-diff-rs/commit/d273245d99836ef799946373444a0b85e02523d0))
+
 </details>
 
 ## 9.0.0 (2022-02-26)
@@ -1454,10 +1538,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 7 commits contributed to the release.
- - 12 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 7 commits contributed to the release.
+- 12 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1465,14 +1549,15 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v9.0.0 ([`31e82c7`](https://github.com/syphar/crates-index-diff-rs/commit/31e82c799c3da9dade6f78082aaf4640204eb44d))
-    - Update changelog; bump major version ([`997ea73`](https://github.com/syphar/crates-index-diff-rs/commit/997ea73473ffe42a7c72bf2bcfe93372902497da))
-    - Ignore certain tests fo now until new hashes are found that work ([`e78694f`](https://github.com/syphar/crates-index-diff-rs/commit/e78694f123f715bdd4bb79d150bcee8d00b49822))
-    - Revert "see if this special case fixes tests" ([`5af8ec4`](https://github.com/syphar/crates-index-diff-rs/commit/5af8ec4b39ab067f73c0cb46526170270dbefefb))
-    - Prep for renaming 'master' to 'main' ([`e228d92`](https://github.com/syphar/crates-index-diff-rs/commit/e228d92e36869ae562ac5b272912ec773ce01d35))
-    - See if this special case fixes tests ([`f00226b`](https://github.com/syphar/crates-index-diff-rs/commit/f00226be073cdab00afc7933eb7065a6c48ff972))
-    - Upgrade git2 to 0.14.0 ([`448eec7`](https://github.com/syphar/crates-index-diff-rs/commit/448eec7bb9cfeca8ea869429f3272aa44a750035))
+- **Uncategorized**
+  - Release crates-index-diff v9.0.0 ([`31e82c7`](https://github.com/Byron/crates-index-diff-rs/commit/31e82c799c3da9dade6f78082aaf4640204eb44d))
+  - Update changelog; bump major version ([`997ea73`](https://github.com/Byron/crates-index-diff-rs/commit/997ea73473ffe42a7c72bf2bcfe93372902497da))
+  - Ignore certain tests fo now until new hashes are found that work ([`e78694f`](https://github.com/Byron/crates-index-diff-rs/commit/e78694f123f715bdd4bb79d150bcee8d00b49822))
+  - Revert "see if this special case fixes tests" ([`5af8ec4`](https://github.com/Byron/crates-index-diff-rs/commit/5af8ec4b39ab067f73c0cb46526170270dbefefb))
+  - Prep for renaming 'master' to 'main' ([`e228d92`](https://github.com/Byron/crates-index-diff-rs/commit/e228d92e36869ae562ac5b272912ec773ce01d35))
+  - See if this special case fixes tests ([`f00226b`](https://github.com/Byron/crates-index-diff-rs/commit/f00226be073cdab00afc7933eb7065a6c48ff972))
+  - Upgrade git2 to 0.14.0 ([`448eec7`](https://github.com/Byron/crates-index-diff-rs/commit/448eec7bb9cfeca8ea869429f3272aa44a750035))
+
 </details>
 
 ## 8.0.1 (2022-02-14)
@@ -1483,10 +1568,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
- - 198 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 4 commits contributed to the release.
+- 198 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1494,11 +1579,12 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Release crates-index-diff v8.0.1 ([`91df107`](https://github.com/syphar/crates-index-diff-rs/commit/91df107100b41ae7448ae64976f9b404776382bc))
-    - Prepare changelog ([`76ae38d`](https://github.com/syphar/crates-index-diff-rs/commit/76ae38d8bccc3518c11bb9f5154b8fd8a993e13f))
-    - Add some more debugging info to failing test ([`b111e03`](https://github.com/syphar/crates-index-diff-rs/commit/b111e037619a9e36f5227957b46eaaeece8321f4))
-    - Only fetch the master crates.io branch, not all branches ([`79cf4ca`](https://github.com/syphar/crates-index-diff-rs/commit/79cf4cab3c444b3c53c43050fd222db984e4c717))
+- **Uncategorized**
+  - Release crates-index-diff v8.0.1 ([`91df107`](https://github.com/Byron/crates-index-diff-rs/commit/91df107100b41ae7448ae64976f9b404776382bc))
+  - Prepare changelog ([`76ae38d`](https://github.com/Byron/crates-index-diff-rs/commit/76ae38d8bccc3518c11bb9f5154b8fd8a993e13f))
+  - Add some more debugging info to failing test ([`b111e03`](https://github.com/Byron/crates-index-diff-rs/commit/b111e037619a9e36f5227957b46eaaeece8321f4))
+  - Only fetch the master crates.io branch, not all branches ([`79cf4ca`](https://github.com/Byron/crates-index-diff-rs/commit/79cf4cab3c444b3c53c43050fd222db984e4c717))
+
 </details>
 
 ## v8.0.0 (2021-07-31)
@@ -1509,10 +1595,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release.
- - 429 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 1 unique issue was worked on: [#11](https://github.com/syphar/crates-index-diff-rs/issues/11)
+- 6 commits contributed to the release.
+- 429 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 1 unique issue was worked on: [#11](https://github.com/Byron/crates-index-diff-rs/issues/11)
 
 ### Commit Details
 
@@ -1520,14 +1606,15 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **[#11](https://github.com/syphar/crates-index-diff-rs/issues/11)**
-    - Add example for fetch options. ([`eaef987`](https://github.com/syphar/crates-index-diff-rs/commit/eaef987e661070aa078db6a47f535343fc1015a4))
- * **Uncategorized**
-    - (cargo-release) version 8.0.0 ([`d6f6d46`](https://github.com/syphar/crates-index-diff-rs/commit/d6f6d46aa00256e57eccfb73d626602c926f2dc9))
-    - Remove non-exhaustive attribute… ([`fbf93be`](https://github.com/syphar/crates-index-diff-rs/commit/fbf93beb4f6d9a496adaaece8bdae6f67c2149e9))
-    - Update changelog ([`79a2ea5`](https://github.com/syphar/crates-index-diff-rs/commit/79a2ea5a472a4bf7cfd06662f75eca0688fb83ac))
-    - Allow future additions of more options without API breakage ([`919d9da`](https://github.com/syphar/crates-index-diff-rs/commit/919d9da05098472264b0faf5adc72cc3c36bf6fd))
-    - Pass FetchOptions for cloning ([`091ef7d`](https://github.com/syphar/crates-index-diff-rs/commit/091ef7dd39a8cbd2730785504ad6817e3d3141e9))
+- **[#11](https://github.com/Byron/crates-index-diff-rs/issues/11)**
+  - Add example for fetch options. ([`eaef987`](https://github.com/Byron/crates-index-diff-rs/commit/eaef987e661070aa078db6a47f535343fc1015a4))
+- **Uncategorized**
+  - (cargo-release) version 8.0.0 ([`d6f6d46`](https://github.com/Byron/crates-index-diff-rs/commit/d6f6d46aa00256e57eccfb73d626602c926f2dc9))
+  - Remove non-exhaustive attribute… ([`fbf93be`](https://github.com/Byron/crates-index-diff-rs/commit/fbf93beb4f6d9a496adaaece8bdae6f67c2149e9))
+  - Update changelog ([`79a2ea5`](https://github.com/Byron/crates-index-diff-rs/commit/79a2ea5a472a4bf7cfd06662f75eca0688fb83ac))
+  - Allow future additions of more options without API breakage ([`919d9da`](https://github.com/Byron/crates-index-diff-rs/commit/919d9da05098472264b0faf5adc72cc3c36bf6fd))
+  - Pass FetchOptions for cloning ([`091ef7d`](https://github.com/Byron/crates-index-diff-rs/commit/091ef7dd39a8cbd2730785504ad6817e3d3141e9))
+
 </details>
 
 ## v7.1.2 (2020-05-28)
@@ -1538,10 +1625,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release over the course of 1 calendar day.
- - 5 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release over the course of 1 calendar day.
+- 5 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1549,9 +1636,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Inform about resource usage in the docs ([`386dcc4`](https://github.com/syphar/crates-index-diff-rs/commit/386dcc4f1cd5118e71a0664c623e8e2a6c77e0ff))
-    - Optimize includes using 'cargo diet' ([`0989e0f`](https://github.com/syphar/crates-index-diff-rs/commit/0989e0f59da7ce82cfb92198ac8bf713e4e209d2))
+- **Uncategorized**
+  - Inform about resource usage in the docs ([`386dcc4`](https://github.com/Byron/crates-index-diff-rs/commit/386dcc4f1cd5118e71a0664c623e8e2a6c77e0ff))
+  - Optimize includes using 'cargo diet' ([`0989e0f`](https://github.com/Byron/crates-index-diff-rs/commit/0989e0f59da7ce82cfb92198ac8bf713e4e209d2))
+
 </details>
 
 ## v7.1.1 (2020-05-23)
@@ -1562,9 +1650,9 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 3 commits contributed to the release.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1572,10 +1660,11 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Bump patch level ([`fceb154`](https://github.com/syphar/crates-index-diff-rs/commit/fceb154bdfb99eb98580906161fce452854ed78a))
-    - Avoid cloning the crates.io index as part of the doctests; convenience ([`dd869e2`](https://github.com/syphar/crates-index-diff-rs/commit/dd869e2bf29cb85901ea3fc6bab97296dd336a09))
-    - Allow changing CloneOptions::repository_url from outside the crate ([`2f10281`](https://github.com/syphar/crates-index-diff-rs/commit/2f10281647279cb4586329e5c9b4eaeb61da53ef))
+- **Uncategorized**
+  - Bump patch level ([`fceb154`](https://github.com/Byron/crates-index-diff-rs/commit/fceb154bdfb99eb98580906161fce452854ed78a))
+  - Avoid cloning the crates.io index as part of the doctests; convenience ([`dd869e2`](https://github.com/Byron/crates-index-diff-rs/commit/dd869e2bf29cb85901ea3fc6bab97296dd336a09))
+  - Allow changing CloneOptions::repository_url from outside the crate ([`2f10281`](https://github.com/Byron/crates-index-diff-rs/commit/2f10281647279cb4586329e5c9b4eaeb61da53ef))
+
 </details>
 
 ## v7.1.0 (2020-05-23)
@@ -1586,10 +1675,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 5 commits contributed to the release over the course of 43 calendar days.
- - 55 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 5 commits contributed to the release over the course of 43 calendar days.
+- 55 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1597,12 +1686,13 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Bump minor version ([`0f20006`](https://github.com/syphar/crates-index-diff-rs/commit/0f200065d1c829a526b3376035e55ec9c3b2b57a))
-    - Add Index::from_path_or_cloned_with_options(…) to support different crates repositories ([`f9b991c`](https://github.com/syphar/crates-index-diff-rs/commit/f9b991c8f91a378ad14d04fced67ec9cda8c3bf7))
-    - Bye bye travis, we had a good time. ([`d913fc1`](https://github.com/syphar/crates-index-diff-rs/commit/d913fc1bd7bc7dbc19a012acaaf7d4757ed0f5e7))
-    - Add github actions ([`204dcd7`](https://github.com/syphar/crates-index-diff-rs/commit/204dcd75ce382a5daab3931c7e9529ff1b2772bf))
-    - Update README to inform about the collapsed crates.io history, and that we deal with it ([`5966b49`](https://github.com/syphar/crates-index-diff-rs/commit/5966b494415421700bb48548f728e8d560f12e2e))
+- **Uncategorized**
+  - Bump minor version ([`0f20006`](https://github.com/Byron/crates-index-diff-rs/commit/0f200065d1c829a526b3376035e55ec9c3b2b57a))
+  - Add Index::from_path_or_cloned_with_options(…) to support different crates repositories ([`f9b991c`](https://github.com/Byron/crates-index-diff-rs/commit/f9b991c8f91a378ad14d04fced67ec9cda8c3bf7))
+  - Bye bye travis, we had a good time. ([`d913fc1`](https://github.com/Byron/crates-index-diff-rs/commit/d913fc1bd7bc7dbc19a012acaaf7d4757ed0f5e7))
+  - Add github actions ([`204dcd7`](https://github.com/Byron/crates-index-diff-rs/commit/204dcd75ce382a5daab3931c7e9529ff1b2772bf))
+  - Update README to inform about the collapsed crates.io history, and that we deal with it ([`5966b49`](https://github.com/Byron/crates-index-diff-rs/commit/5966b494415421700bb48548f728e8d560f12e2e))
+
 </details>
 
 ## v7.0.1 (2020-03-29)
@@ -1613,10 +1703,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 7 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 7 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1624,9 +1714,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Bump patch ([`bf8f77d`](https://github.com/syphar/crates-index-diff-rs/commit/bf8f77dd7dac7a3e5efe6bfa1404f20acf0c885f))
-    - Disable unused ssh git feature ([`3265093`](https://github.com/syphar/crates-index-diff-rs/commit/326509334e04658be4ed86902571701c29eac1a2))
+- **Uncategorized**
+  - Bump patch ([`bf8f77d`](https://github.com/Byron/crates-index-diff-rs/commit/bf8f77dd7dac7a3e5efe6bfa1404f20acf0c885f))
+  - Disable unused ssh git feature ([`3265093`](https://github.com/Byron/crates-index-diff-rs/commit/326509334e04658be4ed86902571701c29eac1a2))
+
 </details>
 
 ## v7.0.0 (2020-03-22)
@@ -1637,10 +1728,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
- - 16 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 1 commit contributed to the release.
+- 16 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1648,8 +1739,9 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Update dependencies ([`ed5c1ac`](https://github.com/syphar/crates-index-diff-rs/commit/ed5c1ac827b48b400bc7982adf1e254fc5861f33))
+- **Uncategorized**
+  - Update dependencies ([`ed5c1ac`](https://github.com/Byron/crates-index-diff-rs/commit/ed5c1ac827b48b400bc7982adf1e254fc5861f33))
+
 </details>
 
 ## v6.2.0 (2020-03-06)
@@ -1660,10 +1752,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
- - 3 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 1 commit contributed to the release.
+- 3 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1671,8 +1763,9 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Refactor for more flexibility; bump version ([`eb244b7`](https://github.com/syphar/crates-index-diff-rs/commit/eb244b7e2ba4a860b6979d7eb8fafdf7cdcf5517))
+- **Uncategorized**
+  - Refactor for more flexibility; bump version ([`eb244b7`](https://github.com/Byron/crates-index-diff-rs/commit/eb244b7e2ba4a860b6979d7eb8fafdf7cdcf5517))
+
 </details>
 
 ## v6.1.0 (2020-03-03)
@@ -1683,9 +1776,9 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 1 commit contributed to the release.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1693,8 +1786,9 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Support for progress messages ([`0167119`](https://github.com/syphar/crates-index-diff-rs/commit/0167119f67aa76ced8a45e708f6bf6b4e4345c37))
+- **Uncategorized**
+  - Support for progress messages ([`0167119`](https://github.com/Byron/crates-index-diff-rs/commit/0167119f67aa76ced8a45e708f6bf6b4e4345c37))
+
 </details>
 
 ## v6.0.0 (2020-03-03)
@@ -1706,10 +1800,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
- - 2 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 1 commit contributed to the release.
+- 2 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1717,8 +1811,9 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Upgrade to git2 v0.12.0 ([`6456fa2`](https://github.com/syphar/crates-index-diff-rs/commit/6456fa2710341e29aa8a0adb787274628688f99d))
+- **Uncategorized**
+  - Upgrade to git2 v0.12.0 ([`6456fa2`](https://github.com/Byron/crates-index-diff-rs/commit/6456fa2710341e29aa8a0adb787274628688f99d))
+
 </details>
 
 ## v5.1.0 (2020-03-01)
@@ -1731,10 +1826,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release over the course of 10 calendar days.
- - 11 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 4 commits contributed to the release over the course of 10 calendar days.
+- 11 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1742,11 +1837,12 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Allow to peek changes ([`99c33e6`](https://github.com/syphar/crates-index-diff-rs/commit/99c33e6936dadd7b3ab0af6709791a8cbdda2071))
-    - Don't borrow from git… Revert "Use Cow everywhere in crate version" ([`8c2f439`](https://github.com/syphar/crates-index-diff-rs/commit/8c2f4397d7d3e637b9b3c7d9a19b5b5502ce9082))
-    - Use Cow everywhere in crate version ([`8d10090`](https://github.com/syphar/crates-index-diff-rs/commit/8d1009058150861c5682709162da47daa8d4b192))
-    - (cargo-release) start next development iteration 5.0.6-alpha.0 ([`5ccb705`](https://github.com/syphar/crates-index-diff-rs/commit/5ccb7058c85960a8ae13334e8f0bfc6bdf7dad66))
+- **Uncategorized**
+  - Allow to peek changes ([`99c33e6`](https://github.com/Byron/crates-index-diff-rs/commit/99c33e6936dadd7b3ab0af6709791a8cbdda2071))
+  - Don't borrow from git… Revert "Use Cow everywhere in crate version" ([`8c2f439`](https://github.com/Byron/crates-index-diff-rs/commit/8c2f4397d7d3e637b9b3c7d9a19b5b5502ce9082))
+  - Use Cow everywhere in crate version ([`8d10090`](https://github.com/Byron/crates-index-diff-rs/commit/8d1009058150861c5682709162da47daa8d4b192))
+  - (cargo-release) start next development iteration 5.0.6-alpha.0 ([`5ccb705`](https://github.com/Byron/crates-index-diff-rs/commit/5ccb7058c85960a8ae13334e8f0bfc6bdf7dad66))
+
 </details>
 
 ## v5.0.5 (2020-02-19)
@@ -1755,10 +1851,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release over the course of 13 calendar days.
- - 14 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release over the course of 13 calendar days.
+- 14 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1766,9 +1862,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Don't skip serializing None fields… ([`11f4aa0`](https://github.com/syphar/crates-index-diff-rs/commit/11f4aa02bcaedc290f1964a909fbf9e8fec06eb6))
-    - (cargo-release) start next development iteration 5.0.5-alpha.0 ([`992a71d`](https://github.com/syphar/crates-index-diff-rs/commit/992a71dbb8ddabc4da8f67d005def5c5d10c55d5))
+- **Uncategorized**
+  - Don't skip serializing None fields… ([`11f4aa0`](https://github.com/Byron/crates-index-diff-rs/commit/11f4aa02bcaedc290f1964a909fbf9e8fec06eb6))
+  - (cargo-release) start next development iteration 5.0.5-alpha.0 ([`992a71d`](https://github.com/Byron/crates-index-diff-rs/commit/992a71dbb8ddabc4da8f67d005def5c5d10c55d5))
+
 </details>
 
 ## v5.0.4 (2020-02-05)
@@ -1777,10 +1874,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release over the course of 2 calendar days.
- - 2 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release over the course of 2 calendar days.
+- 2 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1788,9 +1885,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Implement `Default` for ChangeKind ([`2234f7b`](https://github.com/syphar/crates-index-diff-rs/commit/2234f7b4c846ea8bee7241b43b1613d3544e8e5d))
-    - (cargo-release) start next development iteration 5.0.4-alpha.0 ([`fac9ee1`](https://github.com/syphar/crates-index-diff-rs/commit/fac9ee1a3000c133b4c565a3b382ca62aa778463))
+- **Uncategorized**
+  - Implement `Default` for ChangeKind ([`2234f7b`](https://github.com/Byron/crates-index-diff-rs/commit/2234f7b4c846ea8bee7241b43b1613d3544e8e5d))
+  - (cargo-release) start next development iteration 5.0.4-alpha.0 ([`fac9ee1`](https://github.com/Byron/crates-index-diff-rs/commit/fac9ee1a3000c133b4c565a3b382ca62aa778463))
+
 </details>
 
 ## v5.0.3 (2020-02-03)
@@ -1799,10 +1897,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 1 day passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 1 day passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1810,9 +1908,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Add missing clone trait ([`5f6e3a2`](https://github.com/syphar/crates-index-diff-rs/commit/5f6e3a25ad92378cc2c472239784f7ce6b501ad4))
-    - (cargo-release) start next development iteration 5.0.3-alpha.0 ([`b8c8412`](https://github.com/syphar/crates-index-diff-rs/commit/b8c8412fd68beb3fb535ef7e93f50d8d4786fdac))
+- **Uncategorized**
+  - Add missing clone trait ([`5f6e3a2`](https://github.com/Byron/crates-index-diff-rs/commit/5f6e3a25ad92378cc2c472239784f7ce6b501ad4))
+  - (cargo-release) start next development iteration 5.0.3-alpha.0 ([`b8c8412`](https://github.com/Byron/crates-index-diff-rs/commit/b8c8412fd68beb3fb535ef7e93f50d8d4786fdac))
+
 </details>
 
 ## v5.0.2 (2020-02-02)
@@ -1823,9 +1922,9 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1833,9 +1932,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Improved diff parsing - should be a bit faster ([`b819af0`](https://github.com/syphar/crates-index-diff-rs/commit/b819af0b23ae2abbacae1ad3800290b9bb658a2f))
-    - (cargo-release) start next development iteration 5.0.2-alpha.0 ([`ab59e70`](https://github.com/syphar/crates-index-diff-rs/commit/ab59e70d0533492946275ec4c0e84ba54d4fe87b))
+- **Uncategorized**
+  - Improved diff parsing - should be a bit faster ([`b819af0`](https://github.com/Byron/crates-index-diff-rs/commit/b819af0b23ae2abbacae1ad3800290b9bb658a2f))
+  - (cargo-release) start next development iteration 5.0.2-alpha.0 ([`ab59e70`](https://github.com/Byron/crates-index-diff-rs/commit/ab59e70d0533492946275ec4c0e84ba54d4fe87b))
+
 </details>
 
 ## v5.0.1 (2020-02-02)
@@ -1846,10 +1946,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release over the course of 1 calendar day.
- - 1 day passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 4 commits contributed to the release over the course of 1 calendar day.
+- 1 day passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1857,11 +1957,12 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Expose git2; bump patch level ([`df46581`](https://github.com/syphar/crates-index-diff-rs/commit/df465810d95362d224c75d9b277df6160ab715aa))
-    - Add README to crates.io ([`1ca58b2`](https://github.com/syphar/crates-index-diff-rs/commit/1ca58b25766c6280d76669ccb5988e838f80c98e))
-    - Add README to crates.io ([`5f78bde`](https://github.com/syphar/crates-index-diff-rs/commit/5f78bde1517852b91b36fe962f40a90925d24d48))
-    - Update README ([`b2bb821`](https://github.com/syphar/crates-index-diff-rs/commit/b2bb821e7e6eb2f01e68a5501cb01fefa549b30c))
+- **Uncategorized**
+  - Expose git2; bump patch level ([`df46581`](https://github.com/Byron/crates-index-diff-rs/commit/df465810d95362d224c75d9b277df6160ab715aa))
+  - Add README to crates.io ([`1ca58b2`](https://github.com/Byron/crates-index-diff-rs/commit/1ca58b25766c6280d76669ccb5988e838f80c98e))
+  - Add README to crates.io ([`5f78bde`](https://github.com/Byron/crates-index-diff-rs/commit/5f78bde1517852b91b36fe962f40a90925d24d48))
+  - Update README ([`b2bb821`](https://github.com/Byron/crates-index-diff-rs/commit/b2bb821e7e6eb2f01e68a5501cb01fefa549b30c))
+
 </details>
 
 ## v5.0.0 (2020-02-01)
@@ -1873,10 +1974,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
- - 163 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 3 commits contributed to the release.
+- 163 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1884,10 +1985,11 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Fix unit tests ([`70b3d01`](https://github.com/syphar/crates-index-diff-rs/commit/70b3d0132dd9e6ddbefa63049f49a0a303f4fe26))
-    - Modernize code a little ([`00c0cb7`](https://github.com/syphar/crates-index-diff-rs/commit/00c0cb70cab3b348f071adaa8ff49d6c41ecd1b0))
-    - Upgrade git; add all crate-fields ([`108b15e`](https://github.com/syphar/crates-index-diff-rs/commit/108b15e9d6a49bbdcb7d15a4aea04a5c4cde40ad))
+- **Uncategorized**
+  - Fix unit tests ([`70b3d01`](https://github.com/Byron/crates-index-diff-rs/commit/70b3d0132dd9e6ddbefa63049f49a0a303f4fe26))
+  - Modernize code a little ([`00c0cb7`](https://github.com/Byron/crates-index-diff-rs/commit/00c0cb70cab3b348f071adaa8ff49d6c41ecd1b0))
+  - Upgrade git; add all crate-fields ([`108b15e`](https://github.com/Byron/crates-index-diff-rs/commit/108b15e9d6a49bbdcb7d15a4aea04a5c4cde40ad))
+
 </details>
 
 ## v4.0.2 (2019-08-22)
@@ -1898,10 +2000,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 48 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 48 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1909,9 +2011,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Bump version after dependency update ([`f49bbda`](https://github.com/syphar/crates-index-diff-rs/commit/f49bbda57187321178621b62187cb18ad5f966eb))
-    - Update git2 crate ([`e1152c2`](https://github.com/syphar/crates-index-diff-rs/commit/e1152c2a4d8850ba3fb72aac0a37a6b51ae85fbe))
+- **Uncategorized**
+  - Bump version after dependency update ([`f49bbda`](https://github.com/Byron/crates-index-diff-rs/commit/f49bbda57187321178621b62187cb18ad5f966eb))
+  - Update git2 crate ([`e1152c2`](https://github.com/Byron/crates-index-diff-rs/commit/e1152c2a4d8850ba3fb72aac0a37a6b51ae85fbe))
+
 </details>
 
 ## v4.0.1 (2019-07-05)
@@ -1920,10 +2023,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 475 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 475 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1931,9 +2034,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Bump patch level: update git2 dependency ([`debd65b`](https://github.com/syphar/crates-index-diff-rs/commit/debd65b2fee87d2b93a4701abe4871ef4b89c8b5))
-    - Bump `git2` version ([`724f822`](https://github.com/syphar/crates-index-diff-rs/commit/724f8228ed0ab17d01c5dbec0a88630413094ce7))
+- **Uncategorized**
+  - Bump patch level: update git2 dependency ([`debd65b`](https://github.com/Byron/crates-index-diff-rs/commit/debd65b2fee87d2b93a4701abe4871ef4b89c8b5))
+  - Bump `git2` version ([`724f822`](https://github.com/Byron/crates-index-diff-rs/commit/724f8228ed0ab17d01c5dbec0a88630413094ce7))
+
 </details>
 
 ## v4.0.0 (2018-03-17)
@@ -1949,10 +2053,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release.
- - 442 days passed between releases.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 6 commits contributed to the release.
+- 442 days passed between releases.
+- 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1960,13 +2064,14 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Bump version after switching to serde ([`2498da9`](https://github.com/syphar/crates-index-diff-rs/commit/2498da9cb5583ed33116e4bbea3a4da144c178c7))
-    - Change refspec back from 'master' to what works in tests ([`20d2c0e`](https://github.com/syphar/crates-index-diff-rs/commit/20d2c0e221915f4c053adeba2de28a23d9a8b035))
-    - Upgrade git2 version ([`fde4a47`](https://github.com/syphar/crates-index-diff-rs/commit/fde4a4785556dcc8a204958ccf794217641b92f8))
-    - Add serde test ([`c0c3172`](https://github.com/syphar/crates-index-diff-rs/commit/c0c317294df78d584176cf1d1948ce82ee3a7a00))
-    - Use serde instead of rustc-serialize ([`a310303`](https://github.com/syphar/crates-index-diff-rs/commit/a31030349bc2b38aea1807ae3d07d129ca724b0f))
-    - Fix failing test ([`fd37e49`](https://github.com/syphar/crates-index-diff-rs/commit/fd37e49f4d34dc1cc183bd791b4f66038ffa8fd5))
+- **Uncategorized**
+  - Bump version after switching to serde ([`2498da9`](https://github.com/Byron/crates-index-diff-rs/commit/2498da9cb5583ed33116e4bbea3a4da144c178c7))
+  - Change refspec back from 'master' to what works in tests ([`20d2c0e`](https://github.com/Byron/crates-index-diff-rs/commit/20d2c0e221915f4c053adeba2de28a23d9a8b035))
+  - Upgrade git2 version ([`fde4a47`](https://github.com/Byron/crates-index-diff-rs/commit/fde4a4785556dcc8a204958ccf794217641b92f8))
+  - Add serde test ([`c0c3172`](https://github.com/Byron/crates-index-diff-rs/commit/c0c317294df78d584176cf1d1948ce82ee3a7a00))
+  - Use serde instead of rustc-serialize ([`a310303`](https://github.com/Byron/crates-index-diff-rs/commit/a31030349bc2b38aea1807ae3d07d129ca724b0f))
+  - Fix failing test ([`fd37e49`](https://github.com/Byron/crates-index-diff-rs/commit/fd37e49f4d34dc1cc183bd791b4f66038ffa8fd5))
+
 </details>
 
 ## v3.0.0 (2016-12-30)
@@ -1980,10 +2085,10 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
- - 3 days passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 1 commit contributed to the release.
+- 3 days passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -1991,8 +2096,9 @@ This release is v11.2, but correctly indicates the **breaking change** introduce
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Use latest version of git2 ([`38d9163`](https://github.com/syphar/crates-index-diff-rs/commit/38d9163ed007f2d925201f9a4cb2b4e3d0758dab))
+- **Uncategorized**
+  - Use latest version of git2 ([`38d9163`](https://github.com/Byron/crates-index-diff-rs/commit/38d9163ed007f2d925201f9a4cb2b4e3d0758dab))
+
 </details>
 
 ## v2.0.1 (2016-12-27)
@@ -2001,18 +2107,18 @@ Add a tutorial to the documentation.
 
 ### Documentation
 
- - <csr-id-2d0c8163621f650f17a06c82f70d1bbd147a582e/> add reference to usage example.
-   We are using the crates-cli as an example, even though
-   it certainly is not the cleanest one possible.
+- <csr-id-2d0c8163621f650f17a06c82f70d1bbd147a582e/> add reference to usage example.
+  We are using the crates-cli as an example, even though
+  it certainly is not the cleanest one possible.
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
- - 1 day passed between releases.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 1 commit contributed to the release.
+- 1 day passed between releases.
+- 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -2020,8 +2126,9 @@ Add a tutorial to the documentation.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Add reference to usage example. ([`2d0c816`](https://github.com/syphar/crates-index-diff-rs/commit/2d0c8163621f650f17a06c82f70d1bbd147a582e))
+- **Uncategorized**
+  - Add reference to usage example. ([`2d0c816`](https://github.com/Byron/crates-index-diff-rs/commit/2d0c8163621f650f17a06c82f70d1bbd147a582e))
+
 </details>
 
 ## v2.0.0 (2016-12-26)
@@ -2031,17 +2138,17 @@ Add a tutorial to the documentation.
 ### Bug Fixes
 
 * **cargo:**  use git2 version for compat with docs.rs ([0ceebed3](https://github.com/Byron/crates-index-diff-rs/commit/0ceebed3d70c4482b5d09ffa1f9af5fea2bf7cd7))
- - <csr-id-0ceebed3d70c4482b5d09ffa1f9af5fea2bf7cd7/> use git2 version for compat with docs.rs
-   Otherwise docs.rs cannot use use.
-   This is due to the issue described here:
+- <csr-id-0ceebed3d70c4482b5d09ffa1f9af5fea2bf7cd7/> use git2 version for compat with docs.rs
+  Otherwise docs.rs cannot use use.
+  This is due to the issue described here:
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 2 commits contributed to the release.
+- 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -2049,9 +2156,10 @@ Add a tutorial to the documentation.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - Update to v2.0.0 ([`bd89e72`](https://github.com/syphar/crates-index-diff-rs/commit/bd89e7267b23d8a0bd801679d1ef74d12c84ba09))
-    - Use git2 version for compat with docs.rs ([`0ceebed`](https://github.com/syphar/crates-index-diff-rs/commit/0ceebed3d70c4482b5d09ffa1f9af5fea2bf7cd7))
+- **Uncategorized**
+  - Update to v2.0.0 ([`bd89e72`](https://github.com/Byron/crates-index-diff-rs/commit/bd89e7267b23d8a0bd801679d1ef74d12c84ba09))
+  - Use git2 version for compat with docs.rs ([`0ceebed`](https://github.com/Byron/crates-index-diff-rs/commit/0ceebed3d70c4482b5d09ffa1f9af5fea2bf7cd7))
+
 </details>
 
 ## v1.0.1 (2016-12-26)
@@ -2062,20 +2170,20 @@ Add a tutorial to the documentation.
 ### Bug Fixes
 
 * **makefile:**  make quick tests quick again ([9aa756ae](https://github.com/Byron/crates-index-diff-rs/commit/9aa756ae534e78fc1c9148a0f6eda27ff07350b5))
- - <csr-id-9aa756ae534e78fc1c9148a0f6eda27ff07350b5/> make quick tests quick again
+- <csr-id-9aa756ae534e78fc1c9148a0f6eda27ff07350b5/> make quick tests quick again
 * **display:**  implementation for changetype ([8ed9a81f](https://github.com/Byron/crates-index-diff-rs/commit/8ed9a81f0a84c43944f29f8407554303d84f7248))
 
 ### New Features
 
- - <csr-id-8ed9a81f0a84c43944f29f8407554303d84f7248/> implementation for changetype
+- <csr-id-8ed9a81f0a84c43944f29f8407554303d84f7248/> implementation for changetype
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
- - 4 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 4 commits contributed to the release.
+- 4 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -2083,11 +2191,12 @@ Add a tutorial to the documentation.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - V1.0.1 ([`de4a284`](https://github.com/syphar/crates-index-diff-rs/commit/de4a284687fb476dd70bed3a4eb7e1737aff57ea))
-    - Implementation for changetype ([`8ed9a81`](https://github.com/syphar/crates-index-diff-rs/commit/8ed9a81f0a84c43944f29f8407554303d84f7248))
-    - Make quick tests quick again ([`9aa756a`](https://github.com/syphar/crates-index-diff-rs/commit/9aa756ae534e78fc1c9148a0f6eda27ff07350b5))
-    - Crates.io badge ([`304dfaf`](https://github.com/syphar/crates-index-diff-rs/commit/304dfafe95b23703f3b6d11230b487304d5d6bd0))
+- **Uncategorized**
+  - V1.0.1 ([`de4a284`](https://github.com/Byron/crates-index-diff-rs/commit/de4a284687fb476dd70bed3a4eb7e1737aff57ea))
+  - Implementation for changetype ([`8ed9a81`](https://github.com/Byron/crates-index-diff-rs/commit/8ed9a81f0a84c43944f29f8407554303d84f7248))
+  - Make quick tests quick again ([`9aa756a`](https://github.com/Byron/crates-index-diff-rs/commit/9aa756ae534e78fc1c9148a0f6eda27ff07350b5))
+  - Crates.io badge ([`304dfaf`](https://github.com/Byron/crates-index-diff-rs/commit/304dfafe95b23703f3b6d11230b487304d5d6bd0))
+
 </details>
 
 ## v1.0.0 (2016-12-26)
@@ -2130,60 +2239,60 @@ Add a tutorial to the documentation.
 
 ### New Features
 
- - <csr-id-accb62d00618204e76659ecb4d31e8a04291bdc5/> using openssl file as basis
+- <csr-id-accb62d00618204e76659ecb4d31e8a04291bdc5/> using openssl file as basis
 
 ### Bug Fixes
 
- - <csr-id-cdfc689aacd68dd53ecef19187d1a02de84a8ab7/> give up on osx
-   Openssl can't be linked due to missing symbols, no matter what.
-   
-   Maybe ... the version is too new?
-   Odd that it works locally though.
- - <csr-id-3a5eb46249b6e319944efd53e5003024125e286c/> see if openssl somehow works after all
- - <csr-id-36b79decb47d541172fffcbf6b43c60ab5bdd8d5/> openssl setup from openssl-rs itself
- - <csr-id-120d752b658850df962d65e50fe054c7782b1b04/> try the msvc 32bit version
- - <csr-id-42a9800b03894dd3dc58e3ceefa1c9fecc7b589d/> msys2 seems to be the problem here
- - <csr-id-0a738f3513c1b66f12b99c4260728dcbb3c41e68/> try to enforce linking latest openssl
- - <csr-id-dda7c80ae297084a364b91b36619995c130ee24c/> try disabling the cache
-   Maybe that way, the 64 bit builds will work
- - <csr-id-714d7cf2ce6de29a5021cf5c2c85e5b14631e203/> enforce more recent openssl lib
-   Currently some symbols are missing or are named differently.
-   Let's also see if it links it to the correct spot in /usr/local/opt/openssl
- - <csr-id-ae26330ee78be142f63c41d303a8ac604083880e/> only 1.1.0c seems to be working
-   See
- - <csr-id-959fde03288238dc74ec82ebb2a949e834481ed2/> remove 32 bit targets due to failure
-   The previous version triggered this error:
-   Error parsing appveyor.yml: Value can be either string or "secure" string. (Line: 5, Column: 7)
- - <csr-id-f4ea940e9e8f6adc6a82a45adebecf01c26b7851/> attempt to set OPENSSL env vars
- - <csr-id-05bffd68e3411ca4327c7a905c9a4e562c9c2eb3/> try to allow 32 bit failures
-   Could also remove them, but ideally it remains visible to maybe
-   one day work.
- - <csr-id-b11f6df25e6a12e4835f32b739b7c7fd890d6c23/> try without index-bare cache
-   For now ... I have not seen it being cloned at all.
-   Possibly the cache provides a none-empty directory ?
- - <csr-id-48609062e30407ea29afa5ddccea78e7c94f20bd/> custom code to get cmake onto osx
- - <csr-id-a052f41cd198b7342b14aba186a955067a9a7241/> let's hope it will actually run now
- - <csr-id-b784f1cb3655a2ebef7845ed62cd5c52ab31d46e/> set envvars propery
- - <csr-id-24c1c81d7e1287ed83308f4f8ad795dfca4de834/> remove debug prints
- - <csr-id-9ef08fa5d1517883cb006fda522d020767f8d081/> remove error handling in makefile
-   This isn't a good thing to do for all of those without cargo.
-   However, let's see if it fixes the issue first.
- - <csr-id-42e1290ea75ddf57948b6f6acd23c2c17544db06/> to work with GNU make
- - <csr-id-f89651be89638e8210b74dc8843d5985d28e842b/> finally the correct refspec
-   Fair enough, need trees here after all!
- - <csr-id-d0d43071a3fdcd795a2460b71363545dbf5a2a89/> cmake binary installation
- - <csr-id-f9f67efd7ca12c34d4bbfa171b8604f206d686b4/> use different cmake source
- - <csr-id-a97813620f5990f4d62337e7a6a8c3b3aadd05ef/> cmake upgrade via before_script
- - <csr-id-77bbd20132b7f42dd79b55f86c000f21618d4c39/> see if a custom source will get latest cmake
- - <csr-id-2d0d5d94193d5a65cdac700d811e9d75e849a7c9/> enforce latest cmake
+- <csr-id-cdfc689aacd68dd53ecef19187d1a02de84a8ab7/> give up on osx
+  Openssl can't be linked due to missing symbols, no matter what.
+  
+  Maybe ... the version is too new?
+  Odd that it works locally though.
+- <csr-id-3a5eb46249b6e319944efd53e5003024125e286c/> see if openssl somehow works after all
+- <csr-id-36b79decb47d541172fffcbf6b43c60ab5bdd8d5/> openssl setup from openssl-rs itself
+- <csr-id-120d752b658850df962d65e50fe054c7782b1b04/> try the msvc 32bit version
+- <csr-id-42a9800b03894dd3dc58e3ceefa1c9fecc7b589d/> msys2 seems to be the problem here
+- <csr-id-0a738f3513c1b66f12b99c4260728dcbb3c41e68/> try to enforce linking latest openssl
+- <csr-id-dda7c80ae297084a364b91b36619995c130ee24c/> try disabling the cache
+  Maybe that way, the 64 bit builds will work
+- <csr-id-714d7cf2ce6de29a5021cf5c2c85e5b14631e203/> enforce more recent openssl lib
+  Currently some symbols are missing or are named differently.
+  Let's also see if it links it to the correct spot in /usr/local/opt/openssl
+- <csr-id-ae26330ee78be142f63c41d303a8ac604083880e/> only 1.1.0c seems to be working
+  See
+- <csr-id-959fde03288238dc74ec82ebb2a949e834481ed2/> remove 32 bit targets due to failure
+  The previous version triggered this error:
+  Error parsing appveyor.yml: Value can be either string or "secure" string. (Line: 5, Column: 7)
+- <csr-id-f4ea940e9e8f6adc6a82a45adebecf01c26b7851/> attempt to set OPENSSL env vars
+- <csr-id-05bffd68e3411ca4327c7a905c9a4e562c9c2eb3/> try to allow 32 bit failures
+  Could also remove them, but ideally it remains visible to maybe
+  one day work.
+- <csr-id-b11f6df25e6a12e4835f32b739b7c7fd890d6c23/> try without index-bare cache
+  For now ... I have not seen it being cloned at all.
+  Possibly the cache provides a none-empty directory ?
+- <csr-id-48609062e30407ea29afa5ddccea78e7c94f20bd/> custom code to get cmake onto osx
+- <csr-id-a052f41cd198b7342b14aba186a955067a9a7241/> let's hope it will actually run now
+- <csr-id-b784f1cb3655a2ebef7845ed62cd5c52ab31d46e/> set envvars propery
+- <csr-id-24c1c81d7e1287ed83308f4f8ad795dfca4de834/> remove debug prints
+- <csr-id-9ef08fa5d1517883cb006fda522d020767f8d081/> remove error handling in makefile
+  This isn't a good thing to do for all of those without cargo.
+  However, let's see if it fixes the issue first.
+- <csr-id-42e1290ea75ddf57948b6f6acd23c2c17544db06/> to work with GNU make
+- <csr-id-f89651be89638e8210b74dc8843d5985d28e842b/> finally the correct refspec
+  Fair enough, need trees here after all!
+- <csr-id-d0d43071a3fdcd795a2460b71363545dbf5a2a89/> cmake binary installation
+- <csr-id-f9f67efd7ca12c34d4bbfa171b8604f206d686b4/> use different cmake source
+- <csr-id-a97813620f5990f4d62337e7a6a8c3b3aadd05ef/> cmake upgrade via before_script
+- <csr-id-77bbd20132b7f42dd79b55f86c000f21618d4c39/> see if a custom source will get latest cmake
+- <csr-id-2d0d5d94193d5a65cdac700d811e9d75e849a7c9/> enforce latest cmake
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 61 commits contributed to the release over the course of 1 calendar day.
- - 61 commits were understood as [conventional](https://www.conventionalcommits.org).
- - 0 issues like '(#ID)' were seen in commit messages
+- 61 commits contributed to the release over the course of 1 calendar day.
+- 61 commits were understood as [conventional](https://www.conventionalcommits.org).
+- 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
 
@@ -2191,67 +2300,67 @@ Add a tutorial to the documentation.
 
 <details><summary>view details</summary>
 
- * **Uncategorized**
-    - V1.0.0 ([`381e7cc`](https://github.com/syphar/crates-index-diff-rs/commit/381e7cc1e59a3695f3f07061467ade159822dbcb))
-    - Docs for all remaining methods. ([`706636b`](https://github.com/syphar/crates-index-diff-rs/commit/706636b5198595ff8573505350f49aad241edfc6))
-    - Give up on osx ([`cdfc689`](https://github.com/syphar/crates-index-diff-rs/commit/cdfc689aacd68dd53ecef19187d1a02de84a8ab7))
-    - See if openssl somehow works after all ([`3a5eb46`](https://github.com/syphar/crates-index-diff-rs/commit/3a5eb46249b6e319944efd53e5003024125e286c))
-    - Documentation for crateversion ([`91bf44d`](https://github.com/syphar/crates-index-diff-rs/commit/91bf44d4f3c4454316f32489ba30cd250422065d))
-    - Openssl setup from openssl-rs itself ([`36b79de`](https://github.com/syphar/crates-index-diff-rs/commit/36b79decb47d541172fffcbf6b43c60ab5bdd8d5))
-    - Try the msvc 32bit version ([`120d752`](https://github.com/syphar/crates-index-diff-rs/commit/120d752b658850df962d65e50fe054c7782b1b04))
-    - Msys2 seems to be the problem here ([`42a9800`](https://github.com/syphar/crates-index-diff-rs/commit/42a9800b03894dd3dc58e3ceefa1c9fecc7b589d))
-    - Try to enforce linking latest openssl ([`0a738f3`](https://github.com/syphar/crates-index-diff-rs/commit/0a738f3513c1b66f12b99c4260728dcbb3c41e68))
-    - Try disabling the cache ([`dda7c80`](https://github.com/syphar/crates-index-diff-rs/commit/dda7c80ae297084a364b91b36619995c130ee24c))
-    - Enforce more recent openssl lib ([`714d7cf`](https://github.com/syphar/crates-index-diff-rs/commit/714d7cf2ce6de29a5021cf5c2c85e5b14631e203))
-    - Only 1.1.0c seems to be working ([`ae26330`](https://github.com/syphar/crates-index-diff-rs/commit/ae26330ee78be142f63c41d303a8ac604083880e))
-    - Remove 32 bit targets due to failure ([`959fde0`](https://github.com/syphar/crates-index-diff-rs/commit/959fde03288238dc74ec82ebb2a949e834481ed2))
-    - Attempt to set OPENSSL env vars ([`f4ea940`](https://github.com/syphar/crates-index-diff-rs/commit/f4ea940e9e8f6adc6a82a45adebecf01c26b7851))
-    - Try to allow 32 bit failures ([`05bffd6`](https://github.com/syphar/crates-index-diff-rs/commit/05bffd68e3411ca4327c7a905c9a4e562c9c2eb3))
-    - Try without index-bare cache ([`b11f6df`](https://github.com/syphar/crates-index-diff-rs/commit/b11f6df25e6a12e4835f32b739b7c7fd890d6c23))
-    - Custom code to get cmake onto osx ([`4860906`](https://github.com/syphar/crates-index-diff-rs/commit/48609062e30407ea29afa5ddccea78e7c94f20bd))
-    - Let's hope it will actually run now ([`a052f41`](https://github.com/syphar/crates-index-diff-rs/commit/a052f41cd198b7342b14aba186a955067a9a7241))
-    - Customizations for us ([`c4bf948`](https://github.com/syphar/crates-index-diff-rs/commit/c4bf948b5e2c5590e58a134a3003acde7738e42d))
-    - Using openssl file as basis ([`accb62d`](https://github.com/syphar/crates-index-diff-rs/commit/accb62d00618204e76659ecb4d31e8a04291bdc5))
-    - Test osx as well ([`b0f19b0`](https://github.com/syphar/crates-index-diff-rs/commit/b0f19b0a5d754cd9153b30ca9b363fa9534777da))
-    - Don't enforce branches ([`601dc2d`](https://github.com/syphar/crates-index-diff-rs/commit/601dc2d7ca9bd87f440455e1eb3698c6e2f0227d))
-    - Use quick-error ([`ef53496`](https://github.com/syphar/crates-index-diff-rs/commit/ef5349677d53ab2d31c921b853766a8aa21f59fa))
-    - Move crate into own module ([`97a5b81`](https://github.com/syphar/crates-index-diff-rs/commit/97a5b819df11a454f5154ae3edd5e4a03192c0e1))
-    - Better diff.print implementation ([`81c95f2`](https://github.com/syphar/crates-index-diff-rs/commit/81c95f2a9014ace72e74da64ddb4840197d7bbec))
-    - Simplify fetch-changes error handling ([`988b668`](https://github.com/syphar/crates-index-diff-rs/commit/988b66860a96411f9c263c582159066970ef9265))
-    - Much nicer Crate from json ([`caa5879`](https://github.com/syphar/crates-index-diff-rs/commit/caa58790f61ec4e450dadbf737a0bc3224f8c0b4))
-    - Allow to change seen-ref name ([`56d416a`](https://github.com/syphar/crates-index-diff-rs/commit/56d416aae569d8dbcd568428a7489072eb749249))
-    - Remove duplicate ([`42e6803`](https://github.com/syphar/crates-index-diff-rs/commit/42e68031d586109efe7d9567279af4d4bf7ac0be))
-    - Be compatible with docs.rs ([`a4e6e7e`](https://github.com/syphar/crates-index-diff-rs/commit/a4e6e7efef4bf7d6863eeade1b974a350d08f4a6))
-    - Set envvars propery ([`b784f1c`](https://github.com/syphar/crates-index-diff-rs/commit/b784f1cb3655a2ebef7845ed62cd5c52ab31d46e))
-    - Fix keywords ([`787bdac`](https://github.com/syphar/crates-index-diff-rs/commit/787bdacfa2c1191e121d4d5a6c8e3a09c19bf684))
-    - Show backtrace ([`ed7ca36`](https://github.com/syphar/crates-index-diff-rs/commit/ed7ca366454a0c99698f18beb5955cd6606c7e1e))
-    - Better error handling ([`b0dd277`](https://github.com/syphar/crates-index-diff-rs/commit/b0dd2770a979b278e8be4432418367c6d9620c67))
-    - Attempt of fetch_changes implementation ([`708d9c0`](https://github.com/syphar/crates-index-diff-rs/commit/708d9c0680b797026da731bc9a9874ac71bc125b))
-    - Allow direct usage of objects as well ([`eee5134`](https://github.com/syphar/crates-index-diff-rs/commit/eee513476d300c294272e0c23348cdbc1009f008))
-    - Fetch_changes() ([`d06c4a0`](https://github.com/syphar/crates-index-diff-rs/commit/d06c4a0bb526eafb13a61951cd34c24febd10797))
-    - Remove debug prints ([`24c1c81`](https://github.com/syphar/crates-index-diff-rs/commit/24c1c81d7e1287ed83308f4f8ad795dfca4de834))
-    - Assure we can handle the entire index ([`97b417a`](https://github.com/syphar/crates-index-diff-rs/commit/97b417ad71b3070e3663d1ce6d998f24a0bf1365))
-    - Support for unyanking ([`2ef9c02`](https://github.com/syphar/crates-index-diff-rs/commit/2ef9c028812134af6bf23f72a4ea9850c407a06a))
-    - Handle yanked files ([`8048a2c`](https://github.com/syphar/crates-index-diff-rs/commit/8048a2cf00618d669c9176b0e94353dd1cfa9011))
-    - Remove error handling in makefile ([`9ef08fa`](https://github.com/syphar/crates-index-diff-rs/commit/9ef08fa5d1517883cb006fda522d020767f8d081))
-    - See why makefile is not working ([`11a006b`](https://github.com/syphar/crates-index-diff-rs/commit/11a006bc230d098ad8ee282069b2544c8187d14a))
-    - To work with GNU make ([`42e1290`](https://github.com/syphar/crates-index-diff-rs/commit/42e1290ea75ddf57948b6f6acd23c2c17544db06))
-    - Now seeing the first added crates ([`887c088`](https://github.com/syphar/crates-index-diff-rs/commit/887c088495ef78e21ca88091963dbfd0661e08ec))
-    - Found an illegal-instruction error ([`607d747`](https://github.com/syphar/crates-index-diff-rs/commit/607d747c9306ad0921a6d4166ecf151bb9a39479))
-    - Intermediate crate info from hunk ([`3ce91e8`](https://github.com/syphar/crates-index-diff-rs/commit/3ce91e89b520b6497eceb961065e8898c5aba883))
-    - Automate running tests quickly ([`8801ec2`](https://github.com/syphar/crates-index-diff-rs/commit/8801ec2d1d718eb73200d29ff23a958b5b1ba9d7))
-    - Support for commit'ishs for diffs ([`e451067`](https://github.com/syphar/crates-index-diff-rs/commit/e451067a939a848082def317e1cceb487910aba2))
-    - Finally the correct refspec ([`f89651b`](https://github.com/syphar/crates-index-diff-rs/commit/f89651be89638e8210b74dc8843d5985d28e842b))
-    - First traversal method ([`d49f62f`](https://github.com/syphar/crates-index-diff-rs/commit/d49f62fa41dbba9278ec2080ae2b91f72dc6834e))
-    - Cmake binary installation ([`d0d4307`](https://github.com/syphar/crates-index-diff-rs/commit/d0d43071a3fdcd795a2460b71363545dbf5a2a89))
-    - Use different cmake source ([`f9f67ef`](https://github.com/syphar/crates-index-diff-rs/commit/f9f67efd7ca12c34d4bbfa171b8604f206d686b4))
-    - Cmake upgrade via before_script ([`a978136`](https://github.com/syphar/crates-index-diff-rs/commit/a97813620f5990f4d62337e7a6a8c3b3aadd05ef))
-    - See if a custom source will get latest cmake ([`77bbd20`](https://github.com/syphar/crates-index-diff-rs/commit/77bbd20132b7f42dd79b55f86c000f21618d4c39))
-    - Enforce latest cmake ([`2d0d5d9`](https://github.com/syphar/crates-index-diff-rs/commit/2d0d5d94193d5a65cdac700d811e9d75e849a7c9))
-    - Test against all versions of rust ([`094c788`](https://github.com/syphar/crates-index-diff-rs/commit/094c788f0b9ebd7beda17a8a7ee71d88ebbaad71))
-    - Simplify travis ([`f9d531a`](https://github.com/syphar/crates-index-diff-rs/commit/f9d531a63269e8e236489c9a7bb56a6bafdd9eeb))
-    - First clone on demand ([`fdf281e`](https://github.com/syphar/crates-index-diff-rs/commit/fdf281ee3b301ab370fe1d3ea6aeb1dd5e0536d1))
-    - First failing test ([`1c0b2c0`](https://github.com/syphar/crates-index-diff-rs/commit/1c0b2c0a3723afd587779880337f5a5516c063f1))
-    - First commit ([`f1568c0`](https://github.com/syphar/crates-index-diff-rs/commit/f1568c02652781163055bcbc18bc4af0e6914cd2))
-</details>
+- **Uncategorized**
+  - V1.0.0 ([`381e7cc`](https://github.com/Byron/crates-index-diff-rs/commit/381e7cc1e59a3695f3f07061467ade159822dbcb))
+  - Docs for all remaining methods. ([`706636b`](https://github.com/Byron/crates-index-diff-rs/commit/706636b5198595ff8573505350f49aad241edfc6))
+  - Give up on osx ([`cdfc689`](https://github.com/Byron/crates-index-diff-rs/commit/cdfc689aacd68dd53ecef19187d1a02de84a8ab7))
+  - See if openssl somehow works after all ([`3a5eb46`](https://github.com/Byron/crates-index-diff-rs/commit/3a5eb46249b6e319944efd53e5003024125e286c))
+  - Documentation for crateversion ([`91bf44d`](https://github.com/Byron/crates-index-diff-rs/commit/91bf44d4f3c4454316f32489ba30cd250422065d))
+  - Openssl setup from openssl-rs itself ([`36b79de`](https://github.com/Byron/crates-index-diff-rs/commit/36b79decb47d541172fffcbf6b43c60ab5bdd8d5))
+  - Try the msvc 32bit version ([`120d752`](https://github.com/Byron/crates-index-diff-rs/commit/120d752b658850df962d65e50fe054c7782b1b04))
+  - Msys2 seems to be the problem here ([`42a9800`](https://github.com/Byron/crates-index-diff-rs/commit/42a9800b03894dd3dc58e3ceefa1c9fecc7b589d))
+  - Try to enforce linking latest openssl ([`0a738f3`](https://github.com/Byron/crates-index-diff-rs/commit/0a738f3513c1b66f12b99c4260728dcbb3c41e68))
+  - Try disabling the cache ([`dda7c80`](https://github.com/Byron/crates-index-diff-rs/commit/dda7c80ae297084a364b91b36619995c130ee24c))
+  - Enforce more recent openssl lib ([`714d7cf`](https://github.com/Byron/crates-index-diff-rs/commit/714d7cf2ce6de29a5021cf5c2c85e5b14631e203))
+  - Only 1.1.0c seems to be working ([`ae26330`](https://github.com/Byron/crates-index-diff-rs/commit/ae26330ee78be142f63c41d303a8ac604083880e))
+  - Remove 32 bit targets due to failure ([`959fde0`](https://github.com/Byron/crates-index-diff-rs/commit/959fde03288238dc74ec82ebb2a949e834481ed2))
+  - Attempt to set OPENSSL env vars ([`f4ea940`](https://github.com/Byron/crates-index-diff-rs/commit/f4ea940e9e8f6adc6a82a45adebecf01c26b7851))
+  - Try to allow 32 bit failures ([`05bffd6`](https://github.com/Byron/crates-index-diff-rs/commit/05bffd68e3411ca4327c7a905c9a4e562c9c2eb3))
+  - Try without index-bare cache ([`b11f6df`](https://github.com/Byron/crates-index-diff-rs/commit/b11f6df25e6a12e4835f32b739b7c7fd890d6c23))
+  - Custom code to get cmake onto osx ([`4860906`](https://github.com/Byron/crates-index-diff-rs/commit/48609062e30407ea29afa5ddccea78e7c94f20bd))
+  - Let's hope it will actually run now ([`a052f41`](https://github.com/Byron/crates-index-diff-rs/commit/a052f41cd198b7342b14aba186a955067a9a7241))
+  - Customizations for us ([`c4bf948`](https://github.com/Byron/crates-index-diff-rs/commit/c4bf948b5e2c5590e58a134a3003acde7738e42d))
+  - Using openssl file as basis ([`accb62d`](https://github.com/Byron/crates-index-diff-rs/commit/accb62d00618204e76659ecb4d31e8a04291bdc5))
+  - Test osx as well ([`b0f19b0`](https://github.com/Byron/crates-index-diff-rs/commit/b0f19b0a5d754cd9153b30ca9b363fa9534777da))
+  - Don't enforce branches ([`601dc2d`](https://github.com/Byron/crates-index-diff-rs/commit/601dc2d7ca9bd87f440455e1eb3698c6e2f0227d))
+  - Use quick-error ([`ef53496`](https://github.com/Byron/crates-index-diff-rs/commit/ef5349677d53ab2d31c921b853766a8aa21f59fa))
+  - Move crate into own module ([`97a5b81`](https://github.com/Byron/crates-index-diff-rs/commit/97a5b819df11a454f5154ae3edd5e4a03192c0e1))
+  - Better diff.print implementation ([`81c95f2`](https://github.com/Byron/crates-index-diff-rs/commit/81c95f2a9014ace72e74da64ddb4840197d7bbec))
+  - Simplify fetch-changes error handling ([`988b668`](https://github.com/Byron/crates-index-diff-rs/commit/988b66860a96411f9c263c582159066970ef9265))
+  - Much nicer Crate from json ([`caa5879`](https://github.com/Byron/crates-index-diff-rs/commit/caa58790f61ec4e450dadbf737a0bc3224f8c0b4))
+  - Allow to change seen-ref name ([`56d416a`](https://github.com/Byron/crates-index-diff-rs/commit/56d416aae569d8dbcd568428a7489072eb749249))
+  - Remove duplicate ([`42e6803`](https://github.com/Byron/crates-index-diff-rs/commit/42e68031d586109efe7d9567279af4d4bf7ac0be))
+  - Be compatible with docs.rs ([`a4e6e7e`](https://github.com/Byron/crates-index-diff-rs/commit/a4e6e7efef4bf7d6863eeade1b974a350d08f4a6))
+  - Set envvars propery ([`b784f1c`](https://github.com/Byron/crates-index-diff-rs/commit/b784f1cb3655a2ebef7845ed62cd5c52ab31d46e))
+  - Fix keywords ([`787bdac`](https://github.com/Byron/crates-index-diff-rs/commit/787bdacfa2c1191e121d4d5a6c8e3a09c19bf684))
+  - Show backtrace ([`ed7ca36`](https://github.com/Byron/crates-index-diff-rs/commit/ed7ca366454a0c99698f18beb5955cd6606c7e1e))
+  - Better error handling ([`b0dd277`](https://github.com/Byron/crates-index-diff-rs/commit/b0dd2770a979b278e8be4432418367c6d9620c67))
+  - Attempt of fetch_changes implementation ([`708d9c0`](https://github.com/Byron/crates-index-diff-rs/commit/708d9c0680b797026da731bc9a9874ac71bc125b))
+  - Allow direct usage of objects as well ([`eee5134`](https://github.com/Byron/crates-index-diff-rs/commit/eee513476d300c294272e0c23348cdbc1009f008))
+  - Fetch_changes() ([`d06c4a0`](https://github.com/Byron/crates-index-diff-rs/commit/d06c4a0bb526eafb13a61951cd34c24febd10797))
+  - Remove debug prints ([`24c1c81`](https://github.com/Byron/crates-index-diff-rs/commit/24c1c81d7e1287ed83308f4f8ad795dfca4de834))
+  - Assure we can handle the entire index ([`97b417a`](https://github.com/Byron/crates-index-diff-rs/commit/97b417ad71b3070e3663d1ce6d998f24a0bf1365))
+  - Support for unyanking ([`2ef9c02`](https://github.com/Byron/crates-index-diff-rs/commit/2ef9c028812134af6bf23f72a4ea9850c407a06a))
+  - Handle yanked files ([`8048a2c`](https://github.com/Byron/crates-index-diff-rs/commit/8048a2cf00618d669c9176b0e94353dd1cfa9011))
+  - Remove error handling in makefile ([`9ef08fa`](https://github.com/Byron/crates-index-diff-rs/commit/9ef08fa5d1517883cb006fda522d020767f8d081))
+  - See why makefile is not working ([`11a006b`](https://github.com/Byron/crates-index-diff-rs/commit/11a006bc230d098ad8ee282069b2544c8187d14a))
+  - To work with GNU make ([`42e1290`](https://github.com/Byron/crates-index-diff-rs/commit/42e1290ea75ddf57948b6f6acd23c2c17544db06))
+  - Now seeing the first added crates ([`887c088`](https://github.com/Byron/crates-index-diff-rs/commit/887c088495ef78e21ca88091963dbfd0661e08ec))
+  - Found an illegal-instruction error ([`607d747`](https://github.com/Byron/crates-index-diff-rs/commit/607d747c9306ad0921a6d4166ecf151bb9a39479))
+  - Intermediate crate info from hunk ([`3ce91e8`](https://github.com/Byron/crates-index-diff-rs/commit/3ce91e89b520b6497eceb961065e8898c5aba883))
+  - Automate running tests quickly ([`8801ec2`](https://github.com/Byron/crates-index-diff-rs/commit/8801ec2d1d718eb73200d29ff23a958b5b1ba9d7))
+  - Support for commit'ishs for diffs ([`e451067`](https://github.com/Byron/crates-index-diff-rs/commit/e451067a939a848082def317e1cceb487910aba2))
+  - Finally the correct refspec ([`f89651b`](https://github.com/Byron/crates-index-diff-rs/commit/f89651be89638e8210b74dc8843d5985d28e842b))
+  - First traversal method ([`d49f62f`](https://github.com/Byron/crates-index-diff-rs/commit/d49f62fa41dbba9278ec2080ae2b91f72dc6834e))
+  - Cmake binary installation ([`d0d4307`](https://github.com/Byron/crates-index-diff-rs/commit/d0d43071a3fdcd795a2460b71363545dbf5a2a89))
+  - Use different cmake source ([`f9f67ef`](https://github.com/Byron/crates-index-diff-rs/commit/f9f67efd7ca12c34d4bbfa171b8604f206d686b4))
+  - Cmake upgrade via before_script ([`a978136`](https://github.com/Byron/crates-index-diff-rs/commit/a97813620f5990f4d62337e7a6a8c3b3aadd05ef))
+  - See if a custom source will get latest cmake ([`77bbd20`](https://github.com/Byron/crates-index-diff-rs/commit/77bbd20132b7f42dd79b55f86c000f21618d4c39))
+  - Enforce latest cmake ([`2d0d5d9`](https://github.com/Byron/crates-index-diff-rs/commit/2d0d5d94193d5a65cdac700d811e9d75e849a7c9))
+  - Test against all versions of rust ([`094c788`](https://github.com/Byron/crates-index-diff-rs/commit/094c788f0b9ebd7beda17a8a7ee71d88ebbaad71))
+  - Simplify travis ([`f9d531a`](https://github.com/Byron/crates-index-diff-rs/commit/f9d531a63269e8e236489c9a7bb56a6bafdd9eeb))
+  - First clone on demand ([`fdf281e`](https://github.com/Byron/crates-index-diff-rs/commit/fdf281ee3b301ab370fe1d3ea6aeb1dd5e0536d1))
+  - First failing test ([`1c0b2c0`](https://github.com/Byron/crates-index-diff-rs/commit/1c0b2c0a3723afd587779880337f5a5516c063f1))
+  - First commit ([`f1568c0`](https://github.com/Byron/crates-index-diff-rs/commit/f1568c02652781163055bcbc18bc4af0e6914cd2))
 
+</details>
